@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "709816759828",
+    "project_id": "app-kala",
+    "storage_bucket": "app-kala.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:709816759828:android:f1e954a7ae9176d3401901",
+        "android_client_info": {
+          "package_name": "kala.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "709816759828-04c8g0m6hnu862uhjm23ss4u9949mtmm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCoNY_JbJyDe31jSzPeFlAhAHXT75DjrE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "709816759828-04c8g0m6hnu862uhjm23ss4u9949mtmm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

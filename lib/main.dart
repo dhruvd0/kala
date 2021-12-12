@@ -5,8 +5,9 @@ import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/startup/splash.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     const MaterialApp(
       home: KalaApp(),
@@ -25,14 +26,16 @@ class _KalaAppState extends State<KalaApp> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize:const Size(FigmaConstants.figmaScreenWidth,FigmaConstants.figmaScreenHeight),
-      builder: () {
-        return  MaterialApp(
-          theme: lightTheme,
-          onGenerateRoute: onGenerateRoute,
-          home:  Splash(),
-        );
-      }
-    );
+        designSize: const Size(
+          FigmaConstants.figmaScreenWidth,
+          FigmaConstants.figmaScreenHeight,
+        ),
+        builder: () {
+          return MaterialApp(
+            theme: lightTheme,
+            onGenerateRoute: onGenerateRoute,
+            home: Splash(),
+          );
+        });
   }
 }

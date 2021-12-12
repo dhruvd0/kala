@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kala/config/colors/basic_colors.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 /// The first widget to display for Kala App
@@ -8,7 +7,7 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OffWhiteScaffold(
+    return OffWhiteScaffoldWithBackAppBar(
       body: Center(
         child: Text(
           "K",
