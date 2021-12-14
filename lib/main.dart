@@ -12,10 +12,7 @@ import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/startup/splash.dart';
 
-FirebaseConfig firebaseConfig = FirebaseConfig(
-  firebaseAuthInstance: FirebaseAuth.instance,
-  firestoreInstance: FirebaseFirestore.instance,
-);
+FirebaseConfig? firebaseConfig;
 void main({FirebaseConfig? mockFirebase}) async {
   WidgetsFlutterBinding.ensureInitialized();
   if (mockFirebase == null) {

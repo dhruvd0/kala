@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kala.app">
+  <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="kala"
         android:icon="@mipmap/ic_launcher">

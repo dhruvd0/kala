@@ -5,7 +5,7 @@ import 'package:kala/main.dart';
 
 Future<bool> addNewUser(KalaUser kalaUser) async {
   try {
-    await firebaseConfig.firestoreInstance
+    await firebaseConfig?.firestoreInstance
         .collection("users")
         .doc(kalaUser.name)
         .set(kalaUser.toMap());

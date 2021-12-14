@@ -15,7 +15,10 @@ class KalaUserBloc extends Cubit<KalaUser> {
   void updateKalaUserToFirestore() async {
     if (state.id.isNotEmpty) {
       var docRef =
-          firebaseConfig.firestoreInstance.collection("users").doc(state.id);
+          firebaseConfig?.firestoreInstance.collection("users").doc(state.id);
+      if (docRef == null) {
+        return;
+      }
       DocumentSnapshot userSnapshot = await docRef.get();
       if (userSnapshot.exists) {
         await docRef.update(state.toMap());
@@ -27,7 +30,7 @@ class KalaUserBloc extends Cubit<KalaUser> {
 
   void userSnapshotFetcher() async {
     if (state.id.isNotEmpty) {
-      firebaseConfig.firestoreInstance
+      firebaseConfig?.firestoreInstance
           .collection("users")
           .doc(state.id)
           .snapshots()
