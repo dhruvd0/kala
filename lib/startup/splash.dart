@@ -7,7 +7,7 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OffWhiteScaffoldWithBackAppBar(
+    return OffWhiteScaffold(
       body: Center(
         child: Text(
           "K",
