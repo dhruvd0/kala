@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.15)
-project(kala LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.14)
+project(app LANGUAGES CXX)
 
-set(BINARY_NAME "kala")
+set(BINARY_NAME "app")
 
 cmake_policy(SET CMP0063 NEW)
 

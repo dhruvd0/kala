@@ -1,4 +1,4 @@
-# kala
+# app
 
 A new Flutter project.
 

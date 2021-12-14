@@ -12,30 +12,45 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 30.h,
-          ),
-          Text(
-            "K",
-            style: Theme.of(context).textTheme.headline1,
-          ),
-          SizedBox(
-            height: 30.h,
-          ),
-          CurvedMonoButton(
-            height: 40.h,
-            width: 1.sw / 3,
-            text: "Log In With Google",
-            onTap: () {
-              BlocProvider.of<KalaUserBloc>(context).authenticateWithSocialAuth(
-                AuthType.google,
-              );
-            },
-          )
-        ],
+      body: Container(
+        width: 1.sw,
+        height: 500,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 100.h,
+            ),
+            Text(
+              "K",
+              style: Theme.of(context).textTheme.headline1,
+            ),
+            SizedBox(
+              height: 100.h,
+            ),
+            CurvedMonoButton(
+              height: 50.h,
+              width: 1.sw / 1.8,
+              text: "Log In With Google",
+              onTap: () {
+                BlocProvider.of<KalaUserBloc>(context)
+                    .authenticateWithSocialAuth(
+                      "google",
+                    )
+                    .then(
+                      (value) => BlocProvider.of<KalaUserBloc>(context)
+                          .updateKalaUserToFirestore(),
+                    );
+              },
+            ),
+            SizedBox(
+              height: 30.h,
+            ),
+            SizedBox(
+              height: 30.h,
+            ),
+          ],
+        ),
       ),
     );
   }

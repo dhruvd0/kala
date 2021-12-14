@@ -19,6 +19,7 @@ class OffWhiteScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: BasicColors.backgroundOffWhite,
       body: body,
+    
       appBar: defaultAppBar(),
     );
   }

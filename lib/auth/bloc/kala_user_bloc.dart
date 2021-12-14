@@ -1,19 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kala/auth/models/kala_user.dart';
 import 'package:kala/auth/social_integration/google.dart';
 import 'package:kala/main.dart';
 
 class KalaUserBloc extends Cubit<KalaUser> {
   KalaUserBloc()
-      : super(KalaUser(
-          name: "",
-          id: "",
-          authType: AuthType.phone,
-        ));
+      : super(
+          KalaUser(
+            name: "",
+            id: "",
+            authType: "",
+            photo_url: "",
+          ),
+        );
   void updateKalaUserToFirestore() async {
     if (state.id.isNotEmpty) {
+      if (firebaseConfig?.firebaseAuthInstance.currentUser == null) {
+        Fluttertoast.showToast(msg: "Log in First");
+      }
+
       var docRef =
           firebaseConfig?.firestoreInstance.collection("users").doc(state.id);
       if (docRef == null) {
@@ -43,22 +51,10 @@ class KalaUserBloc extends Cubit<KalaUser> {
     }
   }
 
-  Future<void> authenticateWithSocialAuth(AuthType authType) async {
+  Future<void> authenticateWithSocialAuth(String authType) async {
     KalaUser? kalaUser;
     switch (authType) {
-      case AuthType.google:
-        kalaUser = await signInWithGoogle();
-        break;
-      case AuthType.phone:
-        kalaUser = await signInWithGoogle();
-        break;
-      case AuthType.facebook:
-        kalaUser = await signInWithGoogle();
-        break;
-      case AuthType.instagram:
-        kalaUser = await signInWithGoogle();
-        break;
-      case AuthType.anonymous:
+      case "google":
         kalaUser = await signInWithGoogle();
         break;
     }
