@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ButtonTextStyle {
-  static final TextStyle button1 = GoogleFonts.roboto(
+  static final TextStyle button1 = GoogleFonts.robotoSlab(
     fontSize: 18.sp,
     color: Colors.black,
   );

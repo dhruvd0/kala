@@ -21,12 +21,8 @@ void loginTestFlow() {
     app.main(mockFirebase: mockFirebaseConfig);
     WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
     await widgetTesterHandler.tester.pumpAndSettle();
-    await widgetTesterHandler.tapByKey("googleAuthBtn");
+    await widgetTesterHandler.tapByKey("GoogleAuthBtn");
   
   });
 }
 
-void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  loginTestFlow();
-}
