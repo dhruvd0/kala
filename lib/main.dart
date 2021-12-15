@@ -10,9 +10,10 @@ import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
-import 'package:kala/startup/splash.dart';
 
 FirebaseConfig? firebaseConfig;
+// ignore: non_constant_identifier_names
+bool TEST_FLAG = false;
 void main({FirebaseConfig? mockFirebase}) async {
   WidgetsFlutterBinding.ensureInitialized();
   if (mockFirebase == null) {
@@ -23,12 +24,12 @@ void main({FirebaseConfig? mockFirebase}) async {
     );
   } else {
     firebaseConfig = mockFirebase;
+    TEST_FLAG = true;
   }
-  runApp(
-    const MaterialApp(
-      home: KalaApp(),
-    ),
-  );
+ 
+  runApp(const MaterialApp(
+    home: KalaApp(),
+  ));
 }
 
 class KalaApp extends StatefulWidget {

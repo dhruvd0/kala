@@ -5,13 +5,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 class KalaUser {
   final String name;
   final String id;
+  /// Authentication Method
+  /// Can be: "google", "phone", "instagram" or "email"
   final String authType;
-  final String? photo_url;
+
+  /// Profile image ulr
+  final String? photoURL;
   KalaUser({
     required this.name,
     required this.id,
     required this.authType,
-    required this.photo_url,
+    required this.photoURL,
   });
   factory KalaUser.fromSocialAuthUser(
     User user,
@@ -21,7 +25,7 @@ class KalaUser {
       name: user.displayName.toString(),
       id: user.uid.toString(),
       authType: authType,
-      photo_url: user.photoURL??""
+      photoURL: user.photoURL??""
     );
   }
 
@@ -30,7 +34,7 @@ class KalaUser {
       'name': name,
       'id': id,
       'authType': authType,
-      'photo_url': photo_url.toString(),
+      'photoURL': photoURL,
     };
   }
 
@@ -39,7 +43,7 @@ class KalaUser {
       name: map['name'] ?? '',
       id: map['id'] ?? '',
       authType: map['authType'] ?? '',
-      photo_url: map['photo_url'] ?? '',
+      photoURL: map['photoURL'],
     );
   }
 
@@ -50,7 +54,7 @@ class KalaUser {
 
   @override
   String toString() {
-    return 'KalaUser(name: $name, id: $id, authType: $authType, photo_url: $photo_url)';
+    return 'KalaUser(name: $name, id: $id, authType: $authType, photoURL: $photoURL)';
   }
 
   @override
@@ -61,7 +65,7 @@ class KalaUser {
       other.name == name &&
       other.id == id &&
       other.authType == authType &&
-      other.photo_url == photo_url;
+      other.photoURL == photoURL;
   }
 
   @override
@@ -69,20 +73,20 @@ class KalaUser {
     return name.hashCode ^
       id.hashCode ^
       authType.hashCode ^
-      photo_url.hashCode;
+      photoURL.hashCode;
   }
 
   KalaUser copyWith({
     String? name,
     String? id,
     String? authType,
-    String? photo_url,
+    String? photoURL,
   }) {
     return KalaUser(
       name: name ?? this.name,
       id: id ?? this.id,
       authType: authType ?? this.authType,
-      photo_url: photo_url ?? this.photo_url,
+      photoURL: photoURL ?? this.photoURL,
     );
   }
 }

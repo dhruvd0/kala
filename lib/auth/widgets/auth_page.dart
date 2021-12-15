@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/auth/models/kala_user.dart';
 import 'package:kala/utils/widgets/buttons/curved_mono_button.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
@@ -12,7 +11,7 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
-      body: Container(
+      body: SizedBox(
         width: 1.sw,
         height: 500,
         child: Column(
@@ -32,6 +31,7 @@ class AuthPage extends StatelessWidget {
               height: 50.h,
               width: 1.sw / 1.8,
               text: "Log In With Google",
+              key:const Key("googleAuthBtn"),
               onTap: () {
                 BlocProvider.of<KalaUserBloc>(context)
                     .authenticateWithSocialAuth(

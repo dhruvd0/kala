@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CurvedMonoButton extends StatelessWidget {
-  double height;
-  double width;
-  String text;
-  VoidCallback onTap;
-  EdgeInsets? margin;
-  CurvedMonoButton({
+  final double height;
+  final double width;
+  final String text;
+  final VoidCallback onTap;
+  final EdgeInsets? margin;
+  const CurvedMonoButton({
     Key? key,
     required this.height,
     required this.width,
