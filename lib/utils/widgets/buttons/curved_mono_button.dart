@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CurvedMonoButton extends StatelessWidget {
-  final double height;
-  final double width;
+class RectMonoButton extends StatelessWidget {
+  double? height;
+  double? width;
   final String text;
   final VoidCallback onTap;
   final EdgeInsets? margin;
-  const CurvedMonoButton({
+  RectMonoButton({
     Key? key,
-    required this.height,
-    required this.width,
+    this.height,
+    this.width,
     required this.text,
     required this.onTap,
     this.margin,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    height = height ?? 50.h;
+    width = width ?? 1.sw / 1.8;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -28,7 +31,6 @@ class CurvedMonoButton extends StatelessWidget {
           ),
         ),
         child: Center(
-      
           child: Text(
             text,
             style: Theme.of(context).textTheme.button,

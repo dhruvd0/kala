@@ -8,7 +8,7 @@ class FirebaseMocks {
   static final FakeFirebaseFirestore mockFirestore = FakeFirebaseFirestore();
   static final MockGoogleSignIn googleAuthMock = MockGoogleSignIn();
   static final firebaseMockUser = MockUser(
-    isAnonymous: false,
+    isAnonymous: true,
     uid: 'test_id',
     email: 'bob@somedomain.com',
     displayName: 'Bob',
@@ -16,13 +16,14 @@ class FirebaseMocks {
   );
   static Future<MockFirebaseAuth> getMockAuthFromGoogleAuthMock(
       [bool? signedIn]) async {
-    final googleSignIn = FirebaseMocks.googleAuthMock;
-    final signinAccount = await googleSignIn.signIn();
-
     final auth = MockFirebaseAuth(
-      mockUser: firebaseMockUser,
+      mockUser: (signedIn ?? false) ? firebaseMockUser : null,
       signedIn: signedIn ?? false,
     );
+    if (signedIn ?? false) {
+      assert(auth.currentUser != null);
+    }
+
     return auth;
   }
 

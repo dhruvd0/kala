@@ -13,7 +13,7 @@ class SocialAuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CurvedMonoButton(
+    return RectMonoButton(
       height: 50.h,
       width: 1.sw / 1.8,
       text: "Log In With $authType ",

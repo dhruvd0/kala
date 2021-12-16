@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -30,6 +32,7 @@ class KalaUserBloc extends Cubit<KalaUser> {
   @override
   void onChange(Change<KalaUser> change) {
     super.onChange(change);
+    log(change.toString());
   }
 
   Future<void> updateKalaUserToFirestore() async {
@@ -66,20 +69,20 @@ class KalaUserBloc extends Cubit<KalaUser> {
   }
 
   void userSnapshotFetcher() async {
-    if (state.id.isNotEmpty) {
+    var uid = firebaseConfig?.auth.currentUser?.uid;
+    if (uid?.isNotEmpty ?? false) {
       firebaseConfig?.firestore
           .collection(FirestorePaths.userCollection)
-          .doc(state.id)
+          .doc(uid)
           .snapshots()
           .listen((event) {
         KalaUser userFromSnapshot = KalaUser.fromMap(
           event.data()!,
         );
-        if (TEST_FLAG) {
-          assert(userFromSnapshot.id == "test_id");
-        }
+
         assert(userFromSnapshot.validateUser());
         emit(userFromSnapshot);
+        Fluttertoast.showToast(msg: "Welcome ${state.name}!");
       });
     }
   }
@@ -87,19 +90,18 @@ class KalaUserBloc extends Cubit<KalaUser> {
   Future<void> authenticateWithSocialAuth(String authType) async {
     KalaUser? kalaUser;
     if (firebaseConfig?.auth is MockFirebaseAuth) {
-      UserCredential? userCredential =
-          await firebaseConfig?.auth.signInAnonymously();
-      assert(userCredential != null);
+      await firebaseConfig?.auth.signInAnonymously();
+      assert(firebaseConfig?.auth.currentUser != null);
       kalaUser = KalaUser.fromSocialAuthUser(
-        userCredential?.user as User,
+        firebaseConfig?.auth.currentUser as User,
         "mock-$authType",
-        "$authType-url"
+        "$authType-url",
       );
       emit(kalaUser);
       return;
     }
     switch (authType) {
-      case "google":
+      case "Google":
         kalaUser = await signInWithGoogle();
         break;
     }
