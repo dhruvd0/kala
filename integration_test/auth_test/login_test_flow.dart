@@ -10,19 +10,19 @@ import '../mocks/firebase_mocks.dart';
 void loginTestFlow() {
   testWidgets("Test to authenticate user and store user data in Firestore",
       (tester) async {
-    await FirebaseMocks.mockFirestore
-        .collection(FirestorePaths.userCollection)
-       .add({"test": "test"});
-  
-    FirebaseConfig mockFirebaseConfig = FirebaseConfig(
-      firestoreInstance: FirebaseMocks.mockFirestore,
-      firebaseAuthInstance: await FirebaseMocks.getMockAuthFromGoogleAuthMock(),
-    );
-    app.main(mockFirebase: mockFirebaseConfig);
     WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
+    await widgetTesterHandler.startAppWithMockFirebase(signedIn: false);
+
+    await widgetTesterHandler.tester.pumpAndSettle();
+    await widgetTesterHandler.waitFor(5);
     await widgetTesterHandler.tester.pumpAndSettle();
     await widgetTesterHandler.tapByKey("GoogleAuthBtn");
-  
+  });
+
+  testWidgets("Test to auto-login user on startup", (tester) async {
+    WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
+    await widgetTesterHandler.startAppWithMockFirebase(signedIn: true);
+    await widgetTesterHandler.waitFor(5);
+    expect(widgetTesterHandler.findWidgetByKey("GoogleAuthBtn"), findsNothing);
   });
 }
-

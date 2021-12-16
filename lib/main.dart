@@ -10,6 +10,7 @@ import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
+import 'package:kala/startup/splash.dart';
 
 FirebaseConfig? firebaseConfig;
 // ignore: non_constant_identifier_names
@@ -19,8 +20,8 @@ void main({FirebaseConfig? mockFirebase}) async {
   if (mockFirebase == null) {
     await Firebase.initializeApp();
     firebaseConfig = FirebaseConfig(
-      firebaseAuthInstance: FirebaseAuth.instance,
-      firestoreInstance: FirebaseFirestore.instance,
+      auth: FirebaseAuth.instance,
+      firestore: FirebaseFirestore.instance,
     );
   } else {
     firebaseConfig = mockFirebase;
@@ -57,7 +58,7 @@ class _KalaAppState extends State<KalaApp> {
             child: MaterialApp(
               theme: lightTheme,
               onGenerateRoute: onGenerateRoute,
-              home: const AuthPage(),
+              home: const Splash(),
             ),
           );
         });

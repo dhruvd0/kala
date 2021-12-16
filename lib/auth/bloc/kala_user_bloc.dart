@@ -19,27 +19,26 @@ class KalaUserBloc extends Cubit<KalaUser> {
             id: "",
             authType: "",
             photoURL: "",
+            contactURL: "",
           ),
         );
   @override
   void onError(Object error, StackTrace stackTrace) {
     super.onError(error, stackTrace);
-    //FirebaseCrashlytics.instance.recordError(error, stackTrace);
   }
 
   @override
   void onChange(Change<KalaUser> change) {
     super.onChange(change);
-    // FirebaseCrashlytics.instance.log(change.currentState.toJson());
   }
 
   Future<void> updateKalaUserToFirestore() async {
     if (state.id.isNotEmpty) {
-      if (firebaseConfig?.firebaseAuthInstance.currentUser == null) {
+      if (firebaseConfig?.auth.currentUser == null) {
         Fluttertoast.showToast(msg: "Log in First");
       }
 
-      var docRef = firebaseConfig?.firestoreInstance
+      var docRef = firebaseConfig?.firestore
           .collection(FirestorePaths.userCollection)
           .doc(state.id);
       if (docRef == null) {
@@ -47,16 +46,16 @@ class KalaUserBloc extends Cubit<KalaUser> {
       }
       DocumentSnapshot userSnapshot = await docRef.get();
       if (userSnapshot.exists) {
-        await firebaseConfig?.firestoreInstance
+        await firebaseConfig?.firestore
             .collection(FirestorePaths.userCollection)
             .doc(state.id)
             .update(state.toMap());
       } else {
-        if (firebaseConfig?.firestoreInstance is! FakeFirebaseFirestore) {
+        if (firebaseConfig?.firestore is! FakeFirebaseFirestore) {
           FirebaseAnalytics.instance.logSignUp(signUpMethod: state.authType);
         }
 
-        await firebaseConfig?.firestoreInstance
+        await firebaseConfig?.firestore
             .collection(FirestorePaths.userCollection)
             .doc(state.id)
             .set(state.toMap());
@@ -68,7 +67,7 @@ class KalaUserBloc extends Cubit<KalaUser> {
 
   void userSnapshotFetcher() async {
     if (state.id.isNotEmpty) {
-      firebaseConfig?.firestoreInstance
+      firebaseConfig?.firestore
           .collection(FirestorePaths.userCollection)
           .doc(state.id)
           .snapshots()
@@ -79,6 +78,7 @@ class KalaUserBloc extends Cubit<KalaUser> {
         if (TEST_FLAG) {
           assert(userFromSnapshot.id == "test_id");
         }
+        assert(userFromSnapshot.validateUser());
         emit(userFromSnapshot);
       });
     }
@@ -86,13 +86,14 @@ class KalaUserBloc extends Cubit<KalaUser> {
 
   Future<void> authenticateWithSocialAuth(String authType) async {
     KalaUser? kalaUser;
-    if (firebaseConfig?.firebaseAuthInstance is MockFirebaseAuth) {
+    if (firebaseConfig?.auth is MockFirebaseAuth) {
       UserCredential? userCredential =
-          await firebaseConfig?.firebaseAuthInstance.signInAnonymously();
+          await firebaseConfig?.auth.signInAnonymously();
       assert(userCredential != null);
       kalaUser = KalaUser.fromSocialAuthUser(
         userCredential?.user as User,
         "mock-$authType",
+        "$authType-url"
       );
       emit(kalaUser);
       return;
