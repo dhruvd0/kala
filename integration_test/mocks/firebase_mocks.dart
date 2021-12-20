@@ -16,21 +16,23 @@ class FirebaseMocks {
   );
   static Future<MockFirebaseAuth> getMockAuthFromGoogleAuthMock(
       [bool? signedIn]) async {
-    final auth = MockFirebaseAuth(
-      mockUser: (signedIn ?? false) ? firebaseMockUser : null,
-      signedIn: signedIn ?? false,
-    );
-    if (signedIn ?? false) {
-      assert(auth.currentUser != null);
+    try {
+      final auth = MockFirebaseAuth(
+        mockUser: (signedIn ?? false) ? firebaseMockUser : null,
+        signedIn: signedIn ?? false,
+      );
+      return auth;
+    } on AssertionError {
+      var mockFirebaseAuth = MockFirebaseAuth(mockUser: firebaseMockUser);
+      if (signedIn ?? false) {
+        mockFirebaseAuth.signInAnonymously();
+      }
+      return mockFirebaseAuth;
     }
-
-    return auth;
   }
 
   static Future<FirebaseConfig> getMockFirebaseConfig({bool? signedIn}) async {
-    await FirebaseMocks.mockFirestore
-        .collection(FirestorePaths.userCollection)
-        .add({"test": "test"});
+    await FirebaseMocks.mockFirestore.collection(FirestorePaths.userCollection);
 
     FirebaseConfig mockFirebaseConfig = FirebaseConfig(
       firestore: FirebaseMocks.mockFirestore,

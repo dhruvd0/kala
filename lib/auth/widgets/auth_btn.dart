@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/utils/widgets/buttons/curved_mono_button.dart';
+
 class SocialAuthButton extends StatelessWidget {
   const SocialAuthButton(
     this.authType, {
@@ -20,14 +21,9 @@ class SocialAuthButton extends StatelessWidget {
       key: Key("${authType}AuthBtn"),
       margin: EdgeInsets.symmetric(vertical: 20.h),
       onTap: () {
-        BlocProvider.of<KalaUserBloc>(context)
-            .authenticateWithSocialAuth(
-              authType,
-            )
-            .then(
-              (value) => BlocProvider.of<KalaUserBloc>(context)
-                  .updateKalaUserToFirestore(),
-            );
+        BlocProvider.of<KalaUserBloc>(context).authenticateWithSocialAuth(
+          authType,
+        );
       },
     );
   }

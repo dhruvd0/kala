@@ -10,7 +10,7 @@ class WidgetTesterHandler {
   WidgetTesterHandler(this.tester);
 
   Future<void> tapByKey(String key) async {
-    await tester.tap(find.byKey(Key(key)));
+    await tester.tap(findWidgetByKey(key));
     await tester.pumpAndSettle();
   }
 

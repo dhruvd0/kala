@@ -35,7 +35,8 @@ dependencies:
   firebase_analytics: ^9.0.3
   firebase_auth: ^3.3.3
   firebase_auth_mocks: ^0.8.1
-  firebase_core: ^1.10.5
+  firebase_core: ^1.10.6
+  firebase_core_web: ^1.5.3
   firebase_crashlytics: ^2.4.3
   firebase_storage: ^10.2.3
   flutter:
@@ -46,6 +47,7 @@ dependencies:
   google_fonts: ^2.1.0
   google_sign_in: ^5.2.1
   google_sign_in_mocks: ^0.2.1
+  google_sign_in_web: ^0.10.0+3
   hive: ^2.0.4
   hive_flutter: ^1.1.0
   hydrated_bloc: ^8.0.0

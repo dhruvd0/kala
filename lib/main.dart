@@ -10,6 +10,8 @@ import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/startup/splash.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 FirebaseConfig? firebaseConfig;
 // ignore: non_constant_identifier_names
@@ -17,16 +19,19 @@ bool TEST_FLAG = false;
 void main({FirebaseConfig? mockFirebase}) async {
   WidgetsFlutterBinding.ensureInitialized();
   if (mockFirebase == null) {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     firebaseConfig = FirebaseConfig(
       auth: FirebaseAuth.instance,
       firestore: FirebaseFirestore.instance,
     );
+   
   } else {
     firebaseConfig = mockFirebase;
     TEST_FLAG = true;
   }
- 
+
   runApp(const MaterialApp(
     home: KalaApp(),
   ));
@@ -60,6 +65,6 @@ class _KalaAppState extends State<KalaApp> {
               home: const Splash(),
             ),
           );
-        });
+        },);
   }
 }
