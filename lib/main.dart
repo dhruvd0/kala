@@ -10,7 +10,6 @@ import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/startup/splash.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 FirebaseConfig? firebaseConfig;

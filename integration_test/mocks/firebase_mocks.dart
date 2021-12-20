@@ -2,7 +2,6 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:google_sign_in_mocks/google_sign_in_mocks.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:kala/config/firebase/firebase.dart';
-import 'package:kala/config/firebase/firestore_paths.dart';
 
 class FirebaseMocks {
   static final FakeFirebaseFirestore mockFirestore = FakeFirebaseFirestore();
@@ -32,7 +31,6 @@ class FirebaseMocks {
   }
 
   static Future<FirebaseConfig> getMockFirebaseConfig({bool? signedIn}) async {
-    await FirebaseMocks.mockFirestore.collection(FirestorePaths.userCollection);
 
     FirebaseConfig mockFirebaseConfig = FirebaseConfig(
       firestore: FirebaseMocks.mockFirestore,
