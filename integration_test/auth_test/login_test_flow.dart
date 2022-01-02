@@ -16,21 +16,23 @@ void loginTestFlow() {
       await widgetTesterHandler.tester.pumpAndSettle();
       AuthTypes.allAuthTypes().forEach((type) {
         expect(
-          widgetTesterHandler.findWidgetByKey(
-            "${type}AuthBtn",
-          ),
+          widgetTesterHandler.findWidgetByKey("${type}AuthBtn"),
           findsOneWidget,
         );
-       
       });
     },
-  skip: true,
   );
 
-  testWidgets("Test to auto-login user on startup", (tester) async {
-    WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
-    await widgetTesterHandler.startAppWithMockFirebase(signedIn: true);
-    await widgetTesterHandler.waitFor(5);
-    expect(widgetTesterHandler.findWidgetByKey("GoogleAuthBtn"), findsNothing);
-  },);
+  testWidgets(
+    "Test to auto-login user on startup",
+    (tester) async {
+      WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
+      await widgetTesterHandler.startAppWithMockFirebase(signedIn: true);
+      await widgetTesterHandler.waitFor(5);
+      expect(
+        widgetTesterHandler.findWidgetByKey("GoogleAuthBtn"),
+        findsNothing,
+      );
+    },
+  );
 }

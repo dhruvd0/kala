@@ -9,6 +9,8 @@ import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
+import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
+
 import 'package:kala/startup/splash.dart';
 import 'firebase_options.dart';
 
@@ -47,23 +49,28 @@ class _KalaAppState extends State<KalaApp> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        designSize: const Size(
-          FigmaConstants.figmaScreenWidth,
-          FigmaConstants.figmaScreenHeight,
-        ),
-        builder: () {
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => KalaUserBloc(),
-              ),
-            ],
-            child: MaterialApp(
-              theme: lightTheme,
-              onGenerateRoute: onGenerateRoute,
-              home: const Splash(),
+      designSize: const Size(
+        FigmaConstants.figmaScreenWidth,
+        FigmaConstants.figmaScreenHeight,
+      ),
+      builder: () {
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => KalaUserBloc(),
             ),
-          );
-        },);
+            BlocProvider(
+              create: (context) =>
+                  GallerySlideBloc(kalaUserBloc: context.read<KalaUserBloc>()),
+            ),
+          ],
+          child: MaterialApp(
+            theme: lightTheme,
+            onGenerateRoute: onGenerateRoute,
+            home: const Splash(),
+          ),
+        );
+      },
+    );
   }
 }

@@ -23,16 +23,15 @@ class KalaUser {
     required this.lastSignIn,
   });
   factory KalaUser.fromSocialAuthUser(
-    User user,
-    String authType,
-    String contact,
-  ) {
+    User user, {
+    String? authType,
+  }) {
     return KalaUser(
       name: user.displayName.toString(),
-      authType: authType,
+      authType: authType.toString(),
       lastSignIn: Timestamp.now(),
       photoURL: user.photoURL ?? "",
-      contactURL: contact,
+      contactURL: user.phoneNumber ?? user.email.toString(),
     );
   }
 
@@ -52,7 +51,7 @@ class KalaUser {
       authType: map['authType'] ?? '',
       photoURL: map['photoURL'] ?? "",
       contactURL: map['contactURL'] ?? '',
-      lastSignIn: ((map['lastSignIn'] as String?)?.isNotEmpty??false)
+      lastSignIn: ((map['lastSignIn'] as String?)?.isNotEmpty ?? false)
           ? DateTime.tryParse(map['lastSignIn']) == null
               ? null
               : Timestamp.fromDate(DateTime.tryParse(map['lastSignIn'])!)

@@ -26,8 +26,7 @@ Future<KalaUser?> signInWithGoogle() async {
         : await FirebaseAuth.instance.signInWithCredential(credential);
     return KalaUser.fromSocialAuthUser(
       userCredential.user!,
-      AuthTypes.google,
-      userCredential.user?.email as String,
+      authType: AuthTypes.google,
     );
   } on FirebaseAuthException catch (e) {
     Fluttertoast.showToast(msg: e.toString());

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/auth/social_integration/auth_types.dart';
 import 'package:kala/config/nav/route_names.dart';
+import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/main.dart';
 import 'package:kala/utils/widgets/buttons/curved_mono_button.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
@@ -32,17 +33,20 @@ class _SplashState extends State<Splash> {
       if (currentUser2 == null) {
         nextRoute = Routes.auth;
       } else {
-        if(TEST_FLAG){
-           BlocProvider.of<KalaUserBloc>(context, listen: false)
+        if (TEST_FLAG) {
+          BlocProvider.of<KalaUserBloc>(context, listen: false)
               .authenticateWithSocialAuth(AuthTypes.google);
         }
-        BlocProvider.of<KalaUserBloc>(context, listen: false)
-            .userSnapshotFetcher();
+        nextRoute = Routes.gallery;
       }
       if (nextRoute.isNotEmpty) {
         Navigator.pushReplacementNamed(context, nextRoute);
       }
     });
+  }
+
+  void postAuthRoutine() {
+    BlocProvider.of<GallerySlideBloc>(context, listen: false).getContentList();
   }
 
   @override
