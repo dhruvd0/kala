@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kala/auth/social_integration/auth_types.dart';
+import 'package:kala/config/nav/route_names.dart';
 
 import '../config/widget_tester.dart';
 
@@ -21,6 +22,7 @@ void loginTestFlow() {
         );
       });
     },
+    skip: true,
   );
 
   testWidgets(
@@ -28,10 +30,10 @@ void loginTestFlow() {
     (tester) async {
       WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
       await widgetTesterHandler.startAppWithMockFirebase(signedIn: true);
-      await widgetTesterHandler.waitFor(5);
+      await widgetTesterHandler.waitFor(2);
       expect(
-        widgetTesterHandler.findWidgetByKey("GoogleAuthBtn"),
-        findsNothing,
+        widgetTesterHandler.findWidgetByKey(Routes.gallery),
+        findsOneWidget,
       );
     },
   );

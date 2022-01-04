@@ -24,14 +24,14 @@ class FirebaseMocks {
     } on AssertionError {
       var mockFirebaseAuth = MockFirebaseAuth(mockUser: firebaseMockUser);
       if (signedIn ?? false) {
-        mockFirebaseAuth.signInAnonymously();
+        await mockFirebaseAuth.signInAnonymously();
+        assert(mockFirebaseAuth.currentUser?.uid == firebaseMockUser.uid);
       }
       return mockFirebaseAuth;
     }
   }
 
   static Future<FirebaseConfig> getMockFirebaseConfig({bool? signedIn}) async {
-
     FirebaseConfig mockFirebaseConfig = FirebaseConfig(
       firestore: FirebaseMocks.mockFirestore,
       auth: await FirebaseMocks.getMockAuthFromGoogleAuthMock(signedIn),

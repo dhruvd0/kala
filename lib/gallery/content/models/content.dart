@@ -95,7 +95,7 @@ class Content {
           "https://cdn.britannica.com/78/43678-050-F4DC8D93/Starry-Night-canvas-Vincent-van-Gogh-New-1889.jpg",
       artistName: "Artist#$id",
       artistID: "AA##$id",
-      title: "A",
+      title: "A$id",
       description: "ejjfwjkefjkwjnefjwjkefj fnewjonjfkwejknjfk ewfwmeofmkwm",
       contentID: "$id",
     );

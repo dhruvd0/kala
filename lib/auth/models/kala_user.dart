@@ -41,7 +41,7 @@ class KalaUser {
       'authType': authType,
       'photoURL': photoURL,
       'contactURL': contactURL,
-      'lastSignIn': lastSignIn?.toDate().toIso8601String(),
+      'lastSignIn': lastSignIn
     };
   }
 
@@ -51,11 +51,7 @@ class KalaUser {
       authType: map['authType'] ?? '',
       photoURL: map['photoURL'] ?? "",
       contactURL: map['contactURL'] ?? '',
-      lastSignIn: ((map['lastSignIn'] as String?)?.isNotEmpty ?? false)
-          ? DateTime.tryParse(map['lastSignIn']) == null
-              ? null
-              : Timestamp.fromDate(DateTime.tryParse(map['lastSignIn'])!)
-          : null,
+      lastSignIn: ((map['lastSignIn'])),
     );
   }
 
