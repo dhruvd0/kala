@@ -27,5 +27,6 @@ class WidgetTesterHandler {
         await FirebaseMocks.getMockFirebaseConfig(signedIn: signedIn);
     app.main(mockFirebase: mockFirebaseConfig);
     await tester.pumpAndSettle();
+    await waitFor(2);
   }
 }

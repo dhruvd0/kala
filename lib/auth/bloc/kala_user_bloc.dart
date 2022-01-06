@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -19,15 +20,9 @@ class KalaUserBloc extends Cubit<KalaUserState> {
   StreamSubscription<User?>? authStream;
   KalaUserBloc()
       : super(
-          UnauthenticatedKalaUserState(KalaUser(
-            name: "",
-            authType: "",
-            photoURL: "",
-            contactURL: "",
-            lastSignIn: null,
-          )),
+          unauthenticatedBaseUser(),
         ) {
-    authStream = firebaseConfig?.auth.authStateChanges().listen((user) {
+    authStream = firebaseConfig!.auth.authStateChanges().listen((user) {
       if (user != null && user.uid.isNotEmpty) {
         emit(
           AuthenticatedKalaUserState(
@@ -36,17 +31,26 @@ class KalaUserBloc extends Cubit<KalaUserState> {
             ),
           ),
         );
-        startUserSnapshotFetcher();
+      } else {
+        emit(unauthenticatedBaseUser());
       }
     });
+  }
+
+  static UnauthenticatedKalaUserState unauthenticatedBaseUser() {
+    return UnauthenticatedKalaUserState(KalaUser(
+      name: "",
+      authType: "",
+      photoURL: "",
+      contactURL: "",
+      lastSignIn: null,
+    ));
   }
 
   @override
   void onChange(Change<KalaUserState> change) {
     super.onChange(change);
-    if (change.nextState is AuthenticatedKalaUserState) {
-      updateLastSignedInTimeStamp();
-    }
+  
   }
 
   @override
@@ -124,24 +128,24 @@ class KalaUserBloc extends Cubit<KalaUserState> {
   }
 
   Future<void> authenticateWithSocialAuth(String authType) async {
-    KalaUser? kalaUser;
     if (TEST_FLAG) {
-      kalaUser = await mockAuthentication(kalaUser, authType);
+      await mockAuthentication(authType);
       return;
     }
-    switch (authType) {
-      case AuthTypes.google:
-        kalaUser = await signInWithGoogle();
-        break;
+
+    try {
+      switch (authType) {
+        case AuthTypes.google:
+          await signInWithGoogle();
+          break;
+      }
+    } on PlatformException catch (e) {
+      Fluttertoast.showToast(msg: "Check Internet");
     }
-    if (kalaUser != null) {
-      emit(AuthenticatedKalaUserState(kalaUser));
-    }
-    startUserSnapshotFetcher();
   }
 
-  Future<KalaUser?> mockAuthentication(
-      KalaUser? kalaUser, String authType) async {
+  Future<void> mockAuthentication(String authType) async {
+    var kalaUser;
     assert(firebaseConfig?.auth is MockFirebaseAuth);
     await firebaseConfig?.auth.signInAnonymously();
     assert(firebaseConfig?.auth.currentUser != null);
@@ -151,7 +155,5 @@ class KalaUserBloc extends Cubit<KalaUserState> {
     );
     kalaUser.validateUser();
     emit(AuthenticatedKalaUserState(kalaUser));
-    startUserSnapshotFetcher();
-    return kalaUser;
   }
 }

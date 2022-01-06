@@ -1,34 +1,37 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_state.dart';
 import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/main.dart';
 
-class GallerySlideBloc extends Cubit<GallerySlideState> {
+class GalleryBloc extends Cubit<GalleryState> {
   StreamSubscription<KalaUserState>? kalaUserStateStream;
-  GallerySlideBloc({KalaUserBloc? kalaUserBloc})
-      : super(GallerySlideState(
+  GalleryBloc({KalaUserBloc? kalaUserBloc})
+      : super(GalleryState(
           contentSlideList: [],
-          viewingIndex: 0,
         )) {
-    kalaUserStateStream = kalaUserBloc?.stream.listen((kalaUserState) {
-      if (kalaUserState is AuthenticatedKalaUserState) {
+    kalaUserStateStream= kalaUserBloc?.stream.listen((state) {
+      if (state is AuthenticatedKalaUserState) {
         getContentList();
       }
     });
   }
+  @override
+  Future<void> close() async {
+    await kalaUserStateStream?.cancel();
+    return super.close();
+  }
 
   Future<void> getContentList() async {
     if (TEST_FLAG) {
-      emit(GallerySlideState.fakeGalleryState());
+      emit(GalleryState.fakeGalleryState());
     } else {
-      emit(GallerySlideState.fakeGalleryState());
+      emit(GalleryState.fakeGalleryState());
     }
-  }
-
-  void changeViewingIndex(int index) {
-    emit(state.copyWith(viewingIndex: index));
   }
 }

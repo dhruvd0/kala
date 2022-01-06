@@ -24,14 +24,7 @@ class SocialAuthButton extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 20.h),
       onTap: () {
         BlocProvider.of<KalaUserBloc>(context)
-            .authenticateWithSocialAuth(
-          authType,
-        )
-            .then((value) {
-          if (firebaseConfig?.auth.currentUser != null) {
-            Navigator.of(context).pushReplacementNamed(Routes.gallery);
-          }
-        });
+            .authenticateWithSocialAuth(authType);
       },
     );
   }

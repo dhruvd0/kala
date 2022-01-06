@@ -30,7 +30,7 @@ void loginTestFlow() {
     (tester) async {
       WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
       await widgetTesterHandler.startAppWithMockFirebase(signedIn: true);
-      await widgetTesterHandler.waitFor(2);
+
       expect(
         widgetTesterHandler.findWidgetByKey(Routes.gallery),
         findsOneWidget,

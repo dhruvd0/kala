@@ -4,6 +4,7 @@ import 'package:kala/main.dart' as app;
 
 import 'auth_test/login_flow_test.dart';
 import 'config/widget_tester.dart';
+import 'gallery_test/gallery_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -11,8 +12,12 @@ void main() {
     app.main();
     WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
     await widgetTesterHandler.tester.pumpAndSettle();
-  }, skip: true);
+  }, );
   group("Authentication Tests", () {
     loginTestFlow();
+  },);
+
+  group("Gallery Tests", () {
+    galleryTestFlow();
   });
 }

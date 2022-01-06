@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/config/colors/basic_colors.dart';
 import 'package:kala/config/theme/theme.dart';
 
 class OffWhiteScaffold extends StatelessWidget {
-  OffWhiteScaffold(
-      {Key? key,
-      required this.body,
-      this.centerTitle,
-      this.enableBackArrow,
-      this.onBack})
-      : super(key: key) {
+  OffWhiteScaffold({
+    Key? key,
+    required this.body,
+    this.centerTitle,
+    this.enableBackArrow,
+    this.onBack,
+    this.trailing,
+  }) : super(key: key) {
     if (enableBackArrow == true) {
       assert(onBack != null);
     }
@@ -21,7 +23,7 @@ class OffWhiteScaffold extends StatelessWidget {
   final String? centerTitle;
   final bool? enableBackArrow;
   final VoidCallback? onBack;
-
+  final Widget? trailing;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +33,7 @@ class OffWhiteScaffold extends StatelessWidget {
         elevation: 0,
         shadowColor: null,
         backgroundColor: Theme.of(context).backgroundColor,
+        actions: trailing==null?null:[trailing!,SizedBox(width: 10.w,)],
         leading: enableBackArrow == null
             ? null
             : enableBackArrow ?? false
@@ -43,6 +46,7 @@ class OffWhiteScaffold extends StatelessWidget {
                   )
                 : null,
         centerTitle: true,
+        
         title: centerTitle == null
             ? null
             : Title(

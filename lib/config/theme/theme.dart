@@ -15,6 +15,9 @@ final ThemeData lightTheme = ThemeData(
     headline2: HeadingStyles.heading2,
     headline3: HeadingStyles.heading3,
     bodyText1: BodyTextStyle.bodyText1,
+    bodyText2: BodyTextStyle.bodyText2,
+    caption: BodyTextStyle.caption,
+    subtitle1: BodyTextStyle.subtitle1,
   ),
 );
 final ThemeData darkTheme = lightTheme.copyWith();

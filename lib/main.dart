@@ -28,6 +28,7 @@ void main({FirebaseConfig? mockFirebase}) async {
       firestore: FirebaseFirestore.instance,
     );
    
+   
   } else {
     firebaseConfig = mockFirebase;
     TEST_FLAG = true;
@@ -55,13 +56,16 @@ class _KalaAppState extends State<KalaApp> {
       ),
       builder: () {
         return MultiBlocProvider(
+        
           providers: [
             BlocProvider(
+              lazy: false,
               create: (context) => KalaUserBloc(),
             ),
             BlocProvider(
+              lazy: false,
               create: (context) =>
-                  GallerySlideBloc(kalaUserBloc: context.read<KalaUserBloc>()),
+                  GalleryBloc(kalaUserBloc: context.read<KalaUserBloc>()),
             ),
           ],
           child: MaterialApp(

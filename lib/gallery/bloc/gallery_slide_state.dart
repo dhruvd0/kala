@@ -4,61 +4,55 @@ import 'package:flutter/foundation.dart';
 
 import 'package:kala/gallery/content/models/content.dart';
 
-class GallerySlideState {
+class GalleryState {
   final List<Content> contentSlideList;
-  final int viewingIndex;
-  GallerySlideState({
+
+  GalleryState({
     required this.contentSlideList,
-    required this.viewingIndex,
   });
 
-  GallerySlideState copyWith({
+  GalleryState copyWith({
     List<Content>? contentSlideList,
-    int? viewingIndex,
   }) {
-    return GallerySlideState(
+    return GalleryState(
       contentSlideList: contentSlideList ?? this.contentSlideList,
-      viewingIndex: viewingIndex ?? this.viewingIndex,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'contentSlideList': contentSlideList.map((x) => x.toMap()).toList(),
-      'viewingIndex': viewingIndex,
     };
   }
 
-  factory GallerySlideState.fromMap(Map<String, dynamic> map) {
-    return GallerySlideState(
+  factory GalleryState.fromMap(Map<String, dynamic> map) {
+    return GalleryState(
       contentSlideList: List<Content>.from(map['contentSlideList']?.map((x) => Content.fromMap(x))),
-      viewingIndex: map['viewingIndex']?.toInt() ?? 0,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory GallerySlideState.fromJson(String source) =>
-      GallerySlideState.fromMap(json.decode(source));
+  factory GalleryState.fromJson(String source) =>
+      GalleryState.fromMap(json.decode(source));
 
   @override
-  String toString() => 'GallerySlideState(contentSlideList: $contentSlideList, viewingIndex: $viewingIndex)';
+  String toString() => 'GalleryState(contentSlideList: $contentSlideList)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
   
-    return other is GallerySlideState &&
-      listEquals(other.contentSlideList, contentSlideList) &&
-      other.viewingIndex == viewingIndex;
+    return other is GalleryState &&
+      listEquals(other.contentSlideList, contentSlideList);
   }
 
   @override
-  int get hashCode => contentSlideList.hashCode ^ viewingIndex.hashCode;
+  int get hashCode => contentSlideList.hashCode;
 
-  static GallerySlideState fakeGalleryState() {
-    return GallerySlideState(
-      viewingIndex: 0,
+  static GalleryState fakeGalleryState() {
+    return GalleryState(
+      
       contentSlideList: List.generate(
         20,
         (index) => Content.fakeContent(index),
