@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +14,7 @@ import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 
 import 'package:kala/startup/splash.dart';
 import 'firebase_options.dart';
+import 'gallery/content/models/content.dart';
 
 FirebaseConfig? firebaseConfig;
 // ignore: non_constant_identifier_names
@@ -27,8 +29,6 @@ void main({FirebaseConfig? mockFirebase}) async {
       auth: FirebaseAuth.instance,
       firestore: FirebaseFirestore.instance,
     );
-   
-   
   } else {
     firebaseConfig = mockFirebase;
     TEST_FLAG = true;
@@ -38,6 +38,9 @@ void main({FirebaseConfig? mockFirebase}) async {
     home: KalaApp(),
   ));
 }
+
+
+
 
 class KalaApp extends StatefulWidget {
   const KalaApp({Key? key}) : super(key: key);
@@ -56,7 +59,6 @@ class _KalaAppState extends State<KalaApp> {
       ),
       builder: () {
         return MultiBlocProvider(
-        
           providers: [
             BlocProvider(
               lazy: false,

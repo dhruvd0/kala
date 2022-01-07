@@ -32,6 +32,7 @@ dependencies:
   bloc: ^8.0.1
   cached_network_image: ^3.2.0
   cloud_firestore: ^3.1.4
+  crashlytics: ^0.0.2
   cubit: ^0.1.2
   cupertino_icons: ^1.0.2
   fake_cloud_firestore: ^1.2.0

@@ -8,14 +8,15 @@ import 'gallery_test/gallery_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
   testWidgets("App Start", (tester) async {
     app.main();
     WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
     await widgetTesterHandler.tester.pumpAndSettle();
-  }, );
+  }, skip: true);
   group("Authentication Tests", () {
     loginTestFlow();
-  },);
+  },skip: true);
 
   group("Gallery Tests", () {
     galleryTestFlow();

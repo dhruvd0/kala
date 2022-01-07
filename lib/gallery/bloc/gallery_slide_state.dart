@@ -50,13 +50,5 @@ class GalleryState {
   @override
   int get hashCode => contentSlideList.hashCode;
 
-  static GalleryState fakeGalleryState() {
-    return GalleryState(
-      
-      contentSlideList: List.generate(
-        20,
-        (index) => Content.fakeContent(index),
-      ),
-    );
-  }
+  
 }
