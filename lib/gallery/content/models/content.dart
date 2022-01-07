@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'dart:math';
 
 class Content {
   final String imageUrl;

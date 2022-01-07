@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:kala/gallery/content/models/content.dart';
 
 import '../config/widget_tester.dart';
 import '../mocks/content_mocks.dart';

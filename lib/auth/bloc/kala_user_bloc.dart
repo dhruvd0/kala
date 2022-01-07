@@ -139,13 +139,13 @@ class KalaUserBloc extends Cubit<KalaUserState> {
           await signInWithGoogle();
           break;
       }
-    } on PlatformException catch (e) {
+    } on PlatformException {
       Fluttertoast.showToast(msg: "Check Internet");
     }
   }
 
   Future<void> mockAuthentication(String authType) async {
-    var kalaUser;
+    KalaUser kalaUser;
     assert(firebaseConfig?.auth is MockFirebaseAuth);
     await firebaseConfig?.auth.signInAnonymously();
     assert(firebaseConfig?.auth.currentUser != null);

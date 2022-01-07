@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/gallery/widgets/slide/gallery_scroll.dart';
 import 'package:kala/main.dart';
@@ -14,18 +13,16 @@ class GalleryPage extends StatelessWidget {
       key: const Key(Routes.gallery),
       trailing: GestureDetector(
         onTap: () {
-          firebaseConfig?.auth?.signOut().then((value) =>
+          firebaseConfig?.auth.signOut().then((value) =>
               Navigator.of(context).pushReplacementNamed(Routes.splash));
         },
-        child: Icon(
+        child: const Icon(
           Icons.logout_rounded,
           color: Colors.black,
         ),
       ),
       centerTitle: "Kala Gallery",
-      body: Container(
-        child: const Gallery(),
-      ),
+      body: const Gallery(),
     );
   }
 }
