@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/gallery/content/models/content.dart';
+import '../mocks/firebase_mocks.dart';
 
 class ContentMock{
   static Content fakeContent(int id) {
@@ -13,8 +15,17 @@ class ContentMock{
       artistName: "Artist#$id",
       artistID: "AA##$id",
       title: "A$id",
+      docID: "$id",
       description: "ejjfwjkefjkwjnefjwjkefj fnewjonjfkwejknjfk ewfwmeofmkwm",
-      contentID: "$id",
+     
     );
   }
+  Future<void> populateFakeContentInFirestore() async {
+    for (int i = 0; i < 10; i++) {
+      await FirebaseMocks.mockFirestore
+          .collection(FirestorePaths.contentCollection)
+          .add(ContentMock.fakeContent(i).toMap());
+    }
+  }
+
 }

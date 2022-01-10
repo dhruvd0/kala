@@ -15,7 +15,7 @@ class ContentCard extends StatelessWidget {
     return BlocBuilder<ContentBloc, Content>(
       builder: (context, state) {
         return Center(
-          key: Key("Content${state.contentID}"),
+          key: Key("Content${state.docID}"),
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
             child: Column(

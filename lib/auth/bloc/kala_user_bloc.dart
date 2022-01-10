@@ -18,11 +18,14 @@ import 'package:kala/main.dart';
 
 class KalaUserBloc extends Cubit<KalaUserState> {
   StreamSubscription<User?>? authStream;
-  KalaUserBloc()
-      : super(
-          unauthenticatedBaseUser(),
-        ) {
-    authStream = firebaseConfig!.auth.authStateChanges().listen((user) {
+  KalaUserBloc() : super(unauthenticatedBaseUser()) {
+    registerAuthListener();
+    
+  }
+
+  void registerAuthListener() {
+    
+    authStream = firebaseConfig?.auth.authStateChanges().listen((user) {
       if (user != null && user.uid.isNotEmpty) {
         emit(
           AuthenticatedKalaUserState(
@@ -50,13 +53,15 @@ class KalaUserBloc extends Cubit<KalaUserState> {
   @override
   void onChange(Change<KalaUserState> change) {
     super.onChange(change);
-  
   }
 
   @override
   void onError(Object error, StackTrace stackTrace) {
     super.onError(error, stackTrace);
   }
+
+
+ 
 
   void updateLastSignedInTimeStamp() async {
     var uid = firebaseConfig?.auth.currentUser?.uid;

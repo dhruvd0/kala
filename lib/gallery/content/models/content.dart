@@ -1,20 +1,19 @@
 import 'dart:convert';
 
-
 class Content {
   final String imageUrl;
   final String artistName;
   final String artistID;
   final String title;
   final String description;
-  final String contentID;
+  final String docID;
   Content({
     required this.imageUrl,
     required this.artistName,
     required this.artistID,
     required this.title,
     required this.description,
-    required this.contentID,
+    required this.docID,
   });
 
   Content copyWith({
@@ -23,7 +22,7 @@ class Content {
     String? artistID,
     String? title,
     String? description,
-    String? contentID,
+    String? docID,
   }) {
     return Content(
       imageUrl: imageUrl ?? this.imageUrl,
@@ -31,7 +30,7 @@ class Content {
       artistID: artistID ?? this.artistID,
       title: title ?? this.title,
       description: description ?? this.description,
-      contentID: contentID ?? this.contentID,
+      docID: docID ?? this.docID,
     );
   }
 
@@ -42,7 +41,7 @@ class Content {
       'artistID': artistID,
       'title': title,
       'description': description,
-      'contentID': contentID,
+      'docID': docID,
     };
   }
 
@@ -53,7 +52,7 @@ class Content {
       artistID: map['artistID'] ?? '',
       title: map['title'] ?? '',
       description: map['description'] ?? '',
-      contentID: map['contentID'] ?? '',
+      docID: map['docID'] ?? '',
     );
   }
 
@@ -64,7 +63,7 @@ class Content {
 
   @override
   String toString() {
-    return 'Content(imageUrl: $imageUrl, artistName: $artistName, artistID: $artistID, title: $title, description: $description, contentID: $contentID)';
+    return 'Content(imageUrl: $imageUrl, artistName: $artistName, artistID: $artistID, title: $title, description: $description, docID: $docID)';
   }
 
   @override
@@ -77,7 +76,7 @@ class Content {
         other.artistID == artistID &&
         other.title == title &&
         other.description == description &&
-        other.contentID == contentID;
+        other.docID == docID;
   }
 
   @override
@@ -87,7 +86,7 @@ class Content {
         artistID.hashCode ^
         title.hashCode ^
         description.hashCode ^
-        contentID.hashCode;
+        docID.hashCode;
   }
 
   

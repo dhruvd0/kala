@@ -13,10 +13,10 @@ void main() {
     app.main();
     WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
     await widgetTesterHandler.tester.pumpAndSettle();
-  }, skip: true);
+  }, );
   group("Authentication Tests", () {
     loginTestFlow();
-  },skip: true);
+  },);
 
   group("Gallery Tests", () {
     galleryTestFlow();

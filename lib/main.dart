@@ -37,9 +37,6 @@ void main({FirebaseConfig? mockFirebase}) async {
   ));
 }
 
-
-
-
 class KalaApp extends StatefulWidget {
   const KalaApp({Key? key}) : super(key: key);
 
@@ -64,8 +61,9 @@ class _KalaAppState extends State<KalaApp> {
             ),
             BlocProvider(
               lazy: false,
-              create: (context) =>
-                  GalleryBloc(kalaUserBloc: context.read<KalaUserBloc>()),
+              create: (context) => GalleryBloc(
+                kalaUserBloc: context.read<KalaUserBloc>(),
+              ),
             ),
           ],
           child: MaterialApp(

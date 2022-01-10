@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -7,11 +8,16 @@ import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
 
 class FirestoreQueries {
-  static Future<List<Json>> getAllCollectionDocuments(String collection,
+  FirebaseFirestore? firestore;
+  FirestoreQueries({this.firestore}) {
+    firestore = firestore ?? firebaseConfig!.firestore;
+  }
+  Future<List<Json>> getAllCollectionDocuments(String collection,
       {String? orderByField}) async {
+    log(firestore.runtimeType.toString());
     try {
-      QuerySnapshot<Json>? querySnapshot = await firebaseConfig?.firestore
-          .collection(collection)
+      QuerySnapshot<Json>? querySnapshot = await firestore
+          ?.collection(collection)
           .orderBy(orderByField ?? FieldPath.documentId)
           .get();
       if (querySnapshot == null || querySnapshot.docs.isEmpty) {
