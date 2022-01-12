@@ -10,6 +10,9 @@ class Content {
   final String description;
   final String docID;
   final Timestamp uploadTimestamp;
+  final int fileSize; // in kb
+  final double imgHeight;
+  final double imgWidth;
   Content({
     required this.imageUrl,
     required this.artistName,
@@ -18,6 +21,9 @@ class Content {
     required this.description,
     required this.docID,
     required this.uploadTimestamp,
+    required this.fileSize,
+    required this.imgHeight,
+    required this.imgWidth,
   });
 
   Content copyWith({
@@ -28,6 +34,9 @@ class Content {
     String? description,
     String? docID,
     Timestamp? uploadTimestamp,
+    int? fileSize,
+    double? imgHeight,
+    double? imgWidth,
   }) {
     return Content(
       imageUrl: imageUrl ?? this.imageUrl,
@@ -37,6 +46,9 @@ class Content {
       description: description ?? this.description,
       docID: docID ?? this.docID,
       uploadTimestamp: uploadTimestamp ?? this.uploadTimestamp,
+      fileSize: fileSize ?? this.fileSize,
+      imgHeight: imgHeight ?? this.imgHeight,
+      imgWidth: imgWidth ?? this.imgWidth,
     );
   }
 
@@ -49,6 +61,9 @@ class Content {
       'description': description,
       'docID': docID,
       'uploadTimestamp': uploadTimestamp,
+      'fileSize': fileSize,
+      'imgHeight': imgHeight,
+      'imgWidth': imgWidth,
     };
   }
 
@@ -60,7 +75,10 @@ class Content {
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       docID: map['docID'] ?? '',
-      uploadTimestamp: map['uploadTimestamp'],
+      uploadTimestamp: (map['uploadTimestamp']),
+      fileSize: map['fileSize']?.toInt() ?? 0,
+      imgHeight: map['imgHeight']?.toDouble() ?? 0.0,
+      imgWidth: map['imgWidth']?.toDouble() ?? 0.0,
     );
   }
 
@@ -71,31 +89,37 @@ class Content {
 
   @override
   String toString() {
-    return 'Content(imageUrl: $imageUrl, artistName: $artistName, artistID: $artistID, title: $title, description: $description, docID: $docID, uploadTimestamp: $uploadTimestamp)';
+    return 'Content(imageUrl: $imageUrl, artistName: $artistName, artistID: $artistID, title: $title, description: $description, docID: $docID, uploadTimestamp: $uploadTimestamp, fileSize: $fileSize, imgHeight: $imgHeight, imgWidth: $imgWidth)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
+  
     return other is Content &&
-        other.imageUrl == imageUrl &&
-        other.artistName == artistName &&
-        other.artistID == artistID &&
-        other.title == title &&
-        other.description == description &&
-        other.docID == docID &&
-        other.uploadTimestamp == uploadTimestamp;
+      other.imageUrl == imageUrl &&
+      other.artistName == artistName &&
+      other.artistID == artistID &&
+      other.title == title &&
+      other.description == description &&
+      other.docID == docID &&
+      other.uploadTimestamp == uploadTimestamp &&
+      other.fileSize == fileSize &&
+      other.imgHeight == imgHeight &&
+      other.imgWidth == imgWidth;
   }
 
   @override
   int get hashCode {
     return imageUrl.hashCode ^
-        artistName.hashCode ^
-        artistID.hashCode ^
-        title.hashCode ^
-        description.hashCode ^
-        docID.hashCode ^
-        uploadTimestamp.hashCode;
+      artistName.hashCode ^
+      artistID.hashCode ^
+      title.hashCode ^
+      description.hashCode ^
+      docID.hashCode ^
+      uploadTimestamp.hashCode ^
+      fileSize.hashCode ^
+      imgHeight.hashCode ^
+      imgWidth.hashCode;
   }
 }

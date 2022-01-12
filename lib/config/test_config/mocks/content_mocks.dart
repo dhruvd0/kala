@@ -19,6 +19,9 @@ class ContentMock{
       artistID: "AA##$id",
       title: "A$id",
       docID: "$id",
+      fileSize: 200,
+      imgHeight: 100,
+      imgWidth: 100,
       uploadTimestamp: Timestamp.now(),
       description: "ejjfwjkefjkwjnefjwjkefj fnewjonjfkwejknjfk ewfwmeofmkwm",
      
