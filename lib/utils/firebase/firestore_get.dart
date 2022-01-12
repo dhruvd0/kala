@@ -6,23 +6,33 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kala/config/typedefs.dart';
 import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
+import 'package:kala/utils/firebase/page_data.dart';
 
 class FirestoreQueries {
   FirebaseFirestore? firestore;
   FirestoreQueries({this.firestore}) {
     firestore = firestore ?? firebaseConfig!.firestore;
   }
-  Future<List<Json>> getAllCollectionDocuments(String collection,
-      {String? orderByField}) async {
-    log(firestore.runtimeType.toString());
+  Future<FirestorePageResponse?> paginateCollectionDocuments(
+      FirestorePageRequest request) async {
     try {
-      QuerySnapshot<Json>? querySnapshot = await firestore
-          ?.collection(collection)
-          .orderBy(orderByField ?? FieldPath.documentId)
-          .get();
+      QuerySnapshot<Json>? querySnapshot;
+      var orderByQuery = firestore?.collection(request.collection).orderBy(
+            request.orderByField,
+            descending: request.orderIsDescending,
+          );
+      if (request.lastDocSnap == null) {
+        querySnapshot = await orderByQuery?.limit(5).get();
+      } else {
+        querySnapshot = await orderByQuery
+            ?.startAfterDocument(request.lastDocSnap!)
+            .limit(5)
+            .get();
+      }
+
       if (querySnapshot == null || querySnapshot.docs.isEmpty) {
-        setCrashlyticsCustomKey("collection", collection);
-        setCrashlyticsCustomKey("orderByField", orderByField);
+        setCrashlyticsCustomKey("collection", request.collection);
+        setCrashlyticsCustomKey("orderByField", request.orderByField);
       }
       if (querySnapshot == null) {
         throw Exception("Null Query Snapshot");
@@ -30,16 +40,22 @@ class FirestoreQueries {
       if (querySnapshot.docs.isEmpty) {
         throw Exception("Empty Query Docs");
       }
-      List<Json> jsonList = [];
-      for (var doc in querySnapshot.docs) {
-        var data = doc.data();
-        data.putIfAbsent("docID", () => doc.id);
-        jsonList.add(data);
-      }
-      return jsonList;
+      return FirestorePageResponse(
+        currentJsonList: jsonListFromDocSnaps(querySnapshot),
+        lastDocSnap: querySnapshot.docs.last,
+      );
     } on PlatformException {
       Fluttertoast.showToast(msg: "No Internet");
-      return [];
     }
+  }
+
+  List<Json> jsonListFromDocSnaps(QuerySnapshot<Json> querySnapshot) {
+    List<Json> jsonList = [];
+    for (var doc in querySnapshot.docs) {
+      var data = doc.data();
+      data.putIfAbsent("docID", () => doc.id);
+      jsonList.add(data);
+    }
+    return jsonList;
   }
 }

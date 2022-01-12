@@ -11,11 +11,12 @@ import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
 import 'package:kala/utils/firebase/firestore_get.dart';
+import 'package:kala/utils/firebase/page_data.dart';
 
 class GalleryBloc extends Cubit<GalleryState> {
   StreamSubscription<KalaUserState>? kalaUserStateStream;
   FirebaseFirestore? firebaseFirestore;
-  GalleryBloc({required KalaUserBloc kalaUserBloc,this.firebaseFirestore})
+  GalleryBloc({required KalaUserBloc kalaUserBloc, this.firebaseFirestore})
       : super(GalleryState(contentSlideList: [])) {
     kalaUserStateStream =
         kalaUserBloc.stream.asBroadcastStream().listen((state) {
@@ -31,23 +32,33 @@ class GalleryBloc extends Cubit<GalleryState> {
   }
 
   Future<void> getContentList() async {
-    List<Json> contentJson = await FirestoreQueries(firestore: firebaseFirestore).getAllCollectionDocuments(
-      FirestorePaths.contentCollection,
-      orderByField: "docID",
+    FirestorePageResponse? response =
+        await FirestoreQueries(firestore: firebaseFirestore)
+            .paginateCollectionDocuments(
+      FirestorePageRequest(
+        collection: FirestorePaths.contentCollection,
+        orderByField: "uploadTimestamp",
+        lastDocSnap: state.lastDocument,
+        orderIsDescending: false,
+      ),
     );
-    List<Content> contentList = [];
-    for (var jsonElement in contentJson) {
+    if (response == null) {
+      //TODO: Handle This
+      return;
+    }
+
+    List<Content> newContentList = [];
+    for (var jsonElement in response.currentJsonList) {
       try {
         assert(jsonElement.containsKey("docID"));
-        contentList.add(Content.fromMap(jsonElement));
+        newContentList.add(Content.fromMap(jsonElement));
       } on AssertionError {
         setCrashlyticsCustomKey("content", jsonElement["docID"]).then(
           (value) => throw Exception(
               "Content Validation Exception ${jsonElement["docID"]}"),
         );
       } catch (e) {
-        setCrashlyticsCustomKey(
-                "content#${jsonElement['docID']}", jsonElement)
+        setCrashlyticsCustomKey("content#${jsonElement['docID']}", jsonElement)
             .then(
           (value) => throw Exception(
             "Content.fromMap Parse Exception, Content:${jsonElement['docID']}",
@@ -55,8 +66,18 @@ class GalleryBloc extends Cubit<GalleryState> {
         );
       }
     }
-    if (contentList.isNotEmpty) {
-      emit(state.copyWith(contentSlideList: contentList));
+
+    if (newContentList.isNotEmpty) {
+      if (state.contentSlideList.isNotEmpty) {
+        assert(state.contentSlideList.last.docID != newContentList.first.docID);
+      }
+
+      var currentContentList = state.contentSlideList;
+      currentContentList.addAll(newContentList);
+      emit(state.copyWith(
+        contentSlideList: currentContentList,
+        lastDocument: response.lastDocSnap,
+      ));
     }
   }
 }

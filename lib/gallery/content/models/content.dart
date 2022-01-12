@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Content {
   final String imageUrl;
   final String artistName;
@@ -7,6 +9,7 @@ class Content {
   final String title;
   final String description;
   final String docID;
+  final Timestamp uploadTimestamp;
   Content({
     required this.imageUrl,
     required this.artistName,
@@ -14,6 +17,7 @@ class Content {
     required this.title,
     required this.description,
     required this.docID,
+    required this.uploadTimestamp,
   });
 
   Content copyWith({
@@ -23,6 +27,7 @@ class Content {
     String? title,
     String? description,
     String? docID,
+    Timestamp? uploadTimestamp,
   }) {
     return Content(
       imageUrl: imageUrl ?? this.imageUrl,
@@ -31,6 +36,7 @@ class Content {
       title: title ?? this.title,
       description: description ?? this.description,
       docID: docID ?? this.docID,
+      uploadTimestamp: uploadTimestamp ?? this.uploadTimestamp,
     );
   }
 
@@ -42,6 +48,7 @@ class Content {
       'title': title,
       'description': description,
       'docID': docID,
+      'uploadTimestamp': uploadTimestamp,
     };
   }
 
@@ -53,6 +60,7 @@ class Content {
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       docID: map['docID'] ?? '',
+      uploadTimestamp: map['uploadTimestamp'],
     );
   }
 
@@ -63,7 +71,7 @@ class Content {
 
   @override
   String toString() {
-    return 'Content(imageUrl: $imageUrl, artistName: $artistName, artistID: $artistID, title: $title, description: $description, docID: $docID)';
+    return 'Content(imageUrl: $imageUrl, artistName: $artistName, artistID: $artistID, title: $title, description: $description, docID: $docID, uploadTimestamp: $uploadTimestamp)';
   }
 
   @override
@@ -76,7 +84,8 @@ class Content {
         other.artistID == artistID &&
         other.title == title &&
         other.description == description &&
-        other.docID == docID;
+        other.docID == docID &&
+        other.uploadTimestamp == uploadTimestamp;
   }
 
   @override
@@ -86,8 +95,7 @@ class Content {
         artistID.hashCode ^
         title.hashCode ^
         description.hashCode ^
-        docID.hashCode;
+        docID.hashCode ^
+        uploadTimestamp.hashCode;
   }
-
-  
 }
