@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +10,7 @@ import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
+import 'package:kala/config/test_config/mocks/content_mocks.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 
@@ -31,6 +34,7 @@ void main({FirebaseConfig? mockFirebase}) async {
     firebaseConfig = mockFirebase;
     TEST_FLAG = true;
   }
+  
 
   runApp(const MaterialApp(
     home: KalaApp(),

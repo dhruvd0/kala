@@ -75,17 +75,13 @@ class Content {
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       docID: map['docID'] ?? '',
-      uploadTimestamp: (map['uploadTimestamp']),
+      uploadTimestamp: map['uploadTimestamp'],
       fileSize: map['fileSize']?.toInt() ?? 0,
       imgHeight: map['imgHeight']?.toDouble() ?? 0.0,
       imgWidth: map['imgWidth']?.toDouble() ?? 0.0,
     );
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory Content.fromJson(String source) =>
-      Content.fromMap(json.decode(source));
 
   @override
   String toString() {

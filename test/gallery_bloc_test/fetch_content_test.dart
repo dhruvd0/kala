@@ -9,26 +9,39 @@ import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/gallery/content/models/content.dart';
 
+var length = 50;
 void main() {
-  test("Test to get and paginate content for gallery", () async {
-    var length = 20;
-    await populateFakeContentInFirestore(
-      FirebaseMocks.mockFirestore,
-      length,
-    );
-    log(FirebaseMocks.mockFirestore.dump());
-    GalleryBloc galleryBloc = GalleryBloc(
-      kalaUserBloc: KalaUserBloc(),
-      firebaseFirestore: FirebaseMocks.mockFirestore,
-    );
+  test("Test to get initial content for gallery", () async {
+    GalleryBloc galleryBloc = await galleryBlocSetup();
     await galleryBloc.getContentList();
-    expect(galleryBloc.state.contentSlideList.first.docID, "0");
-    expect(galleryBloc.state.contentSlideList.length, 5);
-    expect(galleryBloc.state.contentSlideList.last.docID, "4");
-
-    await galleryBloc.getContentList();
+      expect(galleryBloc.state.contentSlideList.isNotEmpty, true);
+    expect(galleryBloc.state.contentSlideList.first.docID, "${length - 1}");
     expect(galleryBloc.state.contentSlideList.length, 10);
-    expect(galleryBloc.state.contentSlideList.last.docID, "9");
+    expect(galleryBloc.state.contentSlideList.last.docID, "${length - 10}");
+  });
+  test("Test to paginate content list for gallery", () async {
+    GalleryBloc galleryBloc = await galleryBlocSetup();
+    await galleryBloc.getContentList();
+    await galleryBloc.getContentList();
+     expect(galleryBloc.state.contentSlideList.length, 20);
+    expect(galleryBloc.state.contentSlideList.last.docID, "30");
+    await galleryBloc.getContentList();
+    await galleryBloc.getContentList();
+    expect(galleryBloc.state.contentSlideList.length, 40);
+    expect(galleryBloc.state.contentSlideList.last.docID, "10");
   });
 }
 
+Future<GalleryBloc> galleryBlocSetup() async {
+  await populateFakeContentInFirestore(
+    FirebaseMocks.mockFirestore,
+    length,
+  );
+  log(FirebaseMocks.mockFirestore.dump().toString());
+
+  GalleryBloc galleryBloc = GalleryBloc(
+    kalaUserBloc: KalaUserBloc(),
+    firebaseFirestore: FirebaseMocks.mockFirestore,
+  );
+  return galleryBloc;
+}

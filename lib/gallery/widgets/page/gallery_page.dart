@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kala/config/nav/route_names.dart';
-import 'package:kala/gallery/widgets/slide/gallery_scroll.dart';
+import 'package:kala/gallery/widgets/gallery_view/gallery_container.dart';
+
 import 'package:kala/main.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 

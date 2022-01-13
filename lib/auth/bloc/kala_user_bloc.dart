@@ -138,15 +138,13 @@ class KalaUserBloc extends Cubit<KalaUserState> {
       return;
     }
 
-    try {
+
       switch (authType) {
         case AuthTypes.google:
           await signInWithGoogle();
           break;
       }
-    } on PlatformException {
-      Fluttertoast.showToast(msg: "Check Internet");
-    }
+    
   }
 
   Future<void> mockAuthentication(String authType) async {

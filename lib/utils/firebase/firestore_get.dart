@@ -22,11 +22,11 @@ class FirestoreQueries {
             descending: request.orderIsDescending,
           );
       if (request.lastDocSnap == null) {
-        querySnapshot = await orderByQuery?.limit(5).get();
+        querySnapshot = await orderByQuery?.limit(10).get();
       } else {
         querySnapshot = await orderByQuery
             ?.startAfterDocument(request.lastDocSnap!)
-            .limit(5)
+            .limit(10)
             .get();
       }
 
@@ -38,8 +38,12 @@ class FirestoreQueries {
         throw Exception("Null Query Snapshot");
       }
       if (querySnapshot.docs.isEmpty) {
-        throw Exception("Empty Query Docs");
+        return FirestorePageResponse(
+          currentJsonList: [],
+          lastDocSnap: null,
+        );
       }
+      log(querySnapshot.docs.last.data()["docID"]);
       return FirestorePageResponse(
         currentJsonList: jsonListFromDocSnaps(querySnapshot),
         lastDocSnap: querySnapshot.docs.last,

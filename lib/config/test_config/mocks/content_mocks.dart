@@ -7,7 +7,7 @@ import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import '../mocks/firebase_mocks.dart';
 
-class ContentMock{
+class ContentMock {
   static Content fakeContent(int id) {
     var vincent =
         'https://cdn.britannica.com/78/43678-050-F4DC8D93/Starry-Night-canvas-Vincent-van-Gogh-New-1889.jpg';
@@ -24,11 +24,8 @@ class ContentMock{
       imgWidth: 100,
       uploadTimestamp: Timestamp.now(),
       description: "ejjfwjkefjkwjnefjwjkefj fnewjonjfkwejknjfk ewfwmeofmkwm",
-     
     );
   }
- 
-
 }
 
 Future<void> populateFakeContentInFirestore(
@@ -36,9 +33,9 @@ Future<void> populateFakeContentInFirestore(
   int length,
 ) async {
   for (int i = 0; i < length; i++) {
+    await Future.delayed(Duration(milliseconds: 500));
     await firestore
         .collection(FirestorePaths.contentCollection)
         .add(ContentMock.fakeContent(i).toMap());
   }
-  
 }
