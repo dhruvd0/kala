@@ -44,7 +44,7 @@ class _GalleryScrollState extends State<GalleryScroll> {
         }
 
         return ListView.builder(
-          shrinkWrap: true,
+          
           controller: scrollController,
           itemCount: state.contentSlideList.length,
           physics: const BouncingScrollPhysics(),

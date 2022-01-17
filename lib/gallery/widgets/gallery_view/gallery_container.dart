@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kala/config/figma/consts.dart';
 import 'package:kala/gallery/widgets/gallery_view/gallery_grid.dart';
 import 'package:kala/gallery/widgets/gallery_view/gallery_scroll.dart';
 
@@ -10,17 +12,16 @@ class Gallery extends StatefulWidget {
 }
 
 class _GalleryState extends State<Gallery> {
-
- 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return SizedBox(
+      return Container(
         height: constraints.maxHeight,
         width: constraints.maxWidth,
-        child: constraints.maxWidth > 500
+        margin: EdgeInsets.only(top: 30.h, left: 10.w, right: 10.w),
+        child: constraints.maxWidth > FigmaConstants.figmaScreenWidth
             ? GalleryGridView()
-            : GalleryScroll(),
+            : Center(child: GalleryScroll()),
       );
     });
   }

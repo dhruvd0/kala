@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/gallery/widgets/gallery_view/gallery_scroll.dart';
@@ -13,12 +15,20 @@ class GalleryGridView extends StatelessWidget {
           return Container();
         }
 
-        return GridView.count(
-            primary: false,
-            crossAxisCount: 4,
+        return SingleChildScrollView(
+          child: StaggeredGrid.count(
+            crossAxisCount: 1.sw ~/ 300,
+            mainAxisSpacing: 10.h,
+            crossAxisSpacing: 10.w,
+            
             children: state.contentSlideList
-                .map((e) => ContentBlocProvider(content: e))
-                .toList());
+                .map((content) => StaggeredGridTile.fit(
+                      crossAxisCellCount: 1,
+                      child: ContentBlocProvider(content: content),
+                    ))
+                .toList(),
+          ),
+        );
       },
     );
   }

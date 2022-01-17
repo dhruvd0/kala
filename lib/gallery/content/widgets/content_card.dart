@@ -2,8 +2,10 @@ import 'dart:developer';
 import 'dart:math' hide log;
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/gallery/content/bloc/content_bloc.dart';
 import 'package:kala/gallery/content/models/content.dart';
@@ -18,15 +20,20 @@ class ContentCard extends StatelessWidget {
     return BlocBuilder<ContentBloc, Content>(
       builder: (context, state) {
         return Container(
-          constraints: BoxConstraints(
-            maxHeight: max(state.imgHeight.h, (1.sh - 70) ),
-          ),
-          margin: EdgeInsets.symmetric(horizontal: 40.w, vertical: 20.h),
+        
+          constraints: 1.sw > FigmaConstants.figmaScreenWidth
+              ? null
+              : BoxConstraints(
+                  maxHeight: max(state.imgHeight.h, (1.sh - 70)),
+                ),
+          margin: EdgeInsets.symmetric(
+              horizontal: kIsWeb ? 0 : 40.w, vertical: 20.h),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Flexible(
+              FittedBox(
+                fit: BoxFit.scaleDown,
                 child: ContentImage(
                   imageUrl: state.imageUrl,
                 ),
@@ -35,18 +42,20 @@ class ContentCard extends StatelessWidget {
                 height: 20.h,
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 8.w),
+                padding: EdgeInsets.symmetric(horizontal: 2.w),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      constraints: BoxConstraints(maxWidth: 1.sw / 2 - 10),
-                      child: AutoSizeText(
-                        state.description,
-                        style: TextThemeContext(context).bodyText2,
-                      ),
+                      constraints: BoxConstraints(
+                          maxWidth: 1.sw > FigmaConstants.figmaScreenWidth
+                              ? 1.sw / 10
+                              : 1.sw / 2 - 10),
+                      child: AutoSizeText(state.description,
+                          minFontSize: 8,
+                          style: TextThemeContext(context).bodyText2),
                     ),
+                    Expanded(child: Container()),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.end,

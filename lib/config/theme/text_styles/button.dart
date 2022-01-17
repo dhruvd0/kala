@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ButtonTextStyle {
   static final TextStyle button1 = GoogleFonts.raleway(
-    fontSize: 18.sp,
+    fontSize: 18.sm,
     color: Colors.black,
   );
 }

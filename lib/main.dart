@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,12 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/auth/widgets/auth_page.dart';
 import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/test_config/mocks/content_mocks.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
+import 'package:kala/gallery/widgets/page/gallery_page.dart';
 
 import 'package:kala/startup/splash.dart';
 import 'firebase_options.dart';
@@ -34,8 +38,10 @@ void main({FirebaseConfig? mockFirebase}) async {
     firebaseConfig = mockFirebase;
     TEST_FLAG = true;
   }
-  
-
+  if (kIsWeb) {
+    await firebaseConfig?.auth.setPersistence(Persistence.LOCAL);
+  }
+ 
   runApp(const MaterialApp(
     home: KalaApp(),
   ));
@@ -72,8 +78,8 @@ class _KalaAppState extends State<KalaApp> {
           ],
           child: MaterialApp(
             theme: lightTheme,
-            onGenerateRoute: onGenerateRoute,
-            home: const Splash(),
+            onGenerateRoute: NavigatorController.onGenerateRoute,
+            home:  Splash(),
           ),
         );
       },
