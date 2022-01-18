@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/config/figma/consts.dart';
+import 'package:kala/config/size/size.dart';
 import 'package:kala/gallery/widgets/gallery_view/gallery_grid.dart';
 import 'package:kala/gallery/widgets/gallery_view/gallery_scroll.dart';
 
@@ -19,9 +20,9 @@ class _GalleryState extends State<Gallery> {
         height: constraints.maxHeight,
         width: constraints.maxWidth,
         margin: EdgeInsets.only(top: 30.h, left: 10.w, right: 10.w),
-        child: constraints.maxWidth > FigmaConstants.figmaScreenWidth
-            ? GalleryGridView()
-            : Center(child: GalleryScroll()),
+        child: SizeUtils.isMobileSize()
+            ? Center(child: GalleryScroll())
+            : Center(child: GalleryGridView()),
       );
     });
   }

@@ -15,9 +15,10 @@ class GalleryGridView extends StatelessWidget {
           return Container();
         }
 
+        var cellCount = (1.sw/300).round();
         return SingleChildScrollView(
           child: StaggeredGrid.count(
-            crossAxisCount: 1.sw ~/ 300,
+            crossAxisCount: cellCount,
             mainAxisSpacing: 10.h,
             crossAxisSpacing: 10.w,
             

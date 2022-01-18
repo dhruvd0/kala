@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/config/figma/consts.dart';
+import 'package:kala/config/size/size.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/gallery/content/bloc/content_bloc.dart';
 import 'package:kala/gallery/content/models/content.dart';
@@ -20,8 +21,7 @@ class ContentCard extends StatelessWidget {
     return BlocBuilder<ContentBloc, Content>(
       builder: (context, state) {
         return Container(
-        
-          constraints: 1.sw > FigmaConstants.figmaScreenWidth
+          constraints: !SizeUtils.isMobileSize()
               ? null
               : BoxConstraints(
                   maxHeight: max(state.imgHeight.h, (1.sh - 70)),
@@ -42,20 +42,23 @@ class ContentCard extends StatelessWidget {
                 height: 20.h,
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 2.w),
+                color: Colors.green,
+                margin: EdgeInsets.symmetric(
+                  horizontal: !SizeUtils.isMobileSize() ? 0 : 5.w,
+                ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      constraints: BoxConstraints(
-                          maxWidth: 1.sw > FigmaConstants.figmaScreenWidth
-                              ? 1.sw / 10
-                              : 1.sw / 2 - 10),
-                      child: AutoSizeText(state.description,
-                          minFontSize: 8,
-                          style: TextThemeContext(context).bodyText2),
+                      color: Colors.red,
+                      width: !SizeUtils.isMobileSize() ? 1.sw / 10 : 1.sw/2.5,
+                      child: AutoSizeText(
+                        state.description,
+                        minFontSize: 8,
+                        style: TextThemeContext(context).bodyText2,
+                      ),
                     ),
-                    Expanded(child: Container()),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.end,

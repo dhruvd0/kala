@@ -16,10 +16,11 @@ class Splash extends StatelessWidget {
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
       body: StreamBuilder<User?>(
-          stream: firebaseConfig?.auth.userChanges(),
-          builder: (context, userSnapshot) {
-            return handleUseAuthState(userSnapshot, context);
-          }),
+        stream: firebaseConfig?.auth.userChanges(),
+        builder: (context, userSnapshot) {
+          return handleUseAuthState(userSnapshot, context);
+        },
+      ),
     );
   }
 

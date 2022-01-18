@@ -43,7 +43,7 @@ class FirestoreQueries {
           lastDocSnap: null,
         );
       }
-      log(querySnapshot.docs.last.data()["docID"]);
+     
       return FirestorePageResponse(
         currentJsonList: jsonListFromDocSnaps(querySnapshot),
         lastDocSnap: querySnapshot.docs.last,

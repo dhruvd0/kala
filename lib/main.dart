@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/auth/widgets/auth_page.dart';
 import 'package:kala/config/figma/consts.dart';
@@ -17,7 +18,7 @@ import 'package:kala/config/test_config/mocks/content_mocks.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/gallery/widgets/page/gallery_page.dart';
-
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:kala/startup/splash.dart';
 import 'firebase_options.dart';
 
@@ -39,12 +40,11 @@ void main({FirebaseConfig? mockFirebase}) async {
     TEST_FLAG = true;
   }
   if (kIsWeb) {
+    setUrlStrategy(PathUrlStrategy());
     await firebaseConfig?.auth.setPersistence(Persistence.LOCAL);
   }
- 
-  runApp(const MaterialApp(
-    home: KalaApp(),
-  ));
+
+  runApp(const KalaApp());
 }
 
 class KalaApp extends StatefulWidget {
@@ -77,9 +77,19 @@ class _KalaAppState extends State<KalaApp> {
             ),
           ],
           child: MaterialApp(
+            title: "Kala",
             theme: lightTheme,
+            builder: (context, widget) {
+              ScreenUtil.setContext(context);
+
+              return MediaQuery(
+               
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                child: widget!,
+              );
+            },
             onGenerateRoute: NavigatorController.onGenerateRoute,
-            home:  Splash(),
+            home: Splash(),
           ),
         );
       },
