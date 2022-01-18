@@ -22,9 +22,3 @@ assignees: ''
 ### Required Integration Tests
 - 1 Test to [...]
 - 2 Test to [...]
-
-
-### Feature Issue Checklist
-- [ ] There are no duplicates of this issue
-- [ ] Required Tests Are Included
-- [ ] Figma URLs point to the correct image frames
