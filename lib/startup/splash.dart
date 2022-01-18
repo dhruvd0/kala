@@ -14,8 +14,9 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OffWhiteScaffold(
-      body: StreamBuilder<User?>(
+    return Container(
+
+      child: StreamBuilder<User?>(
         stream: firebaseConfig?.auth.userChanges(),
         builder: (context, userSnapshot) {
           return handleUseAuthState(userSnapshot, context);
@@ -25,7 +26,7 @@ class Splash extends StatelessWidget {
   }
 
   Widget handleUseAuthState(AsyncSnapshot<User?> userSnapshot, context) {
-    if (!userSnapshot.hasData) {
+    if (userSnapshot.connectionState==ConnectionState.waiting) {
       return LogoSplash();
     }
 
@@ -38,7 +39,7 @@ class Splash extends StatelessWidget {
         BlocProvider.of<KalaUserBloc>(context, listen: false)
             .authenticateWithSocialAuth(AuthTypes.google);
       }
-      nextRoute = Routes.gallery;
+      nextRoute = Routes.dashboard;
     }
     return NavigatorController.getWidgetFromRoute(nextRoute);
   }
@@ -51,11 +52,13 @@ class LogoSplash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        "K",
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.headline1,
+    return OffWhiteScaffold(
+      body: Center(
+        child: Text(
+          "K",
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headline1,
+        ),
       ),
     );
   }

@@ -5,25 +5,22 @@ import 'package:kala/config/size/size.dart';
 import 'package:kala/gallery/widgets/gallery_view/gallery_grid.dart';
 import 'package:kala/gallery/widgets/gallery_view/gallery_scroll.dart';
 
-class Gallery extends StatefulWidget {
-  const Gallery({Key? key}) : super(key: key);
+class GalleryContainer extends StatefulWidget {
+  const GalleryContainer({Key? key}) : super(key: key);
 
   @override
-  State<Gallery> createState() => _GalleryState();
+  State<GalleryContainer> createState() => _GalleryContainerState();
 }
 
-class _GalleryState extends State<Gallery> {
+class _GalleryContainerState extends State<GalleryContainer> {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return Container(
-        height: constraints.maxHeight,
-        width: constraints.maxWidth,
-        margin: EdgeInsets.only(top: 30.h, left: 10.w, right: 10.w),
-        child: SizeUtils.isMobileSize()
-            ? Center(child: GalleryScroll())
-            : Center(child: GalleryGridView()),
-      );
-    });
+    return Container(
+      child: SizeUtils.isMobileSize()
+          ? GalleryScroll()
+          : Center(
+              child: GalleryGridView(),
+            ),
+    );
   }
 }

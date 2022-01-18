@@ -42,7 +42,7 @@ class ContentCard extends StatelessWidget {
                 height: 20.h,
               ),
               Container(
-                color: Colors.green,
+               
                 margin: EdgeInsets.symmetric(
                   horizontal: !SizeUtils.isMobileSize() ? 0 : 5.w,
                 ),
@@ -51,7 +51,7 @@ class ContentCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      color: Colors.red,
+                     
                       width: !SizeUtils.isMobileSize() ? 1.sw / 10 : 1.sw/2.5,
                       child: AutoSizeText(
                         state.description,

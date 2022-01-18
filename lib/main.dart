@@ -1,24 +1,19 @@
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/auth/widgets/auth_page.dart';
 import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
-import 'package:kala/config/test_config/mocks/content_mocks.dart';
 import 'package:kala/config/theme/theme.dart';
+import 'package:kala/dashboard/bloc/dash_controller.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
-import 'package:kala/gallery/widgets/page/gallery_page.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
 import 'package:kala/startup/splash.dart';
 import 'firebase_options.dart';
 
@@ -39,10 +34,7 @@ void main({FirebaseConfig? mockFirebase}) async {
     firebaseConfig = mockFirebase;
     TEST_FLAG = true;
   }
-  if (kIsWeb) {
-    setUrlStrategy(PathUrlStrategy());
-    await firebaseConfig?.auth.setPersistence(Persistence.LOCAL);
-  }
+
 
   runApp(const KalaApp());
 }
@@ -75,6 +67,10 @@ class _KalaAppState extends State<KalaApp> {
                 kalaUserBloc: context.read<KalaUserBloc>(),
               ),
             ),
+             BlocProvider(
+              lazy: false,
+              create: (context) => DashController(),
+            ),
           ],
           child: MaterialApp(
             title: "Kala",
@@ -89,7 +85,7 @@ class _KalaAppState extends State<KalaApp> {
               );
             },
             onGenerateRoute: NavigatorController.onGenerateRoute,
-            home: Splash(),
+            home: const Splash(),
           ),
         );
       },

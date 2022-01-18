@@ -12,6 +12,7 @@ class GalleryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
       key: const Key(Routes.gallery),
+      
       trailing: GestureDetector(
         onTap: () {
           firebaseConfig?.auth.signOut().then((value) =>
@@ -23,7 +24,7 @@ class GalleryPage extends StatelessWidget {
         ),
       ),
       centerTitle: "Kala Gallery",
-      body: const Gallery(),
+      body: const GalleryContainer(),
     );
   }
 }

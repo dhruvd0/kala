@@ -1,14 +1,15 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_state.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/typedefs.dart';
+import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';

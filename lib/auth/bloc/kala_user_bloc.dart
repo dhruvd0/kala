@@ -20,11 +20,9 @@ class KalaUserBloc extends Cubit<KalaUserState> {
   StreamSubscription<User?>? authStream;
   KalaUserBloc() : super(unauthenticatedBaseUser()) {
     registerAuthListener();
-    
   }
 
   void registerAuthListener() {
-    
     authStream = firebaseConfig?.auth.authStateChanges().listen((user) {
       if (user != null && user.uid.isNotEmpty) {
         emit(
@@ -34,6 +32,7 @@ class KalaUserBloc extends Cubit<KalaUserState> {
             ),
           ),
         );
+        startUserSnapshotFetcher();
       } else {
         emit(unauthenticatedBaseUser());
       }
@@ -59,9 +58,6 @@ class KalaUserBloc extends Cubit<KalaUserState> {
   void onError(Object error, StackTrace stackTrace) {
     super.onError(error, stackTrace);
   }
-
-
- 
 
   void updateLastSignedInTimeStamp() async {
     var uid = firebaseConfig?.auth.currentUser?.uid;
@@ -118,6 +114,7 @@ class KalaUserBloc extends Cubit<KalaUserState> {
           .listen((event) async {
         if (event.data() == null) {
           await addKalaUserToFirestore();
+        
           return;
         }
         KalaUser userFromSnapshot = KalaUser.fromMap(
@@ -138,13 +135,11 @@ class KalaUserBloc extends Cubit<KalaUserState> {
       return;
     }
 
-
-      switch (authType) {
-        case AuthTypes.google:
-          await signInWithGoogle();
-          break;
-      }
-    
+    switch (authType) {
+      case AuthTypes.google:
+        await signInWithGoogle();
+        break;
+    }
   }
 
   Future<void> mockAuthentication(String authType) async {
