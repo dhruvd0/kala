@@ -104,7 +104,6 @@ class KalaUserBloc extends Cubit<KalaUserState> {
   }
 
   void startUserSnapshotFetcher() async {
-   
     var uid = firebaseConfig?.auth.currentUser?.uid;
     if (uid?.isNotEmpty ?? false) {
       firebaseConfig?.firestore
@@ -114,19 +113,17 @@ class KalaUserBloc extends Cubit<KalaUserState> {
           .listen((event) async {
         if (event.data() == null) {
           await addKalaUserToFirestore();
-        
+
           return;
         }
         KalaUser userFromSnapshot = KalaUser.fromMap(
           event.data()!,
         );
-       
+
         assert(userFromSnapshot.validateUser());
         try {
           emit(ActiveKalaUserState(userFromSnapshot));
-        } on StateError catch (e) {
-          
-        }
+        } on StateError catch (e) {}
       });
     }
   }
@@ -155,5 +152,13 @@ class KalaUserBloc extends Cubit<KalaUserState> {
     );
     kalaUser.validateUser();
     emit(AuthenticatedKalaUserState(kalaUser));
+  }
+
+  void getUserContent(){
+    
+  }
+
+  void toggleEditMode() {
+    emit(ActiveKalaUserState(state.kalaUser, editMode: !state.isEditMode));
   }
 }

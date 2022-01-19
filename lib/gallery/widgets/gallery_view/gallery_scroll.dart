@@ -41,7 +41,9 @@ class _GalleryScrollState extends State<GalleryScroll> {
         }
 
         return ListView.builder(
-          
+          addSemanticIndexes: false,
+          semanticChildCount: 0,
+         addRepaintBoundaries: false,
           controller: scrollController,
           itemCount: state.contentSlideList.length,
           physics: const BouncingScrollPhysics(),

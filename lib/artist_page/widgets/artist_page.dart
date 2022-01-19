@@ -13,6 +13,16 @@ class ArtistPage extends StatelessWidget {
     return BlocBuilder<KalaUserBloc, KalaUserState>(
       builder: (context, state) {
         return OffWhiteScaffold(
+          trailing: GestureDetector(
+            onTap: () {
+              BlocProvider.of<KalaUserBloc>(context, listen: false)
+                  .toggleEditMode();
+            },
+            child: Icon(
+              Icons.edit,
+              color: Colors.black,
+            ),
+          ),
           scaffoldKey: const ValueKey(ScaffoldKeys.artistPageKey),
           enablePageNavigationArrows: true,
           centerTitle: state.kalaUser.name,

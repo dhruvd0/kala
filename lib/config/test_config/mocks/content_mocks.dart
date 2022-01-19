@@ -32,7 +32,7 @@ Future<void> populateFakeContentInFirestore(
   for (int i = 0; i < length; i++) {
     await Future.delayed(const Duration(milliseconds: 500));
     await firestore
-        .collection(FirestorePaths.contentCollection)
+        .collection(FirestorePaths.fakeContentCollection)
         .add(ContentMock.fakeContent(i).toMap());
   }
 }
