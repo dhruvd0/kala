@@ -43,9 +43,11 @@ class FirestoreQueries {
           lastDocSnap: null,
         );
       }
-     
+
+      var jsonListFromDocSnaps2 = jsonListFromDocSnaps(querySnapshot);
+      //log("Count: ${jsonListFromDocSnaps2.length} , First:${querySnapshot.docs.first.id}, Last:${querySnapshot.docs.last.id}  ");
       return FirestorePageResponse(
-        currentJsonList: jsonListFromDocSnaps(querySnapshot),
+        currentJsonList: jsonListFromDocSnaps2,
         lastDocSnap: querySnapshot.docs.last,
       );
     } on PlatformException {

@@ -9,6 +9,7 @@ import 'package:kala/artist_page/widgets/artist_page.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
+import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/test_config/mocks/content_mocks.dart';
 import 'package:kala/config/theme/theme.dart';
@@ -16,6 +17,7 @@ import 'package:kala/dashboard/bloc/dash_controller.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 
 import 'package:kala/startup/splash.dart';
+import 'package:kala/utils/helper_bloc/content_pagination/content_pagination_bloc.dart';
 import 'firebase_options.dart';
 
 FirebaseConfig? firebaseConfig;
@@ -64,8 +66,12 @@ class _KalaAppState extends State<KalaApp> {
             BlocProvider(
               lazy: false,
               create: (context) => GalleryBloc(
-                kalaUserBloc: context.read<KalaUserBloc>(),
-              ),
+                  kalaUserBloc: context.read<KalaUserBloc>(),
+                  contentPaginationCubit: ContentPaginationCubit(
+                    collection: FirestorePaths.fakeContentCollection,
+                    orderIsDescending: true,
+                    orderByField: "uploadTimestamp",
+                  )),
             ),
             BlocProvider(
               lazy: false,
@@ -84,7 +90,7 @@ class _KalaAppState extends State<KalaApp> {
               );
             },
             onGenerateRoute: NavigatorController.onGenerateRoute,
-            home: const ArtistPage(),
+            home: const Splash(),
           ),
         );
       },

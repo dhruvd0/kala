@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,9 +15,9 @@ import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
 import 'package:kala/utils/firebase/firestore_get.dart';
 import 'package:kala/utils/firebase/page_data.dart';
+import 'package:kala/utils/helper_bloc/content_pagination/content_pagination_bloc.dart';
 
 List<Content> parseContentFromFirestoreResponse(List<dynamic> args) {
-  log("IN ISOLATE:${Isolate.current}");
   List<Content> newContentList = [];
   FirestorePageResponse response = args.first;
   for (var jsonElement in response.currentJsonList) {
@@ -39,11 +40,16 @@ List<Content> parseContentFromFirestoreResponse(List<dynamic> args) {
 
 class GalleryBloc extends Cubit<GalleryState> {
   StreamSubscription<KalaUserState>? kalaUserStateStream;
-  FirebaseFirestore? firebaseFirestore;
 
-  GalleryBloc({required KalaUserBloc kalaUserBloc, this.firebaseFirestore})
-      : super(GalleryState(
-            contentSlideList: [], lastFetchedTimestamp: Timestamp.now())) {
+  final ContentPaginationCubit contentPaginationCubit;
+  GalleryBloc({
+    required KalaUserBloc kalaUserBloc,
+    required this.contentPaginationCubit,
+  }) : super(
+          GalleryState(
+            contentSlideList: [],
+          ),
+        ) {
     kalaUserStateStream =
         kalaUserBloc.stream.asBroadcastStream().listen((state) {
       if (state is AuthenticatedKalaUserState) {
@@ -55,7 +61,6 @@ class GalleryBloc extends Cubit<GalleryState> {
   void onChange(Change<GalleryState> change) {
     // TODO: implement onChange
     super.onChange(change);
-    
   }
 
   @override
@@ -65,53 +70,14 @@ class GalleryBloc extends Cubit<GalleryState> {
   }
 
   Future<void> getContentList() async {
-    var firestorePageRequest = FirestorePageRequest(
-      collection: FirestorePaths.fakeContentCollection,
-      orderByField: "uploadTimestamp",
-      lastDocSnap: state.lastDocument,
-      orderIsDescending: true,
-    );
-    if (state.lastPageRequest == firestorePageRequest) {
-      return;
-    }
-    emit(state.copyWith(lastPageRequest: firestorePageRequest));
-    FirestorePageResponse? response =
-        await FirestoreQueries(firestore: firebaseFirestore)
-            .paginateCollectionDocuments(firestorePageRequest);
-    if (response == null) {
-      return;
-    }
-    emit(state.copyWith(
-      lastDocument: response.lastDocSnap,
-    ));
+    List<Content> newGalleryContent =
+        (await contentPaginationCubit.getContentList());
 
-    validateAndEmitContent(
-      parseContentFromFirestoreResponse([
-        response,
-        state.contentSlideList,
-      ]),
-      response,
-    );
-  }
-
-  void validateAndEmitContent(
-    List<Content> newContentList,
-    FirestorePageResponse response,
-  ) {
-    if (newContentList.isNotEmpty) {
-      var currentContentList = state.contentSlideList;
-
-      currentContentList.addAll(newContentList);
-
+    if (newGalleryContent.isNotEmpty) {
       emit(state.copyWith(
-        contentSlideList: currentContentList,
-        lastDocument: response.lastDocSnap,
+        contentSlideList: newGalleryContent,
+        lastFetchedTimestamp: Timestamp.now(),
       ));
-      emit(state.copyWith(lastFetchedTimestamp: Timestamp.now()));
     }
-  }
-
-  void assertionsForNewContentList(List<Content> newContentList) {
-    assert(state.contentSlideList.last.docID != newContentList.first.docID);
   }
 }

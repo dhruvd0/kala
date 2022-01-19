@@ -1,7 +1,7 @@
-import 'package:kala/gallery/content/models/content.dart';
+// import 'package:kala/gallery/content/models/content.dart';
 
-class KalaUserContentState {
-  List<Content> userContent;
-  Content coverContent;
-  String bio;
-}
+// class KalaUserContentState {
+//   List<Content> userContent;
+//   Content coverContent;
+//   String bio;
+// }

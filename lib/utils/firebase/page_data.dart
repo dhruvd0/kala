@@ -44,11 +44,14 @@ class FirestorePageRequest {
   final String collection;
   final String orderByField;
   final bool orderIsDescending;
+  final String? subCollection;
   final DocumentSnapshot? lastDocSnap;
+
   FirestorePageRequest({
     required this.collection,
     required this.orderByField,
     required this.orderIsDescending,
+    this.subCollection,
     this.lastDocSnap,
   });
 
