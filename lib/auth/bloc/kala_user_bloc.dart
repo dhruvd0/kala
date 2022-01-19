@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -105,6 +104,7 @@ class KalaUserBloc extends Cubit<KalaUserState> {
   }
 
   void startUserSnapshotFetcher() async {
+   
     var uid = firebaseConfig?.auth.currentUser?.uid;
     if (uid?.isNotEmpty ?? false) {
       firebaseConfig?.firestore
@@ -120,11 +120,13 @@ class KalaUserBloc extends Cubit<KalaUserState> {
         KalaUser userFromSnapshot = KalaUser.fromMap(
           event.data()!,
         );
-        if (TEST_FLAG) {
-          log(userFromSnapshot.toString());
-        }
+       
         assert(userFromSnapshot.validateUser());
-        emit(ActiveKalaUserState(userFromSnapshot));
+        try {
+          emit(ActiveKalaUserState(userFromSnapshot));
+        } on StateError catch (e) {
+          
+        }
       });
     }
   }

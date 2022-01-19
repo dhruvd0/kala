@@ -1,13 +1,10 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/test_config/mocks/content_mocks.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
-import 'package:kala/gallery/content/models/content.dart';
 
 var length = 50;
 void main() {
@@ -37,7 +34,7 @@ Future<GalleryBloc> galleryBlocSetup() async {
     FirebaseMocks.mockFirestore,
     length,
   );
-  log(FirebaseMocks.mockFirestore.dump().toString());
+  
 
   GalleryBloc galleryBloc = GalleryBloc(
     kalaUserBloc: KalaUserBloc(),

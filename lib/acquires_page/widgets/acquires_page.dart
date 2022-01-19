@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_state.dart';
-import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
-class ArtistPage extends StatelessWidget {
-  const ArtistPage({Key? key}) : super(key: key);
+class AcquiresPage extends StatelessWidget {
+  const AcquiresPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<KalaUserBloc, KalaUserState>(
       builder: (context, state) {
         return OffWhiteScaffold(
-          scaffoldKey: const ValueKey(ScaffoldKeys.artistPageKey),
+          scaffoldKey: ValueKey("AcquiresPage"),
           enablePageNavigationArrows: true,
-          centerTitle: state.kalaUser.name,
+          centerTitle: "Acquires",
           body: const Center(),
         );
       },

@@ -1,11 +1,9 @@
-import 'dart:developer';
 import 'dart:math' hide log;
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/size/size.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/gallery/content/bloc/content_bloc.dart';

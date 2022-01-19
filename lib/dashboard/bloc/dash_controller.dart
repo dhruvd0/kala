@@ -3,19 +3,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:kala/dashboard/bloc/dash_state.dart';
 
 class DashController extends Cubit<DashState> {
+  static final PageController pageController = PageController();
   DashController()
       : super(
           DashState(
-            pageController: PageController(),
             pageIndex: 0,
           ),
         );
   void nextPage() async {
-    if (state.pageController.hasClients) {
-      await state.pageController.nextPage(
-        duration: const Duration(seconds: 200),
+    if (pageController.hasClients) {
+      await pageController.nextPage(
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeIn,
       );
+
       emit(
         state.copyWith(
           pageIndex: state.pageIndex == state.pages.length - 1
@@ -31,9 +32,9 @@ class DashController extends Cubit<DashState> {
   }
 
   void previousPage() async {
-    if (state.pageController.hasClients) {
-      await state.pageController.previousPage(
-        duration: const Duration(seconds: 200),
+    if (pageController.hasClients) {
+      await pageController.previousPage(
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeIn,
       );
       emit(

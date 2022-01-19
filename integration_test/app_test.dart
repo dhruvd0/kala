@@ -4,21 +4,32 @@ import 'package:kala/main.dart' as app;
 
 import 'auth_test/login_flow_test.dart';
 import 'config/widget_tester.dart';
+import 'dashboard_test/dashboard_test.dart';
 import 'gallery_test/gallery_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets("App Start", (tester) async {
-    app.main();
-    WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
-    await widgetTesterHandler.tester.pumpAndSettle();
-  }, );
-  group("Authentication Tests", () {
-    loginTestFlow();
-  },);
+  testWidgets(
+    "App Start",
+    (tester) async {
+      app.main();
+      WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
+      await widgetTesterHandler.startAppWithMockFirebase();
+    },
+  );
+  group(
+    "Authentication Tests",
+    () {
+      loginTestFlow();
+    },
+  );
 
   group("Gallery Tests", () {
     galleryTestFlow();
+  });
+
+  group("Dashboard Navigation Tests", () {
+    dashboardIntegrationTests();
   });
 }

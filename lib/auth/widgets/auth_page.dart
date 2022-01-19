@@ -6,6 +6,7 @@ import 'package:kala/auth/bloc/kala_user_state.dart';
 import 'package:kala/auth/social_integration/auth_types.dart';
 import 'package:kala/auth/widgets/auth_btn.dart';
 import 'package:kala/config/nav/route_names.dart';
+import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 class AuthPage extends StatefulWidget {
@@ -19,6 +20,7 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
+      scaffoldKey: ValueKey(ScaffoldKeys.authPageKey),
       body: BlocListener<KalaUserBloc, KalaUserState>(
         listener: (_, state) {
           if (state is AuthenticatedKalaUserState) {

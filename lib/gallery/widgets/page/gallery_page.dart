@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kala/config/nav/route_names.dart';
+import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/gallery/widgets/gallery_view/gallery_container.dart';
 
 import 'package:kala/main.dart';
@@ -11,18 +12,8 @@ class GalleryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
-      key: const Key(Routes.gallery),
-      
-      trailing: GestureDetector(
-        onTap: () {
-          firebaseConfig?.auth.signOut().then((value) =>
-              Navigator.of(context).pushReplacementNamed(Routes.splash));
-        },
-        child: const Icon(
-          Icons.logout_rounded,
-          color: Colors.black,
-        ),
-      ),
+      scaffoldKey: const ValueKey(ScaffoldKeys.galleryPageKey),
+      enablePageNavigationArrows: true,
       centerTitle: "Kala Gallery",
       body: const GalleryContainer(),
     );

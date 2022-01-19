@@ -1,11 +1,8 @@
-import 'dart:developer';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/gallery/content/models/content.dart';
-import '../mocks/firebase_mocks.dart';
 
 class ContentMock {
   static Content fakeContent(int id) {
@@ -33,7 +30,7 @@ Future<void> populateFakeContentInFirestore(
   int length,
 ) async {
   for (int i = 0; i < length; i++) {
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     await firestore
         .collection(FirestorePaths.contentCollection)
         .add(ContentMock.fakeContent(i).toMap());

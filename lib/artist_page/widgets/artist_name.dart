@@ -5,6 +5,8 @@ import 'package:kala/auth/bloc/kala_user_state.dart';
 import 'package:kala/config/theme/theme.dart';
 
 class ArtistNameContainer extends StatelessWidget {
+  const ArtistNameContainer({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<KalaUserBloc, KalaUserState>(

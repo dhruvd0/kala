@@ -1,15 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_state.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
-import 'package:kala/config/typedefs.dart';
-import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
@@ -93,20 +89,19 @@ class GalleryBloc extends Cubit<GalleryState> {
     FirestorePageResponse response,
   ) {
     if (newContentList.isNotEmpty) {
-      try {
-        if (state.contentSlideList.isNotEmpty) {
-          assertionsForNewContentList(newContentList);
-        }
-        
-        var currentContentList = state.contentSlideList;
-        currentContentList.addAll(newContentList);
-        emit(state.copyWith(
-          contentSlideList: currentContentList,
-          lastDocument: response.lastDocSnap,
-        ));
-      } on AssertionError catch (e) {
-        // TODO
+      var currentContentList = state.contentSlideList;
+      newContentList.removeWhere((newE) =>
+          currentContentList.any(((element) => newE.docID == element.docID)));
+
+      if (state.contentSlideList.isNotEmpty && newContentList.isNotEmpty) {
+        assertionsForNewContentList(newContentList);
       }
+      currentContentList.addAll(newContentList);
+
+      emit(state.copyWith(
+        contentSlideList: currentContentList,
+        lastDocument: response.lastDocSnap,
+      ));
     }
   }
 

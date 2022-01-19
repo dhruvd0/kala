@@ -18,7 +18,7 @@ class SocialAuthButton extends StatelessWidget {
       height: 50.h,
       width: 1.sw / 1.8,
       text: "Log In With $authType ",
-      key: Key("${authType}AuthBtn"),
+      key: ValueKey("${authType}AuthBtn"),
       margin: EdgeInsets.symmetric(vertical: 20.h),
       onTap: () {
         BlocProvider.of<KalaUserBloc>(context)
