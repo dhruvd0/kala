@@ -35,7 +35,7 @@ class ContentCard extends StatelessWidget {
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: ContentImage(
-                  imageUrl: state.imageUrl,
+                  image: state.imageUrl??state.imageFile,
                 ),
               ),
               SizedBox(

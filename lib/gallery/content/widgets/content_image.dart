@@ -1,14 +1,16 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 
 class ContentImage extends StatefulWidget {
   const ContentImage({
-    required this.imageUrl,
+    required this.image,
     Key? key,
   }) : super(key: key);
 
-  final String imageUrl;
+  final dynamic image;
 
   @override
   State<ContentImage> createState() => _ContentImageState();
@@ -20,10 +22,10 @@ class _ContentImageState extends State<ContentImage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (kIsWeb) {
-      cachedNetworkImageProvider = NetworkImage(widget.imageUrl);
-    } else {
-      cachedNetworkImageProvider = CachedNetworkImageProvider(widget.imageUrl);
+    if (widget.image is String) {
+      cachedNetworkImageProvider = CachedNetworkImageProvider(widget.image.toString());
+    } else if (widget.image is File){
+      cachedNetworkImageProvider = FileImage(widget.image as File) ;
 
       precacheImage(cachedNetworkImageProvider!, context);
     }
@@ -35,7 +37,7 @@ class _ContentImageState extends State<ContentImage> {
       key: UniqueKey(),
       elevation: 20,
       child: cachedNetworkImageProvider == null
-          ? Container()
+          ? CircularProgressIndicator()
           : Image(
               image: cachedNetworkImageProvider!,
               fit: BoxFit.fill,

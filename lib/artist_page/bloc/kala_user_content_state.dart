@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_dynamic_calls
 
+import 'dart:io';
+
 import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
 import 'package:flutter/foundation.dart';
 
@@ -11,14 +13,15 @@ class KalaUserContentState {
     required this.userContent,
     required this.coverContent,
     required this.bio,
+    required this.newContent,
     this.lastFetchedTimestamp,
-  });
+  }) : assert(coverContent is File || coverContent is String);
 
   final String bio;
-  final Content coverContent;
+  final dynamic coverContent;
   final List<Content> userContent;
   final Timestamp? lastFetchedTimestamp;
-
+  final Content newContent;
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -40,15 +43,18 @@ class KalaUserContentState {
       'KalaUserContentState(userContent: $userContent, coverContent: $coverContent, bio: $bio)';
 
   KalaUserContentState copyWith({
-    List<Content>? userContent,
-    Content? coverContent,
     String? bio,
+    dynamic? coverContent,
+    List<Content>? userContent,
     Timestamp? lastFetchedTimestamp,
+    Content? newContent,
   }) {
     return KalaUserContentState(
-      userContent: userContent ?? this.userContent,
-      coverContent: coverContent ?? this.coverContent,
       bio: bio ?? this.bio,
+      coverContent: coverContent ?? this.coverContent,
+      userContent: userContent ?? this.userContent,
+      lastFetchedTimestamp: lastFetchedTimestamp ?? this.lastFetchedTimestamp,
+      newContent: newContent ?? this.newContent,
     );
   }
 }

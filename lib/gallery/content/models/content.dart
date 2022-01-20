@@ -1,35 +1,44 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 // ignore_for_file: implicit_dynamic_map_literal
 // ignore_for_file: argument_type_not_assignable
 @immutable
-class Content  {
+class Content {
   const Content({
-    required this.imageUrl,
-    required this.artistName,
     required this.artistID,
-    required this.title,
+    required this.artistName,
     required this.description,
     required this.docID,
-    required this.uploadTimestamp,
     required this.fileSize,
+    required this.price,
+    required this.imageUrl,
     required this.imgHeight,
     required this.imgWidth,
+    required this.title,
+    required this.uploadTimestamp,
+    this.imageFile,
   });
+
+  factory Content.fromJson(String source) =>
+      Content.fromMap(json.decode(source));
 
   factory Content.fromMap(Map<String, dynamic> map) {
     return Content(
-      imageUrl: map['imageUrl'] ?? '',
-      artistName: map['artistName'] ?? '',
       artistID: map['artistID'] ?? '',
-      title: map['title'] ?? '',
+      artistName: map['artistName'] ?? '',
       description: map['description'] ?? '',
       docID: map['docID'] ?? '',
-      uploadTimestamp: map['uploadTimestamp']??Timestamp.fromMicrosecondsSinceEpoch(0),
-      fileSize: map['fileSize'] ?? 0,
-      imgHeight: map['imgHeight'] ?? 0.0,
-      imgWidth: map['imgWidth'] ?? 0.0,
+      fileSize: map['fileSize']?.toInt() ?? 0,
+      price: map['price']?.toInt() ?? 0,
+      imageUrl: map['imageUrl'] ?? '',
+      imgHeight: map['imgHeight']?.toDouble() ?? 0.0,
+      imgWidth: map['imgWidth']?.toDouble() ?? 0.0,
+      title: map['title'] ?? '',
+      uploadTimestamp: (map['uploadTimestamp']),
     );
   }
 
@@ -38,88 +47,104 @@ class Content  {
   final String description;
   final String docID;
   final int fileSize; // in kb
-  final String imageUrl;
+  final File? imageFile;
+  final String? imageUrl;
   final double imgHeight;
   final double imgWidth;
+  final int price;
   final String title;
-  final Timestamp uploadTimestamp;
+  final Timestamp? uploadTimestamp;
 
   @override
   bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
+    if (identical(this, other)) return true;
 
     return other is Content &&
-        other.imageUrl == imageUrl &&
-        other.artistName == artistName &&
         other.artistID == artistID &&
-        other.title == title &&
+        other.artistName == artistName &&
         other.description == description &&
         other.docID == docID &&
-        other.uploadTimestamp == uploadTimestamp &&
         other.fileSize == fileSize &&
+        other.price == price &&
+        other.imageUrl == imageUrl &&
         other.imgHeight == imgHeight &&
-        other.imgWidth == imgWidth;
+        other.imgWidth == imgWidth &&
+        other.title == title &&
+        other.uploadTimestamp == uploadTimestamp;
   }
 
   @override
   int get hashCode {
-    return imageUrl.hashCode ^
+    return artistID.hashCode ^
         artistName.hashCode ^
-        artistID.hashCode ^
-        title.hashCode ^
         description.hashCode ^
         docID.hashCode ^
-        uploadTimestamp.hashCode ^
         fileSize.hashCode ^
+        price.hashCode ^
+        imageUrl.hashCode ^
         imgHeight.hashCode ^
-        imgWidth.hashCode;
+        imgWidth.hashCode ^
+        title.hashCode ^
+        uploadTimestamp.hashCode;
   }
 
   @override
   String toString() {
-    return 'Content(imageUrl: $imageUrl, artistName: $artistName, artistID: $artistID, title: $title, description: $description, docID: $docID, uploadTimestamp: $uploadTimestamp, fileSize: $fileSize, imgHeight: $imgHeight, imgWidth: $imgWidth)';
+    return 'Content(artistID: $artistID, artistName: $artistName, description: $description, docID: $docID, fileSize: $fileSize, price: $price, imageUrl: $imageUrl, imgHeight: $imgHeight, imgWidth: $imgWidth, title: $title, uploadTimestamp: $uploadTimestamp)';
   }
 
   Content copyWith({
-    String? imageUrl,
-    String? artistName,
     String? artistID,
-    String? title,
+    String? artistName,
     String? description,
     String? docID,
-    Timestamp? uploadTimestamp,
     int? fileSize,
+    int? price,
+    File? imageFile,
+    String? imageUrl,
     double? imgHeight,
     double? imgWidth,
+    String? title,
+    Timestamp? uploadTimestamp,
   }) {
     return Content(
-      imageUrl: imageUrl ?? this.imageUrl,
-      artistName: artistName ?? this.artistName,
       artistID: artistID ?? this.artistID,
-      title: title ?? this.title,
+      artistName: artistName ?? this.artistName,
       description: description ?? this.description,
       docID: docID ?? this.docID,
-      uploadTimestamp: uploadTimestamp ?? this.uploadTimestamp,
       fileSize: fileSize ?? this.fileSize,
+      price: price ?? this.price,
+      imageFile: imageFile ?? this.imageFile,
+      imageUrl: imageUrl ?? this.imageUrl,
       imgHeight: imgHeight ?? this.imgHeight,
       imgWidth: imgWidth ?? this.imgWidth,
+      title: title ?? this.title,
+      uploadTimestamp: uploadTimestamp ?? this.uploadTimestamp,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'imageUrl': imageUrl,
-      'artistName': artistName,
       'artistID': artistID,
-      'title': title,
+      'artistName': artistName,
       'description': description,
       'docID': docID,
-      'uploadTimestamp': uploadTimestamp,
       'fileSize': fileSize,
+      'price': price,
+      'imageUrl': imageUrl,
       'imgHeight': imgHeight,
       'imgWidth': imgWidth,
+      'title': title,
+      'uploadTimestamp': uploadTimestamp,
     };
   }
+
+  String toJson() => json.encode(toMap());
+}
+
+enum ContentProps {
+  title,
+  price,
+  image,
+  description,
 }

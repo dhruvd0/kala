@@ -20,10 +20,11 @@ import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
 
 FirebaseConfig? firebaseConfig;
 // ignore: non_constant_identifier_names
-bool TEST_FLAG = false;
+bool TEST_FLAG = true;
 Future<void> main({FirebaseConfig? mockFirebase}) async {
   WidgetsFlutterBinding.ensureInitialized();
   if (mockFirebase == null) {
+     TEST_FLAG = false;
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -31,6 +32,7 @@ Future<void> main({FirebaseConfig? mockFirebase}) async {
       auth: FirebaseAuth.instance,
       firestore: FirebaseFirestore.instance,
     );
+   
   } else {
     firebaseConfig = mockFirebase;
     TEST_FLAG = true;
@@ -58,13 +60,14 @@ class KalaApp extends StatelessWidget {
             ),
             BlocProvider(
               lazy: false,
-              create: (context) => KalaUserContentCubit(),
+              create: (context) => KalaUserContentCubit(
+                context.read<KalaUserBloc>(),
+              ),
             ),
             BlocProvider(
               lazy: false,
               create: (context) => GalleryBloc(
                 kalaUserBloc: context.read<KalaUserBloc>(),
-                
               ),
             ),
             BlocProvider(

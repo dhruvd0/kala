@@ -19,6 +19,7 @@ class ContentMock {
       artistName: 'Artist#$id',
       artistID: 'AA##$id',
       title: 'A$id',
+      price: 100,
       docID: '$id',
       fileSize: 200,
       imgHeight: 100,

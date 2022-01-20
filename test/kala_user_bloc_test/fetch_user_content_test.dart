@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
+import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/test_config/mocks/content_mocks.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 
@@ -35,6 +36,7 @@ Future<KalaUserContentCubit> userContentBlocSetup() async {
     length,
   );
   log(FirebaseMocks.mockFirestore.dump());
-  final userContentBloc = KalaUserContentCubit(FirebaseMocks.mockFirestore);
+  final userContentBloc =
+      KalaUserContentCubit(KalaUserBloc(), FirebaseMocks.mockFirestore);
   return userContentBloc;
 }
