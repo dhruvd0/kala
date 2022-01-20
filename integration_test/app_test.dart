@@ -10,6 +10,8 @@ import 'dashboard_test/dashboard_test.dart';
 import 'gallery_test/gallery_test.dart';
 
 void main() {
+
+  
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets(
