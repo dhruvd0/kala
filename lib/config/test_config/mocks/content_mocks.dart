@@ -1,8 +1,12 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:kala/auth/models/kala_user.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
+import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/gallery/content/models/content.dart';
+import 'package:kala/main.dart';
 
 class ContentMock {
   static Content fakeContent(int id) {
@@ -20,7 +24,8 @@ class ContentMock {
       imgHeight: 100,
       imgWidth: 100,
       uploadTimestamp: Timestamp.now(),
-      description: 'Description Description Description Description Description Description Description',
+      description:
+          'Description Description Description Description Description Description Description',
     );
   }
 }
@@ -33,6 +38,26 @@ Future<void> populateFakeContentInFirestore(
     await Future<void>.delayed(const Duration(milliseconds: 500));
     await firestore
         .collection(FirestorePaths.fakeContentCollection)
+        .add(ContentMock.fakeContent(i).toMap());
+  }
+}
+
+Future<void> populateFakeUserContentInFirestore(
+  FirebaseFirestore firestore,
+  int length,
+) async {
+  final uid = firestore is FakeFirebaseFirestore
+      ? FirebaseMocks.firebaseMockUser.uid
+      : firebaseConfig?.auth.currentUser?.uid;
+  final doc = firestore.collection(FirestorePaths.userCollection).doc(uid);
+  await doc
+      .set(KalaUser.fromSocialAuthUser(FirebaseMocks.firebaseMockUser).toMap());
+
+  for (var i = 0; i < length; i++) {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+
+    await doc
+        .collection(FirestorePaths.userPaths.userContent)
         .add(ContentMock.fakeContent(i).toMap());
   }
 }

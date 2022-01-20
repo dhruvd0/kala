@@ -5,55 +5,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_state.dart';
+import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/gallery/content/models/content.dart';
-import 'package:kala/utils/firebase/crashlytics.dart';
-import 'package:kala/utils/firebase/page_data.dart';
-import 'package:kala/utils/helper_bloc/content_pagination/content_pagination_bloc.dart';
-
-List<Content> parseContentFromFirestoreResponse(List<dynamic> args) {
-  final newContentList = <Content>[];
-  final response = args.first as FirestorePageResponse;
-  for (final jsonElement in response.currentJsonList) {
-    try {
-      assert(jsonElement.containsKey('docID'));
-      newContentList.add(Content.fromMap(jsonElement));
-      // ignore: avoid_catching_errors
-    } on AssertionError {
-      setCrashlyticsCustomKey('doc', jsonElement)
-          .then((value) => throw Exception('No docID'));
-    }
-  }
-  final currentContentList = args.last as List<Content>;
-  if (newContentList.isNotEmpty && currentContentList.isNotEmpty) {
-    newContentList.removeWhere(
-      (newE) => currentContentList.any(
-        (element) => newE.docID == element.docID,
-      ),
-    );
-  }
-
-  return newContentList;
-}
+import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
 
 class GalleryBloc extends Cubit<GalleryState> {
   GalleryBloc({
     required KalaUserBloc kalaUserBloc,
-    required this.contentPaginationCubit,
+    FirebaseFirestore? firebaseFirestore,
   }) : super(
           const GalleryState(
             contentSlideList: [],
           ),
         ) {
+    if (firebaseFirestore != null) {
+      contentPaginationCubit.changeFirestore(firebaseFirestore);
+    }
+
     kalaUserStateStream =
         kalaUserBloc.stream.asBroadcastStream().listen((state) {
       if (state is AuthenticatedKalaUserState) {
-        getContentList();
+        getContentList(0);
       }
     });
   }
 
-  final ContentPaginationCubit contentPaginationCubit;
+  final PaginationCubit contentPaginationCubit =
+      PaginationCubit.galleryContentPagination();
   StreamSubscription<KalaUserState>? kalaUserStateStream;
 
   @override
@@ -67,13 +46,15 @@ class GalleryBloc extends Cubit<GalleryState> {
     super.onChange(change);
   }
 
-  Future<void> getContentList() async {
-    final newGalleryContent = await contentPaginationCubit.getContentList();
+  Future<void> getContentList(int scrollPosition) async {
+    final newGalleryContent =
+        await contentPaginationCubit.getTList(scrollPosition);
 
     if (newGalleryContent.isNotEmpty) {
       emit(
         state.copyWith(
-          contentSlideList: newGalleryContent,
+          contentSlideList:
+              newGalleryContent.map((dynamic e) => e as Content).toList(),
           lastFetchedTimestamp: Timestamp.now(),
         ),
       );

@@ -10,7 +10,7 @@ void galleryTestFlow() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets('Test to load gallery content on login', (tester) async {
     final widgetTester = WidgetTesterHandler(tester);
-    await populateFakeContentInFirestore(FirebaseMocks.mockFirestore, 20);
+    await populateFakeUserContentInFirestore(FirebaseMocks.mockFirestore, 20);
     await widgetTester.startAppWithMockFirebase(signedIn: true);
     expect(find.byType(ContentCard), findsWidgets);
     

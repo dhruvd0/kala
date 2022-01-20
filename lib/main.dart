@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
@@ -13,8 +14,9 @@ import 'package:kala/config/theme/theme.dart';
 import 'package:kala/dashboard/bloc/dash_controller.dart';
 import 'package:kala/firebase_options.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
+import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/startup/splash.dart';
-import 'package:kala/utils/helper_bloc/content_pagination/content_pagination_bloc.dart';
+import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
 
 FirebaseConfig? firebaseConfig;
 // ignore: non_constant_identifier_names
@@ -56,13 +58,13 @@ class KalaApp extends StatelessWidget {
             ),
             BlocProvider(
               lazy: false,
+              create: (context) => KalaUserContentCubit(),
+            ),
+            BlocProvider(
+              lazy: false,
               create: (context) => GalleryBloc(
                 kalaUserBloc: context.read<KalaUserBloc>(),
-                contentPaginationCubit: ContentPaginationCubit(
-                  collection: FirestorePaths.fakeContentCollection,
-                  orderIsDescending: true,
-                  orderByField: 'uploadTimestamp',
-                ),
+                
               ),
             ),
             BlocProvider(

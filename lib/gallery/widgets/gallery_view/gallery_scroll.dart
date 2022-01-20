@@ -25,7 +25,7 @@ class _GalleryScrollState extends State<GalleryScroll> {
       scrollController.addListener(() {
         if (scrollController.hasClients) {
           if (scrollController.offset / 300 > 5) {
-            context.read<GalleryBloc>().getContentList();
+            context.read<GalleryBloc>().getContentList(scrollController.offset.toInt());
           }
         }
       });

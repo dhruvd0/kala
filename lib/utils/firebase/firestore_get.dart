@@ -1,32 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/config/typedefs.dart';
 import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
 import 'package:kala/utils/firebase/page_data.dart';
+import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class FirestoreQueries {
   FirestoreQueries({this.firestore}) {
-    firestore = firestore ?? firebaseConfig!.firestore;
+    firestore =
+        firestore ?? firebaseConfig?.firestore ?? FirebaseMocks.mockFirestore;
   }
 
   FirebaseFirestore? firestore;
 
   Future<FirestorePageResponse?> paginateCollectionDocuments(
-    FirestorePageRequest request,
+    PaginationRequestState request,
   ) async {
     try {
       QuerySnapshot<Json>? querySnapshot;
-      final orderByQuery = firestore?.collection(request.collection).orderBy(
-            request.orderByField,
-            descending: request.orderIsDescending,
-          );
-      if (request.lastDocSnap == null) {
+      var collection = firestore?.collection(request.collection);
+      if (request.subCollection != null) {
+        collection = collection
+            ?.doc(request.subDocID.toString())
+            .collection(request.subCollection.toString());
+      }
+      final orderByQuery = collection?.orderBy(
+        request.orderByField,
+        descending: request.orderIsDescending,
+      );
+      if (request.lastDocument == null) {
         querySnapshot = await orderByQuery?.limit(10).get();
       } else {
         querySnapshot = await orderByQuery
-            ?.startAfterDocument(request.lastDocSnap!)
+            ?.startAfterDocument(request.lastDocument!)
             .limit(10)
             .get();
       }

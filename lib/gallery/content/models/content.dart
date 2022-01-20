@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 // ignore_for_file: implicit_dynamic_map_literal
 // ignore_for_file: argument_type_not_assignable
 @immutable
-class Content {
+class Content  {
   const Content({
     required this.imageUrl,
     required this.artistName,
@@ -26,10 +26,10 @@ class Content {
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       docID: map['docID'] ?? '',
-      uploadTimestamp: map['uploadTimestamp'],
-      fileSize: map['fileSize'] as int,
-      imgHeight: map['imgHeight'] as double,
-      imgWidth: map['imgWidth'] as double,
+      uploadTimestamp: map['uploadTimestamp']??Timestamp.fromMicrosecondsSinceEpoch(0),
+      fileSize: map['fileSize'] ?? 0,
+      imgHeight: map['imgHeight'] ?? 0.0,
+      imgWidth: map['imgWidth'] ?? 0.0,
     );
   }
 

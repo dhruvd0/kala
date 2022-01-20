@@ -1,29 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:kala/gallery/content/models/content.dart';
-import 'package:kala/utils/firebase/page_data.dart';
-@immutable
-class ContentPaginationState {
-  const ContentPaginationState({
-    required this.lastFetchedTimestamp,
+class PaginationRequestState {
+  PaginationRequestState({
     required this.collection,
+    required this.data,
+    required this.lastFetchedTimestamp,
     required this.orderByField,
     required this.orderIsDescending,
-    required this.content,
+    this.scrollPosition,
     this.lastDocument,
-    this.lastPageRequest,
     this.subCollection,
+    this.subDocID,
   });
 
   final String collection;
-  final List<Content> content;
+  final List<dynamic> data;
   final DocumentSnapshot? lastDocument;
   final Timestamp lastFetchedTimestamp;
-  final FirestorePageRequest? lastPageRequest;
   final String orderByField;
   final bool orderIsDescending;
+  int? scrollPosition = 0;
   final String? subCollection;
+  final String? subDocID;
 
   @override
   bool operator ==(Object other) {
@@ -31,53 +30,55 @@ class ContentPaginationState {
       return true;
     }
 
-    return other is ContentPaginationState &&
-        other.lastDocument == lastDocument &&
-        other.lastPageRequest == lastPageRequest &&
-        other.lastFetchedTimestamp == lastFetchedTimestamp &&
+    return other is PaginationRequestState &&
         other.collection == collection &&
+        listEquals<dynamic>(other.data, data) &&
+        other.lastDocument == lastDocument &&
+        other.lastFetchedTimestamp == lastFetchedTimestamp &&
         other.orderByField == orderByField &&
         other.orderIsDescending == orderIsDescending &&
         other.subCollection == subCollection &&
-        listEquals(other.content, content);
+        other.subDocID == subDocID;
   }
 
   @override
   int get hashCode {
-    return lastDocument.hashCode ^
-        lastPageRequest.hashCode ^
+    return collection.hashCode ^
+        data.hashCode ^
+        lastDocument.hashCode ^
         lastFetchedTimestamp.hashCode ^
-        collection.hashCode ^
         orderByField.hashCode ^
         orderIsDescending.hashCode ^
         subCollection.hashCode ^
-        content.hashCode;
+        subDocID.hashCode;
   }
 
   @override
   String toString() {
-    return 'ContentPaginationState(lastDocument: $lastDocument, lastPageRequest: $lastPageRequest, lastFetchedTimestamp: $lastFetchedTimestamp, collection: $collection, orderByField: $orderByField, orderIsDescending: $orderIsDescending, subCollection: $subCollection, content: $content)';
+    return 'PaginationRequestState(collection: $collection, data: $data, lastDocument: $lastDocument, lastFetchedTimestamp: $lastFetchedTimestamp, orderByField: $orderByField, orderIsDescending: $orderIsDescending, subCollection: $subCollection, subDocID: $subDocID)';
   }
 
-  ContentPaginationState copyWith({
-    DocumentSnapshot? lastDocument,
-    FirestorePageRequest? lastPageRequest,
-    Timestamp? lastFetchedTimestamp,
+  PaginationRequestState copyWith({
     String? collection,
+    List<dynamic>? data,
+    DocumentSnapshot? lastDocument,
+    Timestamp? lastFetchedTimestamp,
     String? orderByField,
     bool? orderIsDescending,
     String? subCollection,
-    List<Content>? content,
+    String? subDocID,
+    int? scrollPosition,
   }) {
-    return ContentPaginationState(
-      lastDocument: lastDocument ?? this.lastDocument,
-      lastPageRequest: lastPageRequest ?? this.lastPageRequest,
-      lastFetchedTimestamp: lastFetchedTimestamp ?? this.lastFetchedTimestamp,
+    return PaginationRequestState(
       collection: collection ?? this.collection,
+      data: data ?? this.data,
+      lastDocument: lastDocument ?? this.lastDocument,
+      lastFetchedTimestamp: lastFetchedTimestamp ?? this.lastFetchedTimestamp,
       orderByField: orderByField ?? this.orderByField,
       orderIsDescending: orderIsDescending ?? this.orderIsDescending,
       subCollection: subCollection ?? this.subCollection,
-      content: content ?? this.content,
+      subDocID: subDocID ?? this.subDocID,
+      scrollPosition: scrollPosition ?? this.scrollPosition,
     );
   }
 }

@@ -3,27 +3,30 @@ import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/test_config/mocks/content_mocks.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
+import 'package:kala/config/typedefs.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
-import 'package:kala/utils/helper_bloc/content_pagination/content_pagination_bloc.dart';
+import 'package:kala/gallery/content/models/content.dart';
+import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
 
-int length = 50;
+int length = 10;
 void main() {
   test('Test to get initial content for gallery', () async {
     final galleryBloc = await galleryBlocSetup();
-    await galleryBloc.getContentList();
+    await galleryBloc.getContentList(1);
     expect(galleryBloc.state.contentSlideList.isNotEmpty, true);
     expect(galleryBloc.state.contentSlideList.first.docID, '${length - 1}');
     expect(galleryBloc.state.contentSlideList.length, 10);
     expect(galleryBloc.state.contentSlideList.last.docID, '${length - 10}');
   });
   test('Test to paginate content list for gallery', () async {
+    length = 50;
     final galleryBloc = await galleryBlocSetup();
-    await galleryBloc.getContentList();
-    await galleryBloc.getContentList();
+    await galleryBloc.getContentList(1);
+    await galleryBloc.getContentList(2);
     expect(galleryBloc.state.contentSlideList.length, 20);
     expect(galleryBloc.state.contentSlideList.last.docID, '30');
-    await galleryBloc.getContentList();
-    await galleryBloc.getContentList();
+    await galleryBloc.getContentList(3);
+    await galleryBloc.getContentList(4);
     expect(galleryBloc.state.contentSlideList.length, 40);
     expect(galleryBloc.state.contentSlideList.last.docID, '10');
   });
@@ -37,12 +40,7 @@ Future<GalleryBloc> galleryBlocSetup() async {
 
   final galleryBloc = GalleryBloc(
     kalaUserBloc: KalaUserBloc(),
-    contentPaginationCubit: ContentPaginationCubit(
-      collection: FirestorePaths.fakeContentCollection,
-      orderIsDescending: true,
-      orderByField: 'uploadTimestamp',
-      firebaseFirestore: FirebaseMocks.mockFirestore,
-    ),
+   
   );
   return galleryBloc;
 }
