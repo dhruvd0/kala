@@ -39,7 +39,6 @@ class WidgetTesterHandler {
   }
 
   Future<void> startAppWithMockFirebase({bool? signedIn}) async {
-    enableFlutterDriverExtension();
     final mockFirebaseConfig =
         await FirebaseMocks.getMockFirebaseConfig(signedIn: signedIn);
     app.main(mockFirebase: mockFirebaseConfig);
