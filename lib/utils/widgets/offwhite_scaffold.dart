@@ -17,21 +17,22 @@ class OffWhiteScaffold extends StatelessWidget {
     this.enablePageNavigationArrows,
     this.trailing,
   }) : super(key: scaffoldKey) {
-    if (enableBackArrow == true) {
+    if (enableBackArrow ?? false) {
       assert(onBack != null);
     }
     if (onBack != null) {
-      assert(enableBackArrow == true);
+      assert(enableBackArrow ?? false);
     }
   }
 
-  final ValueKey<String> scaffoldKey;
   final Widget body;
   final String? centerTitle;
   final bool? enableBackArrow;
-  final VoidCallback? onBack;
   final bool? enablePageNavigationArrows;
+  final VoidCallback? onBack;
+  final ValueKey<String> scaffoldKey;
   final Widget? trailing;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +43,6 @@ class OffWhiteScaffold extends StatelessWidget {
         preferredSize: Size.fromHeight(50.h),
         child: AppBar(
           elevation: 0,
-          shadowColor: null,
           backgroundColor: BasicColors.backgroundOffWhite,
           actions: trailing == null
               ? null
@@ -66,36 +66,35 @@ class OffWhiteScaffold extends StatelessWidget {
           centerTitle: true,
           title: centerTitle == null
               ? null
-              : Container(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      enablePageNavigationArrows ?? false
-                          ? _PageNavArrow(
-                              navArrowType: NavArrowType.left,
-                              pageKey: scaffoldKey,
-                            )
-                          : Container(),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: Title(
-                          color: Colors.black,
-                          child: Text(
-                            centerTitle.toString(),
-                            style: TextThemeContext(context).headline1,
-                          ),
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (enablePageNavigationArrows ?? false)
+                      _PageNavArrow(
+                        navArrowType: NavArrowType.left,
+                        pageKey: scaffoldKey,
+                      )
+                    else
+                      Container(),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 15.w),
+                      child: Title(
+                        color: Colors.black,
+                        child: Text(
+                          centerTitle.toString(),
+                          style: TextThemeContext(context).headline1,
                         ),
                       ),
-                      enablePageNavigationArrows ?? false
-                          ? _PageNavArrow(
-                              navArrowType: NavArrowType.right,
-                              pageKey: scaffoldKey,
-                            )
-                          : Container(),
-                    ],
-                  ),
+                    ),
+                    if (enablePageNavigationArrows ?? false)
+                      _PageNavArrow(
+                        navArrowType: NavArrowType.right,
+                        pageKey: scaffoldKey,
+                      )
+                    else
+                      Container(),
+                  ],
                 ),
         ),
       ),
@@ -107,31 +106,35 @@ enum NavArrowType { left, right }
 
 class _PageNavArrow extends StatelessWidget {
   const _PageNavArrow({
-    Key? key,
     required this.navArrowType,
     required this.pageKey,
+    Key? key,
   }) : super(key: key);
+
   final NavArrowType navArrowType;
   final ValueKey pageKey;
+
+  bool isPageEndOfPages(DashState state) {
+    return state.pageIndex == 0 && navArrowType == NavArrowType.left ||
+        state.pageIndex == state.pages.length - 1 &&
+            navArrowType == NavArrowType.right;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
-        DashController dashController =
+        final dashController =
             BlocProvider.of<DashController>(context, listen: false);
         void Function() onTap;
         IconData icon;
         switch (navArrowType) {
           case NavArrowType.left:
-            onTap = () {
-              dashController.previousPage();
-            };
+            onTap = dashController.previousPage;
             icon = Icons.arrow_back_ios_new;
             break;
           case NavArrowType.right:
-            onTap = () {
-              dashController.nextPage();
-            };
+            onTap = dashController.nextPage;
             icon = Icons.arrow_forward_ios;
             break;
         }
@@ -141,10 +144,12 @@ class _PageNavArrow extends StatelessWidget {
                 ? Container()
                 : GestureDetector(
                     onTap: onTap,
-                    key: ValueKey(NavWidgetKeys.pageNavArrowKey(
-                      pageKey.value,
-                      navArrowType,
-                    )),
+                    key: ValueKey(
+                      NavWidgetKeys.pageNavArrowKey(
+                        pageKey.value.toString(),
+                        navArrowType,
+                      ),
+                    ),
                     child: Icon(
                       icon,
                       size: 14,
@@ -155,11 +160,5 @@ class _PageNavArrow extends StatelessWidget {
         );
       },
     );
-  }
-
-  bool isPageEndOfPages(DashState state) {
-    return state.pageIndex == 0 && navArrowType == NavArrowType.left ||
-        state.pageIndex == state.pages.length - 1 &&
-            navArrowType == NavArrowType.right;
   }
 }

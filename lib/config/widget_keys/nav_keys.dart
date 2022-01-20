@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 class NavWidgetKeys {
@@ -7,6 +5,6 @@ class NavWidgetKeys {
     String scaffoldKey,
     NavArrowType navArrowType,
   ) {
-    return ("${scaffoldKey.toString()}-${navArrowType.name}-arrow");
+    return '$scaffoldKey-${navArrowType.name}-arrow';
   }
 }

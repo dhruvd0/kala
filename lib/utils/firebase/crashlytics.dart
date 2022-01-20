@@ -9,6 +9,8 @@ Future<void> setCrashlyticsCustomKey(String key, dynamic value) async {
   if (kIsWeb) {
     return;
   }
-  await FirebaseCrashlytics.instance
-      .setCustomKey(key, value is Map ? value.toString() : value);
+  await FirebaseCrashlytics.instance.setCustomKey(
+    key,
+    value is Map ? value.toString() : value.toString(),
+  );
 }

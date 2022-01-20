@@ -7,9 +7,9 @@ import 'package:kala/startup/splash.dart';
 
 class NavigatorController {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
-    return MaterialPageRoute(
+    return MaterialPageRoute<dynamic>(
       builder: (context) {
-        String route = settings.name as String;
+        final route = settings.name.toString();
         return getWidgetFromRoute(route);
       },
     );

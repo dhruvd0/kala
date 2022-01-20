@@ -18,7 +18,7 @@ class ArtistPage extends StatelessWidget {
               BlocProvider.of<KalaUserBloc>(context, listen: false)
                   .toggleEditMode();
             },
-            child: Icon(
+            child: const Icon(
               Icons.edit,
               color: Colors.black,
             ),

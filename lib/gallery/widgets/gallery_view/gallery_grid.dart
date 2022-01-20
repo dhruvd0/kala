@@ -15,18 +15,19 @@ class GalleryGridView extends StatelessWidget {
           return Container();
         }
 
-        var cellCount = (1.sw/300).round();
+        final cellCount = (1.sw / 300).round();
         return SingleChildScrollView(
           child: StaggeredGrid.count(
             crossAxisCount: cellCount,
             mainAxisSpacing: 10.h,
             crossAxisSpacing: 10.w,
-            
             children: state.contentSlideList
-                .map((content) => StaggeredGridTile.fit(
-                      crossAxisCellCount: 1,
-                      child: ContentBlocProvider(content: content),
-                    ))
+                .map(
+                  (content) => StaggeredGridTile.fit(
+                    crossAxisCellCount: 1,
+                    child: ContentBlocProvider(content: content),
+                  ),
+                )
                 .toList(),
           ),
         );

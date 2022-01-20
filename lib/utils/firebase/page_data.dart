@@ -1,17 +1,35 @@
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:kala/config/typedefs.dart';
-
+@immutable
 class FirestorePageResponse {
-  final List<Json> currentJsonList;
-  final DocumentSnapshot? lastDocSnap;
-  FirestorePageResponse({
+  const FirestorePageResponse({
     required this.currentJsonList,
     required this.lastDocSnap,
   });
+
+  final List<Json> currentJsonList;
+  final DocumentSnapshot? lastDocSnap;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is FirestorePageResponse &&
+        listEquals(other.currentJsonList, currentJsonList) &&
+        other.lastDocSnap == lastDocSnap;
+  }
+
+  @override
+  int get hashCode => currentJsonList.hashCode ^ lastDocSnap.hashCode;
+
+  @override
+  String toString() =>
+      'FirestorePageData(currentJsonList: $currentJsonList, lastDocSnap: $lastDocSnap)';
 
   FirestorePageResponse copyWith({
     List<Json>? currentJsonList,
@@ -22,38 +40,42 @@ class FirestorePageResponse {
       lastDocSnap: lastDocSnap ?? this.lastDocSnap,
     );
   }
-
-  @override
-  String toString() =>
-      'FirestorePageData(currentJsonList: $currentJsonList, lastDocSnap: $lastDocSnap)';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is FirestorePageResponse &&
-        listEquals(other.currentJsonList, currentJsonList) &&
-        other.lastDocSnap == lastDocSnap;
-  }
-
-  @override
-  int get hashCode => currentJsonList.hashCode ^ lastDocSnap.hashCode;
 }
-
+@immutable
 class FirestorePageRequest {
-  final String collection;
-  final String orderByField;
-  final bool orderIsDescending;
-  final String? subCollection;
-  final DocumentSnapshot? lastDocSnap;
-
-  FirestorePageRequest({
+  const FirestorePageRequest({
     required this.collection,
     required this.orderByField,
     required this.orderIsDescending,
     this.subCollection,
     this.lastDocSnap,
   });
+
+  final String collection;
+  final DocumentSnapshot? lastDocSnap;
+  final String orderByField;
+  final bool orderIsDescending;
+  final String? subCollection;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is FirestorePageRequest &&
+        other.collection == collection &&
+        other.orderByField == orderByField &&
+        other.lastDocSnap == lastDocSnap;
+  }
+
+  @override
+  int get hashCode =>
+      collection.hashCode ^ orderByField.hashCode ^ lastDocSnap.hashCode;
+
+  @override
+  String toString() =>
+      'FirestorePageRequest(collection: $collection, orderByField: $orderByField, lastDocSnap: $lastDocSnap)';
 
   FirestorePageRequest copyWith({
     String? collection,
@@ -68,22 +90,4 @@ class FirestorePageRequest {
       lastDocSnap: lastDocSnap ?? this.lastDocSnap,
     );
   }
-
-  @override
-  String toString() =>
-      'FirestorePageRequest(collection: $collection, orderByField: $orderByField, lastDocSnap: $lastDocSnap)';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is FirestorePageRequest &&
-        other.collection == collection &&
-        other.orderByField == orderByField &&
-        other.lastDocSnap == lastDocSnap;
-  }
-
-  @override
-  int get hashCode =>
-      collection.hashCode ^ orderByField.hashCode ^ lastDocSnap.hashCode;
 }

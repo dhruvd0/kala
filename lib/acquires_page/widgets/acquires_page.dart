@@ -12,9 +12,9 @@ class AcquiresPage extends StatelessWidget {
     return BlocBuilder<KalaUserBloc, KalaUserState>(
       builder: (context, state) {
         return OffWhiteScaffold(
-          scaffoldKey: ValueKey("AcquiresPage"),
+          scaffoldKey: const ValueKey('AcquiresPage'),
           enablePageNavigationArrows: true,
-          centerTitle: "Acquires",
+          centerTitle: 'Acquires',
           body: const Center(),
         );
       },

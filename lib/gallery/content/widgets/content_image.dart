@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 
 class ContentImage extends StatefulWidget {
   const ContentImage({
-    Key? key,
     required this.imageUrl,
+    Key? key,
   }) : super(key: key);
+
   final String imageUrl;
 
   @override
@@ -15,6 +16,7 @@ class ContentImage extends StatefulWidget {
 
 class _ContentImageState extends State<ContentImage> {
   ImageProvider? cachedNetworkImageProvider;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();

@@ -20,7 +20,7 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
-      scaffoldKey: ValueKey(ScaffoldKeys.authPageKey),
+      scaffoldKey: const ValueKey(ScaffoldKeys.authPageKey),
       body: BlocListener<KalaUserBloc, KalaUserState>(
         listener: (_, state) {
           if (state is AuthenticatedKalaUserState) {
@@ -31,7 +31,6 @@ class _AuthPageState extends State<AuthPage> {
           width: 1.sw,
           height: 1.sh,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: authPageColumChildren(context),
           ),
         ),
@@ -40,25 +39,23 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   List<Widget> authPageColumChildren(BuildContext context) {
-    var columnChildren = [
+    final columnChildren = [
       SizedBox(
         height: 100.h,
       ),
       Text(
-        "K",
+        'K',
         style: Theme.of(context).textTheme.headline1,
       ),
       SizedBox(
         height: 100.h,
       ),
-    ];
-    columnChildren.addAll(
-      AuthTypes.allAuthTypes()
+      ...AuthTypes.allAuthTypes()
           .map(
-            (e) => SocialAuthButton(e),
+            SocialAuthButton.new,
           )
           .toList(),
-    );
+    ];
     return columnChildren;
   }
 }

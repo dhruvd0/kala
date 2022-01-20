@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
@@ -18,6 +17,7 @@ class GalleryScroll extends StatefulWidget {
 
 class _GalleryScrollState extends State<GalleryScroll> {
   ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -43,12 +43,11 @@ class _GalleryScrollState extends State<GalleryScroll> {
         return ListView.builder(
           addSemanticIndexes: false,
           semanticChildCount: 0,
-       
           controller: scrollController,
           itemCount: state.contentSlideList.length,
           physics: const BouncingScrollPhysics(),
           itemBuilder: (_, index) {
-            return ContentBlocProvider(content:state.contentSlideList[index]);
+            return ContentBlocProvider(content: state.contentSlideList[index]);
           },
         );
       },
@@ -58,10 +57,12 @@ class _GalleryScrollState extends State<GalleryScroll> {
 
 class ContentBlocProvider extends StatelessWidget {
   const ContentBlocProvider({
+    required this.content,
     Key? key,
-    required this.content
   }) : super(key: key);
+
   final Content content;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

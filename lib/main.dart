@@ -1,29 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/artist_page/widgets/artist_page.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/nav/router.dart';
-import 'package:kala/config/test_config/mocks/content_mocks.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/dashboard/bloc/dash_controller.dart';
+import 'package:kala/firebase_options.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
-
 import 'package:kala/startup/splash.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/content_pagination_bloc.dart';
-import 'firebase_options.dart';
 
 FirebaseConfig? firebaseConfig;
 // ignore: non_constant_identifier_names
 bool TEST_FLAG = false;
-void main({FirebaseConfig? mockFirebase}) async {
+Future<void> main({FirebaseConfig? mockFirebase}) async {
   WidgetsFlutterBinding.ensureInitialized();
   if (mockFirebase == null) {
     await Firebase.initializeApp(
@@ -41,14 +37,9 @@ void main({FirebaseConfig? mockFirebase}) async {
   runApp(const KalaApp());
 }
 
-class KalaApp extends StatefulWidget {
+class KalaApp extends StatelessWidget {
   const KalaApp({Key? key}) : super(key: key);
 
-  @override
-  _KalaAppState createState() => _KalaAppState();
-}
-
-class _KalaAppState extends State<KalaApp> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -66,12 +57,13 @@ class _KalaAppState extends State<KalaApp> {
             BlocProvider(
               lazy: false,
               create: (context) => GalleryBloc(
-                  kalaUserBloc: context.read<KalaUserBloc>(),
-                  contentPaginationCubit: ContentPaginationCubit(
-                    collection: FirestorePaths.fakeContentCollection,
-                    orderIsDescending: true,
-                    orderByField: "uploadTimestamp",
-                  )),
+                kalaUserBloc: context.read<KalaUserBloc>(),
+                contentPaginationCubit: ContentPaginationCubit(
+                  collection: FirestorePaths.fakeContentCollection,
+                  orderIsDescending: true,
+                  orderByField: 'uploadTimestamp',
+                ),
+              ),
             ),
             BlocProvider(
               lazy: false,
@@ -79,13 +71,13 @@ class _KalaAppState extends State<KalaApp> {
             ),
           ],
           child: MaterialApp(
-            title: "Kala",
+            title: 'Kala',
             theme: lightTheme,
             builder: (context, widget) {
               ScreenUtil.setContext(context);
 
               return MediaQuery(
-                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
                 child: widget!,
               );
             },

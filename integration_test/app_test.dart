@@ -1,3 +1,5 @@
+// ignore_for_file: unawaited_futures
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:kala/main.dart' as app;
@@ -11,25 +13,19 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets(
-    "App Start",
+    'App Start',
     (tester) async {
       app.main();
-      WidgetTesterHandler widgetTesterHandler = WidgetTesterHandler(tester);
+      final widgetTesterHandler = WidgetTesterHandler(tester);
       await widgetTesterHandler.startAppWithMockFirebase();
     },
   );
   group(
-    "Authentication Tests",
-    () {
-      loginTestFlow();
-    },
+    'Authentication Tests',
+    loginTestFlow,
   );
 
-  group("Gallery Tests", () {
-    galleryTestFlow();
-  });
+  group('Gallery Tests', galleryTestFlow);
 
-  group("Dashboard Navigation Tests", () {
-    dashboardIntegrationTests();
-  });
+  group('Dashboard Navigation Tests', dashboardIntegrationTests);
 }

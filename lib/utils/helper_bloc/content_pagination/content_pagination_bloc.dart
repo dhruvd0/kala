@@ -1,8 +1,7 @@
-import 'dart:developer';
+// ignore_for_file: avoid_single_cascade_in_expression_statements, prefer_final_locals, cascade_invocations
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/firebase/firestore_get.dart';
@@ -10,24 +9,25 @@ import 'package:kala/utils/firebase/page_data.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/content_pagination_state.dart';
 
 class ContentPaginationCubit extends Cubit<ContentPaginationState> {
-  FirebaseFirestore? firebaseFirestore;
   ContentPaginationCubit({
-    this.firebaseFirestore,
     required String collection,
     required bool orderIsDescending,
     required String orderByField,
+    this.firebaseFirestore,
   }) : super(
           ContentPaginationState(
             collection: collection,
             orderIsDescending: orderIsDescending,
             orderByField: orderByField,
             lastFetchedTimestamp: Timestamp.now(),
-            content: [],
+            content: const [],
           ),
         );
 
+  FirebaseFirestore? firebaseFirestore;
+
   Future<List<Content>> getContentList() async {
-    var firestorePageRequest = FirestorePageRequest(
+    final firestorePageRequest = FirestorePageRequest(
       collection: state.collection,
       orderByField: state.orderByField,
       lastDocSnap: state.lastDocument,
@@ -37,18 +37,19 @@ class ContentPaginationCubit extends Cubit<ContentPaginationState> {
       return [];
     }
     emit(state.copyWith(lastPageRequest: firestorePageRequest));
-    FirestorePageResponse? response =
-        await FirestoreQueries(firestore: firebaseFirestore)
-            .paginateCollectionDocuments(firestorePageRequest);
+    final response = await FirestoreQueries(firestore: firebaseFirestore)
+        .paginateCollectionDocuments(firestorePageRequest);
     if (response == null) {
       return [];
     }
-    emit(state.copyWith(
-      lastDocument: response.lastDocSnap,
-    ));
+    emit(
+      state.copyWith(
+        lastDocument: response.lastDocSnap,
+      ),
+    );
 
-    var validatedContent = validateAndEmitContent(
-      parseContentFromFirestoreResponse([
+    final validatedContent = validateAndEmitContent(
+      parseContentFromFirestoreResponse(<dynamic>[
         response,
         state.content,
       ]),
@@ -62,10 +63,10 @@ class ContentPaginationCubit extends Cubit<ContentPaginationState> {
     FirestorePageResponse response,
   ) {
     if (newContentList.isNotEmpty) {
-      var currentContentList = state.content;
-
+      // ignore: omit_local_variable_types
+      List<Content> currentContentList = state.content.toList(growable: true);
       currentContentList.addAll(newContentList);
-      log(" Last:${currentContentList.last.docID}  ");
+
       emit(
         state.copyWith(
           content: currentContentList,

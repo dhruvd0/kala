@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/config/widget_keys/nav_keys.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
@@ -10,14 +8,14 @@ import '../config/widget_tester.dart';
 
 void dashboardIntegrationTests() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets("Test to navigate to next/prev pages on arrow button tap",
+  testWidgets('Test to navigate to next/prev pages on arrow button tap',
       (tester) async {
-    WidgetTesterHandler widgetTester = WidgetTesterHandler(tester);
+    final widgetTester = WidgetTesterHandler(tester);
     await widgetTester.startAppWithMockFirebase(signedIn: true);
 
     await widgetTester.tapByKey(
       NavWidgetKeys.pageNavArrowKey(
-        (ScaffoldKeys.galleryPageKey),
+        ScaffoldKeys.galleryPageKey,
         NavArrowType.right,
       ),
     );
@@ -29,7 +27,7 @@ void dashboardIntegrationTests() {
 
     await widgetTester.tapByKey(
       NavWidgetKeys.pageNavArrowKey(
-        (ScaffoldKeys.artistPageKey),
+        ScaffoldKeys.artistPageKey,
         NavArrowType.right,
       ),
     );
@@ -40,13 +38,13 @@ void dashboardIntegrationTests() {
     );
     await widgetTester.tapByKey(
       NavWidgetKeys.pageNavArrowKey(
-        (ScaffoldKeys.acquiresPageKey),
+        ScaffoldKeys.acquiresPageKey,
         NavArrowType.left,
       ),
     );
      await widgetTester.tapByKey(
       NavWidgetKeys.pageNavArrowKey(
-        (ScaffoldKeys.artistPageKey),
+        ScaffoldKeys.artistPageKey,
         NavArrowType.left,
       ),
     );

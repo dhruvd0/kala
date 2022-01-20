@@ -8,10 +8,10 @@ import 'package:kala/auth/social_integration/auth_types.dart';
 Future<KalaUser?> signInWithGoogle() async {
   // Trigger the authentication flow
   try {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
+    final googleAuth =
         await googleUser?.authentication;
 
     // Create a new credential
@@ -21,7 +21,7 @@ Future<KalaUser?> signInWithGoogle() async {
     );
 
     // Once signed in, return the UserCredential
-    UserCredential userCredential = (kIsWeb)
+    final userCredential = kIsWeb
         ? await getGoogleAuthProviderForWeb()
         : await FirebaseAuth.instance.signInWithCredential(credential);
     return KalaUser.fromSocialAuthUser(
@@ -29,15 +29,17 @@ Future<KalaUser?> signInWithGoogle() async {
       authType: AuthTypes.google,
     );
   } on FirebaseAuthException catch (e) {
-    Fluttertoast.showToast(msg: e.toString());
+    await Fluttertoast.showToast(msg: e.toString());
   }
 }
 
 Future<UserCredential> getGoogleAuthProviderForWeb() async {
   // Create a new provider
-  GoogleAuthProvider googleProvider = GoogleAuthProvider();
+  final googleProvider = GoogleAuthProvider();
 
-  googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-  googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
-  return await FirebaseAuth.instance.signInWithPopup(googleProvider);
+  googleProvider
+      .addScope('https://www.googleapis.com/auth/contacts.readonly')
+      .setCustomParameters(<String, String>{'login_hint': 'user@example.com'});
+
+  return FirebaseAuth.instance.signInWithPopup(googleProvider);
 }

@@ -13,25 +13,16 @@ import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 class Splash extends StatelessWidget {
   const Splash({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: StreamBuilder<User?>(
-        stream: firebaseConfig?.auth.userChanges(),
-        builder: (context, userSnapshot) {
-          return handleUseAuthState(userSnapshot, context);
-        },
-      ),
-    );
-  }
-
-  Widget handleUseAuthState(AsyncSnapshot<User?> userSnapshot, context) {
+  Widget handleUseAuthState(
+    AsyncSnapshot<User?> userSnapshot,
+    BuildContext context,
+  ) {
     if (userSnapshot.connectionState == ConnectionState.waiting) {
-      return LogoSplash();
+      return const LogoSplash();
     }
 
-    String nextRoute = "";
-    User? user = userSnapshot.data;
+    var nextRoute = '';
+    final user = userSnapshot.data;
     if (user == null) {
       nextRoute = Routes.auth;
     } else {
@@ -43,6 +34,16 @@ class Splash extends StatelessWidget {
     }
     return NavigatorController.getWidgetFromRoute(nextRoute);
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: firebaseConfig?.auth.userChanges(),
+      builder: (context, userSnapshot) {
+        return handleUseAuthState(userSnapshot, context);
+      },
+    );
+  }
 }
 
 class LogoSplash extends StatelessWidget {
@@ -53,10 +54,10 @@ class LogoSplash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
-      scaffoldKey: ValueKey(ScaffoldKeys.splashKey),
+      scaffoldKey: const ValueKey(ScaffoldKeys.splashKey),
       body: Center(
         child: Text(
-          "K",
+          'K',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline1,
         ),

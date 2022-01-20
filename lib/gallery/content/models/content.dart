@@ -1,19 +1,11 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
+// ignore_for_file: implicit_dynamic_map_literal
+// ignore_for_file: argument_type_not_assignable
+@immutable
 class Content {
-  final String imageUrl;
-  final String artistName;
-  final String artistID;
-  final String title;
-  final String description;
-  final String docID;
-  final Timestamp uploadTimestamp;
-  final int fileSize; // in kb
-  final double imgHeight;
-  final double imgWidth;
-  Content({
+  const Content({
     required this.imageUrl,
     required this.artistName,
     required this.artistID,
@@ -25,6 +17,70 @@ class Content {
     required this.imgHeight,
     required this.imgWidth,
   });
+
+  factory Content.fromMap(Map<String, dynamic> map) {
+    return Content(
+      imageUrl: map['imageUrl'] ?? '',
+      artistName: map['artistName'] ?? '',
+      artistID: map['artistID'] ?? '',
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      docID: map['docID'] ?? '',
+      uploadTimestamp: map['uploadTimestamp'],
+      fileSize: map['fileSize'] as int,
+      imgHeight: map['imgHeight'] as double,
+      imgWidth: map['imgWidth'] as double,
+    );
+  }
+
+  final String artistID;
+  final String artistName;
+  final String description;
+  final String docID;
+  final int fileSize; // in kb
+  final String imageUrl;
+  final double imgHeight;
+  final double imgWidth;
+  final String title;
+  final Timestamp uploadTimestamp;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is Content &&
+        other.imageUrl == imageUrl &&
+        other.artistName == artistName &&
+        other.artistID == artistID &&
+        other.title == title &&
+        other.description == description &&
+        other.docID == docID &&
+        other.uploadTimestamp == uploadTimestamp &&
+        other.fileSize == fileSize &&
+        other.imgHeight == imgHeight &&
+        other.imgWidth == imgWidth;
+  }
+
+  @override
+  int get hashCode {
+    return imageUrl.hashCode ^
+        artistName.hashCode ^
+        artistID.hashCode ^
+        title.hashCode ^
+        description.hashCode ^
+        docID.hashCode ^
+        uploadTimestamp.hashCode ^
+        fileSize.hashCode ^
+        imgHeight.hashCode ^
+        imgWidth.hashCode;
+  }
+
+  @override
+  String toString() {
+    return 'Content(imageUrl: $imageUrl, artistName: $artistName, artistID: $artistID, title: $title, description: $description, docID: $docID, uploadTimestamp: $uploadTimestamp, fileSize: $fileSize, imgHeight: $imgHeight, imgWidth: $imgWidth)';
+  }
 
   Content copyWith({
     String? imageUrl,
@@ -65,57 +121,5 @@ class Content {
       'imgHeight': imgHeight,
       'imgWidth': imgWidth,
     };
-  }
-
-  factory Content.fromMap(Map<String, dynamic> map) {
-    return Content(
-      imageUrl: map['imageUrl'] ?? '',
-      artistName: map['artistName'] ?? '',
-      artistID: map['artistID'] ?? '',
-      title: map['title'] ?? '',
-      description: map['description'] ?? '',
-      docID: map['docID'] ?? '',
-      uploadTimestamp: map['uploadTimestamp'],
-      fileSize: map['fileSize']?.toInt() ?? 0,
-      imgHeight: map['imgHeight']?.toDouble() ?? 0.0,
-      imgWidth: map['imgWidth']?.toDouble() ?? 0.0,
-    );
-  }
-
-
-  @override
-  String toString() {
-    return 'Content(imageUrl: $imageUrl, artistName: $artistName, artistID: $artistID, title: $title, description: $description, docID: $docID, uploadTimestamp: $uploadTimestamp, fileSize: $fileSize, imgHeight: $imgHeight, imgWidth: $imgWidth)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-  
-    return other is Content &&
-      other.imageUrl == imageUrl &&
-      other.artistName == artistName &&
-      other.artistID == artistID &&
-      other.title == title &&
-      other.description == description &&
-      other.docID == docID &&
-      other.uploadTimestamp == uploadTimestamp &&
-      other.fileSize == fileSize &&
-      other.imgHeight == imgHeight &&
-      other.imgWidth == imgWidth;
-  }
-
-  @override
-  int get hashCode {
-    return imageUrl.hashCode ^
-      artistName.hashCode ^
-      artistID.hashCode ^
-      title.hashCode ^
-      description.hashCode ^
-      docID.hashCode ^
-      uploadTimestamp.hashCode ^
-      fileSize.hashCode ^
-      imgHeight.hashCode ^
-      imgWidth.hashCode;
   }
 }

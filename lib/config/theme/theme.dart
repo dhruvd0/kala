@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:kala/config/colors/basic_colors.dart';
 import 'package:kala/config/theme/text_styles/body.dart';
 import 'package:kala/config/theme/text_styles/button.dart';
 import 'package:kala/config/theme/text_styles/heading.dart';

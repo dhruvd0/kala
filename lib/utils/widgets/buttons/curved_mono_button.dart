@@ -3,19 +3,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // ignore: must_be_immutable
 class RectMonoButton extends StatelessWidget {
-  double? height;
-  double? width;
-  final String text;
-  final VoidCallback onTap;
-  final EdgeInsets? margin;
   RectMonoButton({
+    required this.text,
+    required this.onTap,
     Key? key,
     this.height,
     this.width,
-    required this.text,
-    required this.onTap,
     this.margin,
   }) : super(key: key);
+
+  double? height;
+  final EdgeInsets? margin;
+  final VoidCallback onTap;
+  final String text;
+  double? width;
+
   @override
   Widget build(BuildContext context) {
     height = height ?? 50.h;
@@ -28,7 +30,7 @@ class RectMonoButton extends StatelessWidget {
         margin: margin,
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.black,
+            
           ),
         ),
         child: Center(
