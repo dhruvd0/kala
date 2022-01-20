@@ -36,7 +36,6 @@ Future<KalaUserContentCubit> userContentBlocSetup() async {
     length,
   );
   log(FirebaseMocks.mockFirestore.dump());
-  final userContentBloc =
-      KalaUserContentCubit(KalaUserBloc(), FirebaseMocks.mockFirestore);
+  final userContentBloc = KalaUserContentCubit.mock();
   return userContentBloc;
 }

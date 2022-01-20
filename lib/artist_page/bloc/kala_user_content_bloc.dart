@@ -1,4 +1,4 @@
-// ignore_for_file: unawaited_futures
+// ignore_for_file: unawaited_futures, cascade_invocations
 
 import 'dart:io';
 
@@ -18,8 +18,11 @@ import 'package:kala/utils/firebase/firestore_update.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
 
 class KalaUserContentCubit extends Cubit<KalaUserContentState> {
-  KalaUserContentCubit(this.kalaUserBloc, [this.firebaseFirestore])
-      : super(
+  KalaUserContentCubit({
+    required this.kalaUserBloc,
+    this.firebaseFirestore,
+    this.customStorage,
+  }) : super(
           KalaUserContentState(
             userContent: const [],
             bio: '',
@@ -29,7 +32,14 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
         ) {
     setupUserContentPaginationCubit();
   }
-
+  factory KalaUserContentCubit.mock() {
+    return KalaUserContentCubit(
+      kalaUserBloc: KalaUserBloc(),
+      firebaseFirestore: FirebaseMocks.mockFirestore,
+      customStorage: FirebaseMocks.mockFirebaseStorage,
+    );
+  }
+  FirebaseStorage? customStorage;
   PaginationCubit? contentPaginationCubit;
   FirebaseFirestore? firebaseFirestore;
   final KalaUserBloc kalaUserBloc;
@@ -56,7 +66,10 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
         contentStringPropAssertions(data);
         emit(
           state.copyWith(
-            newContent: state.newContent.copyWith(title: data.toString()),
+            newContent: state.newContent.copyWith(
+              title: data.toString(),
+              uploadTimestamp: Timestamp.now(),
+            ),
           ),
         );
         break;
@@ -100,8 +113,9 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
   }
 
   Future<void> addNewContent() async {
-    final userCollectionPath =
-        '/$FirestorePaths.userCollection/${firebaseConfig?.auth.currentUser?.uid}/content}';
+    state.newContent.validate();
+
+    final userCollectionPath = buildUserContentPath;
     final uploadedContentDocID = await setInitialContentData();
     assert(state.newContent.imageFile != null);
     final imageUrl = await uploadImageAndGetUrl(
@@ -112,17 +126,20 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
       imageUrl,
       uploadedContentDocID,
     );
-    updateNewContentImageURL(
+    await updateNewContentImageURL(
       uploadedContentDocID,
       imageUrl,
     );
-    addContentToUserContentCollection(
+    await addContentToUserContentCollection(
       userCollectionPath,
       uploadedContentDocID,
     );
 
     emit(state.copyWith(newContent: initialNewContent()));
   }
+
+  String get buildUserContentPath =>
+      '${FirestorePaths.userCollection}/${TEST_FLAG ? FirebaseMocks.firebaseMockUser.uid : firebaseConfig?.auth?.currentUser?.uid}/content}';
 
   void emitLocalNewContentState(String imageUrl, String uploadedContentDocID) {
     emit(
@@ -133,11 +150,14 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
         ),
       ),
     );
-    emit(
-      state.copyWith(
-        userContent: state.userContent..insert(0, state.newContent),
-      ),
-    );
+    // // ignore: omit_local_variable_types
+    // List<Content> newUserContentList = state.userContent.toList();
+    // newUserContentList.insert(0, state.newContent);
+    // emit(
+    //   state.copyWith(
+    //     userContent:newUserContentList ,
+    //   ),
+    // );
   }
 
   Future<void> addContentToUserContentCollection(
@@ -167,11 +187,14 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
     String userCollectionPath,
     String uploadedContentDocID,
   ) {
-    return FirebaseStorageRequest(FirebaseStorage.instance).uploadFile(
-      '$userCollectionPath/$uploadedContentDocID',
+    return FirebaseStorageRequest(customStorage).uploadFile(
+      '$userCollectionPath/$uploadedContentDocID/$correctFilePath',
       state.newContent.imageFile!,
     );
   }
+
+  String? get correctFilePath =>
+      state.newContent.imageFile?.path.split('/').last;
 
   Future<String> setInitialContentData() {
     return FirestoreUpdateRequest(firestore: firebaseFirestore).set(

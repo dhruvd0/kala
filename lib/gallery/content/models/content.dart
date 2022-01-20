@@ -140,6 +140,14 @@ class Content {
   }
 
   String toJson() => json.encode(toMap());
+
+  void validate() {
+    assert(title.isNotEmpty);
+    assert(artistID.isNotEmpty);
+    assert(artistName.isNotEmpty);
+    assert(imageFile != null);
+    assert(fileSize > 0);
+  }
 }
 
 enum ContentProps {
