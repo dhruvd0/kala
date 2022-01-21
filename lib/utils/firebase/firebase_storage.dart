@@ -22,7 +22,7 @@ class FirebaseStorageRequest {
 
       await ref!.putFile(data, SettableMetadata(customMetadata: metaData));
       if (firebaseStorage is MockFirebaseStorage) {
-        var mock = firebaseStorage as MockFirebaseStorage;
+        final mock = firebaseStorage! as MockFirebaseStorage;
         log(mock.storedFilesMap.toString());
       }
       return 'test_url';

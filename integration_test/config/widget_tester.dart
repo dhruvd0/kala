@@ -1,10 +1,9 @@
-// ignore_for_file: unawaited_futures
+
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
-import "package:flutter_driver/driver_extension.dart";
 import 'package:kala/main.dart' as app;
 
 typedef WT = WidgetTester;
@@ -41,6 +40,7 @@ class WidgetTesterHandler {
   Future<void> startAppWithMockFirebase({bool? signedIn}) async {
     final mockFirebaseConfig =
         await FirebaseMocks.getMockFirebaseConfig(signedIn: signedIn);
+    // ignore: unawaited_futures
     app.main(mockFirebase: mockFirebaseConfig);
 
     await pumTenFrames();

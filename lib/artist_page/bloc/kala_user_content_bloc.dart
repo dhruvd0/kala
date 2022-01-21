@@ -6,10 +6,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_size_getter/file_input.dart';
+import 'package:image_size_getter/image_size_getter.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_state.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
-import 'package:kala/config/test_config/mocks/content_mocks.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/main.dart';
@@ -32,6 +33,7 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
         ) {
     setupUserContentPaginationCubit();
   }
+
   factory KalaUserContentCubit.mock() {
     return KalaUserContentCubit(
       kalaUserBloc: KalaUserBloc(),
@@ -39,16 +41,17 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
       customStorage: FirebaseMocks.mockFirebaseStorage,
     );
   }
-  FirebaseStorage? customStorage;
+
   PaginationCubit? contentPaginationCubit;
+  FirebaseStorage? customStorage;
   FirebaseFirestore? firebaseFirestore;
   final KalaUserBloc kalaUserBloc;
 
   static Content initialNewContent() => Content.fromMap(
         <String, dynamic>{
-          'artistID': TEST_FLAG
+          'artistID': isTestMode
               ? FirebaseMocks.firebaseMockUser.uid
-              : firebaseConfig?.auth?.currentUser?.uid,
+              : firebaseConfig?.auth.currentUser?.uid,
         },
       );
 
@@ -61,6 +64,19 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
   }
 
   Future<void> editNewContent(ContentProps contentProp, dynamic data) async {
+    assert(data != null);
+    if (state.newContent.artistName.isEmpty) {
+      emit(
+        state.copyWith(
+          newContent: state.newContent.copyWith(
+            artistName: isTestMode
+                ? FirebaseMocks.firebaseMockUser.displayName
+                : kalaUserBloc.state.kalaUser.name,
+          ),
+        ),
+      );
+    }
+
     switch (contentProp) {
       case ContentProps.title:
         contentStringPropAssertions(data);
@@ -82,14 +98,18 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
         );
         break;
       case ContentProps.image:
+        final value = ImageSizeGetter.getSize(FileInput(data));
         emit(
           state.copyWith(
             newContent: state.newContent.copyWith(
               imageFile: data as File,
               fileSize: await data.length(),
+              imgHeight: value.height.toDouble(),
+              imgWidth: value.width.toDouble(),
             ),
           ),
         );
+
         break;
       case ContentProps.description:
         contentStringPropAssertions(data);
@@ -113,8 +133,6 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
   }
 
   Future<void> addNewContent() async {
-    state.newContent.validate();
-
     final userCollectionPath = buildUserContentPath;
     final uploadedContentDocID = await setInitialContentData();
     assert(state.newContent.imageFile != null);
@@ -126,6 +144,7 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
       imageUrl,
       uploadedContentDocID,
     );
+    state.newContent.validate();
     await updateNewContentImageURL(
       uploadedContentDocID,
       imageUrl,
@@ -135,11 +154,15 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
       uploadedContentDocID,
     );
 
-    emit(state.copyWith(newContent: initialNewContent()));
+    emit(
+      state.copyWith(
+        newContent: initialNewContent(),
+      ),
+    );
   }
 
   String get buildUserContentPath =>
-      '${FirestorePaths.userCollection}/${TEST_FLAG ? FirebaseMocks.firebaseMockUser.uid : firebaseConfig?.auth?.currentUser?.uid}/content}';
+      '${FirestorePaths.userCollection}/${isTestMode ? FirebaseMocks.firebaseMockUser.uid : firebaseConfig?.auth.currentUser?.uid}/${FirestorePaths.userPaths.userContent}';
 
   void emitLocalNewContentState(String imageUrl, String uploadedContentDocID) {
     emit(
@@ -150,14 +173,6 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
         ),
       ),
     );
-    // // ignore: omit_local_variable_types
-    // List<Content> newUserContentList = state.userContent.toList();
-    // newUserContentList.insert(0, state.newContent);
-    // emit(
-    //   state.copyWith(
-    //     userContent:newUserContentList ,
-    //   ),
-    // );
   }
 
   Future<void> addContentToUserContentCollection(
@@ -210,14 +225,14 @@ class KalaUserContentCubit extends Cubit<KalaUserContentState> {
       contentPaginationCubit = PaginationCubit.userContentPagination(
         FirebaseMocks.firebaseMockUser.uid,
       );
-      contentPaginationCubit?.changeFirestore(firebaseFirestore!);
+      contentPaginationCubit?.firestore = firebaseFirestore;
     }
     firebaseConfig?.auth.userChanges().asBroadcastStream().listen((event) {
       contentPaginationCubit = PaginationCubit.userContentPagination(
         FirebaseMocks.firebaseMockUser.uid,
       );
       if (firebaseFirestore != null) {
-        contentPaginationCubit?.changeFirestore(firebaseFirestore!);
+        contentPaginationCubit?.firestore = firebaseFirestore;
       }
       getUserContent(0);
     });

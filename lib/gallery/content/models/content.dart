@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
 // ignore_for_file: implicit_dynamic_map_literal
 // ignore_for_file: argument_type_not_assignable
 @immutable
-class Content {
+class Content extends Equatable {
   const Content({
     required this.artistID,
     required this.artistName,
@@ -38,7 +39,7 @@ class Content {
       imgHeight: map['imgHeight']?.toDouble() ?? 0.0,
       imgWidth: map['imgWidth']?.toDouble() ?? 0.0,
       title: map['title'] ?? '',
-      uploadTimestamp: (map['uploadTimestamp']),
+      uploadTimestamp: map['uploadTimestamp'],
     );
   }
 
@@ -56,36 +57,21 @@ class Content {
   final Timestamp? uploadTimestamp;
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Content &&
-        other.artistID == artistID &&
-        other.artistName == artistName &&
-        other.description == description &&
-        other.docID == docID &&
-        other.fileSize == fileSize &&
-        other.price == price &&
-        other.imageUrl == imageUrl &&
-        other.imgHeight == imgHeight &&
-        other.imgWidth == imgWidth &&
-        other.title == title &&
-        other.uploadTimestamp == uploadTimestamp;
-  }
-
-  @override
-  int get hashCode {
-    return artistID.hashCode ^
-        artistName.hashCode ^
-        description.hashCode ^
-        docID.hashCode ^
-        fileSize.hashCode ^
-        price.hashCode ^
-        imageUrl.hashCode ^
-        imgHeight.hashCode ^
-        imgWidth.hashCode ^
-        title.hashCode ^
-        uploadTimestamp.hashCode;
+  List<Object> get props {
+    return [
+      artistID,
+      artistName,
+      description,
+      docID,
+      fileSize,
+      imageFile.toString(),
+      imageUrl.toString(),
+      imgHeight,
+      imgWidth,
+      price,
+      title,
+      uploadTimestamp.toString(),
+    ];
   }
 
   @override
@@ -146,7 +132,10 @@ class Content {
     assert(artistID.isNotEmpty);
     assert(artistName.isNotEmpty);
     assert(imageFile != null);
-    assert(fileSize > 0);
+    assert(fileSize > 1);
+    assert(imgHeight > 1);
+    assert(imgWidth > 1);
+    assert(imageUrl?.isNotEmpty ?? false);
   }
 }
 

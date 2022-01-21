@@ -22,7 +22,7 @@ class FirestoreUpdateRequest {
       await doc?.update(data);
       return doc?.id??'';
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      await Fluttertoast.showToast(msg: e.toString());
       return '';
     }
   }
@@ -36,7 +36,7 @@ class FirestoreUpdateRequest {
       await doc?.set(data);
       return doc?.id ?? '';
     } on Exception catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      await Fluttertoast.showToast(msg: e.toString());
       return '';
     }
   }

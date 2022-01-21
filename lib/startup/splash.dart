@@ -26,7 +26,7 @@ class Splash extends StatelessWidget {
     if (user == null) {
       nextRoute = Routes.auth;
     } else {
-      if (TEST_FLAG) {
+      if (isTestMode) {
         BlocProvider.of<KalaUserBloc>(context, listen: false)
             .authenticateWithSocialAuth(AuthTypes.google);
       }

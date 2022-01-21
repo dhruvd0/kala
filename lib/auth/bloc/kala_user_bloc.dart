@@ -133,7 +133,7 @@ class KalaUserBloc extends Cubit<KalaUserState> {
   }
 
   Future<void> authenticateWithSocialAuth(String authType) async {
-    if (TEST_FLAG) {
+    if (isTestMode) {
       await mockAuthentication(authType);
       return;
     }

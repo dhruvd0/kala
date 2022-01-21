@@ -1,12 +1,9 @@
 // ignore_for_file: avoid_single_cascade_in_expression_statements, prefer_final_locals, cascade_invocations
 
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
 
-import 'package:kala/config/typedefs.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
 import 'package:kala/utils/firebase/firestore_get.dart';
@@ -19,7 +16,6 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
     required bool orderIsDescending,
     required String orderByField,
     required this.dataFromMap,
-    this.firebaseFirestore,
     String? subCollection,
     String? subDocID,
   }) : super(
@@ -33,7 +29,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
             data: const <dynamic>[],
           ),
         );
-  factory PaginationCubit.galleryContentPagination(){
+  factory PaginationCubit.galleryContentPagination() {
     return PaginationCubit(
       collection: FirestorePaths.fakeContentCollection,
       orderIsDescending: true,
@@ -41,7 +37,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       orderByField: 'uploadTimestamp',
     );
   }
-  factory PaginationCubit.userContentPagination(String uid){
+  factory PaginationCubit.userContentPagination(String uid) {
     return PaginationCubit(
       collection: FirestorePaths.userCollection,
       orderIsDescending: true,
@@ -53,7 +49,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
   }
 
   final dynamic Function(Map<String, dynamic>) dataFromMap;
-  FirebaseFirestore? firebaseFirestore;
+  FirebaseFirestore? _firebaseFirestore;
 
   Future<List<dynamic>> getTList(int scrollPosition) async {
     final firestorePageRequest = state;
@@ -61,7 +57,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       return <dynamic>[];
     }
     emit(state.copyWith(scrollPosition: scrollPosition));
-    final response = await FirestoreQueries(firestore: firebaseFirestore)
+    final response = await FirestoreQueries(firestore: _firebaseFirestore)
         .paginateCollectionDocuments(firestorePageRequest);
     if (response == null) {
       return <dynamic>[];
@@ -132,7 +128,8 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
     assert(state.data.last != newDataList.first);
   }
 
-  void changeFirestore(FirebaseFirestore firebaseFirestore) {
-    this.firebaseFirestore = firebaseFirestore;
-  }
+  set firestore(FirebaseFirestore? firebaseFirestore) =>
+      _firebaseFirestore = firebaseFirestore;
+
+  FirebaseFirestore? get firestore => _firebaseFirestore;
 }

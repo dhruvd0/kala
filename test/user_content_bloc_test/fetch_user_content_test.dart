@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
-import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/test_config/mocks/content_mocks.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 

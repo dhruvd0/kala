@@ -1,31 +1,16 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
-
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
 
 include: package:strict/analysis_options.yaml
 analyzer:
-  # Both of the strong-mode lints are really impactful throughout the project, and both of these might be rules that you
-  # may want to modify to `true` if they are too severe.
-  #
-  # We think that both of these rules are usually enforced in scenarios where we are manipulating untyped field/data,
-  # meaning: the `dynamic` type - this means a very high opportunity to access non-existing properties and have errors
-  # like NoSuchMethod, thrown while in runtime. If there is a need to use dynamic type, it would be done by explicitly
-  # declaring such fields as `dynamic`.
+ 
   strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
+    implicit-casts: true
+    implicit-dynamic: true
 
 linter:
-  
-  rules:    
+  rules:
     argument_type_not_assignable: false
     implicit_dynamic_map_literal: false
     implicit-dynamic: false
-
-
+    avoid_dynamic_calls: false
+    avoid_equals_and_hash_code_on_mutable_classes: false
+    unnecessary_getters_setters: false

@@ -37,7 +37,7 @@ class _ContentImageState extends State<ContentImage> {
       key: UniqueKey(),
       elevation: 20,
       child: cachedNetworkImageProvider == null
-          ? CircularProgressIndicator()
+          ? const CircularProgressIndicator()
           : Image(
               image: cachedNetworkImageProvider!,
               fit: BoxFit.fill,

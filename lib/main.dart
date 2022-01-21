@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,23 +12,32 @@ import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
-import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/dashboard/bloc/dash_controller.dart';
 import 'package:kala/firebase_options.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
-import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/startup/splash.dart';
-import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
 
 FirebaseConfig? firebaseConfig;
-// ignore: non_constant_identifier_names
-bool TEST_FLAG = true;
+
+bool isTestMode = true;
 Future<void> main({FirebaseConfig? mockFirebase}) async {
-  WidgetsFlutterBinding.ensureInitialized();
+  await runZonedGuarded<Future<void>>(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await setupFirebase(mockFirebase);
+      await setupCrashlytics();
+
+      runApp(const KalaApp());
+    },
+    (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack),
+  );
+}
+
+Future<void> setupFirebase(FirebaseConfig? mockFirebase) async {
   if (mockFirebase == null) {
-    TEST_FLAG = false;
+    isTestMode = false;
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -34,10 +47,18 @@ Future<void> main({FirebaseConfig? mockFirebase}) async {
     );
   } else {
     firebaseConfig = mockFirebase;
-    TEST_FLAG = true;
+    isTestMode = true;
   }
+}
 
-  runApp(const KalaApp());
+Future<void> setupCrashlytics() async {
+  if (kDebugMode) {
+    // Force disable Crashlytics collection while doing every day development.
+    // Temporarily toggle this to true if you want to test crash reporting in your app.
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  } else {
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  }
 }
 
 class KalaApp extends StatelessWidget {

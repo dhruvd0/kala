@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_state.dart';
-import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
@@ -20,7 +19,7 @@ class GalleryBloc extends Cubit<GalleryState> {
           ),
         ) {
     if (firebaseFirestore != null) {
-      contentPaginationCubit.changeFirestore(firebaseFirestore);
+      contentPaginationCubit.firestore=firebaseFirestore;
     }
 
     kalaUserStateStream =

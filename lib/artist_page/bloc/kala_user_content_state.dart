@@ -2,13 +2,14 @@
 
 import 'dart:io';
 
-import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:kala/gallery/content/models/content.dart';
 
 @immutable
-class KalaUserContentState {
+class KalaUserContentState extends Equatable {
   const KalaUserContentState({
     required this.userContent,
     required this.coverContent,
@@ -19,24 +20,20 @@ class KalaUserContentState {
 
   final String bio;
   final dynamic coverContent;
-  final List<Content> userContent;
   final Timestamp? lastFetchedTimestamp;
   final Content newContent;
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
+  final List<Content> userContent;
 
-    return other is KalaUserContentState &&
-        listEquals(other.userContent, userContent) &&
-        other.coverContent == coverContent &&
-        other.bio == bio;
+  @override
+  List<Object> get props {
+    return [
+      bio,
+      coverContent,
+      lastFetchedTimestamp ?? Timestamp.now(),
+      newContent,
+      userContent,
+    ];
   }
-
-  @override
-  int get hashCode =>
-      userContent.hashCode ^ coverContent.hashCode ^ bio.hashCode;
 
   @override
   String toString() =>
@@ -44,7 +41,7 @@ class KalaUserContentState {
 
   KalaUserContentState copyWith({
     String? bio,
-    dynamic? coverContent,
+    dynamic coverContent,
     List<Content>? userContent,
     Timestamp? lastFetchedTimestamp,
     Content? newContent,
