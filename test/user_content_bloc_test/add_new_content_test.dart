@@ -10,7 +10,7 @@ void main() {
   test(
     'Test to add new content to Kala gallery',
     () async {
-      final kalaUserContentCubit = KalaUserContentCubit.mock();
+      final kalaUserContentCubit = KalaUserContentBloc.mock();
       final image = File('test_data/content/test_image.jpg');
       await kalaUserContentCubit.editNewContent(ContentProps.image, image);
       await kalaUserContentCubit.editNewContent(

@@ -29,12 +29,12 @@ void main() {
   });
 }
 
-Future<KalaUserContentCubit> userContentBlocSetup() async {
+Future<KalaUserContentBloc> userContentBlocSetup() async {
   await populateFakeUserContentInFirestore(
     FirebaseMocks.mockFirestore,
     length,
   );
   log(FirebaseMocks.mockFirestore.dump());
-  final userContentBloc = KalaUserContentCubit.mock();
+  final userContentBloc = KalaUserContentBloc.mock();
   return userContentBloc;
 }

@@ -13,19 +13,19 @@ class DashController extends Cubit<DashState> {
   static final PageController pageController = PageController();
 
   Future<void> nextPage() async {
-    if (pageController.hasClients) {
+    if (DashController.pageController.hasClients) {
       await pageController.nextPage(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeIn,
       );
 
-      emit(
-        state.copyWith(
-          pageIndex: state.pageIndex == state.pages.length - 1
-              ? 0
-              : state.pageIndex + 1,
-        ),
-      );
+      // emit(
+      //   state.copyWith(
+      //     pageIndex: state.pageIndex == DashState.pages.length - 1
+      //         ? 0
+      //         : state.pageIndex + 1,
+      //   ),
+      // );
     }
   }
 

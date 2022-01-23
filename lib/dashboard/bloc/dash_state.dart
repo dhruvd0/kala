@@ -11,7 +11,7 @@ class DashState {
   });
 
   final int pageIndex;
-  final List<Widget> pages = [
+ static final List<Widget> pages = [
     const GalleryPage(),
     const ArtistPage(),
     const AcquiresPage()

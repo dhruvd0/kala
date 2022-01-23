@@ -7,30 +7,26 @@ import 'package:kala/auth/social_integration/auth_types.dart';
 
 Future<KalaUser?> signInWithGoogle() async {
   // Trigger the authentication flow
-  try {
-    final googleUser = await GoogleSignIn().signIn();
 
-    // Obtain the auth details from the request
-    final googleAuth =
-        await googleUser?.authentication;
+  final googleUser = await GoogleSignIn().signIn();
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+  // Obtain the auth details from the request
+  final googleAuth = await googleUser?.authentication;
 
-    // Once signed in, return the UserCredential
-    final userCredential = kIsWeb
-        ? await getGoogleAuthProviderForWeb()
-        : await FirebaseAuth.instance.signInWithCredential(credential);
-    return KalaUser.fromSocialAuthUser(
-      userCredential.user!,
-      authType: AuthTypes.google,
-    );
-  } on FirebaseAuthException catch (e) {
-    await Fluttertoast.showToast(msg: e.toString());
-  }
+  // Create a new credential
+  final credential = GoogleAuthProvider.credential(
+    accessToken: googleAuth?.accessToken,
+    idToken: googleAuth?.idToken,
+  );
+
+  // Once signed in, return the UserCredential
+  final userCredential = kIsWeb
+      ? await getGoogleAuthProviderForWeb()
+      : await FirebaseAuth.instance.signInWithCredential(credential);
+  return KalaUser.fromSocialAuthUser(
+    userCredential.user!,
+    authType: AuthTypes.google,
+  );
 }
 
 Future<UserCredential> getGoogleAuthProviderForWeb() async {

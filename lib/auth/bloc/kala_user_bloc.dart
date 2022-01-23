@@ -143,6 +143,7 @@ class KalaUserBloc extends Cubit<KalaUserState> {
         await signInWithGoogle();
         break;
     }
+    await Fluttertoast.showToast(msg: 'Signed In');
   }
 
   Future<void> mockAuthentication(String authType) async {

@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
+import 'package:kala/config/typedefs.dart';
 
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
@@ -16,15 +17,16 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
     required bool orderIsDescending,
     required String orderByField,
     required this.dataFromMap,
-    String? subCollection,
+    Json? whereQueryEquals,
     String? subDocID,
   }) : super(
           PaginationRequestState(
             collection: collection,
             orderIsDescending: orderIsDescending,
             orderByField: orderByField,
-            subCollection: subCollection,
+            whereQueryEquals: whereQueryEquals,
             subDocID: subDocID,
+            scrollPosition: 0,
             lastFetchedTimestamp: Timestamp.now(),
             data: const <dynamic>[],
           ),
@@ -39,12 +41,14 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
   }
   factory PaginationCubit.userContentPagination(String uid) {
     return PaginationCubit(
-      collection: FirestorePaths.userCollection,
+      collection: FirestorePaths.fakeContentCollection,
       orderIsDescending: true,
       orderByField: 'uploadTimestamp',
       dataFromMap: Content.fromMap,
-      subCollection: FirestorePaths.userPaths.userContent,
-      subDocID: uid,
+      whereQueryEquals: {
+        'artistID':uid
+      },
+     
     );
   }
 

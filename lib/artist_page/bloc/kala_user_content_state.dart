@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_dynamic_calls
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,11 +12,12 @@ import 'package:kala/gallery/content/models/content.dart';
 @immutable
 class KalaUserContentState extends Equatable {
   const KalaUserContentState({
-    required this.userContent,
-    required this.coverContent,
     required this.bio,
-    required this.newContent,
+    required this.coverContent,
     this.lastFetchedTimestamp,
+    required this.newContent,
+    required this.userContent,
+    required this.uid,
   }) : assert(coverContent is File || coverContent is String);
 
   final String bio;
@@ -23,35 +25,42 @@ class KalaUserContentState extends Equatable {
   final Timestamp? lastFetchedTimestamp;
   final Content newContent;
   final List<Content> userContent;
+  final String uid;
 
   @override
-  List<Object> get props {
+  List<dynamic> get props {
     return [
       bio,
       coverContent,
-      lastFetchedTimestamp ?? Timestamp.now(),
+      lastFetchedTimestamp,
       newContent,
       userContent,
+      uid,
     ];
   }
 
   @override
-  String toString() =>
-      'KalaUserContentState(userContent: $userContent, coverContent: $coverContent, bio: $bio)';
+  String toString() {
+    return 'KalaUserContentState(bio: $bio, coverContent: $coverContent, lastFetchedTimestamp: $lastFetchedTimestamp, newContent: $newContent, userContent: $userContent, uid: $uid)';
+  }
 
   KalaUserContentState copyWith({
     String? bio,
-    dynamic coverContent,
-    List<Content>? userContent,
+    dynamic? coverContent,
     Timestamp? lastFetchedTimestamp,
     Content? newContent,
+    List<Content>? userContent,
+    String? uid,
   }) {
     return KalaUserContentState(
       bio: bio ?? this.bio,
       coverContent: coverContent ?? this.coverContent,
-      userContent: userContent ?? this.userContent,
       lastFetchedTimestamp: lastFetchedTimestamp ?? this.lastFetchedTimestamp,
       newContent: newContent ?? this.newContent,
+      userContent: userContent ?? this.userContent,
+      uid: uid ?? this.uid,
     );
   }
+
+  
 }

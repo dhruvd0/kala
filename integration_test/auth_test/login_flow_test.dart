@@ -6,8 +6,7 @@ import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import '../config/widget_tester.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  loginTestFlow();
+  
 }
 
 void loginTestFlow() {

@@ -9,7 +9,7 @@ import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/main.dart';
 
 class ContentMock {
-  static Content fakeContent(int id) {
+  static Content fakeContent(int id, [String? overrideArtistID]) {
     const vincent =
         'https://cdn.britannica.com/78/43678-050-F4DC8D93/Starry-Night-canvas-Vincent-van-Gogh-New-1889.jpg';
     const smallImage =
@@ -17,7 +17,7 @@ class ContentMock {
     return Content(
       imageUrl: Random().nextBool() ? vincent : smallImage,
       artistName: 'Artist#$id',
-      artistID: 'AA##$id',
+      artistID: overrideArtistID ?? 'AA##$id',
       title: 'A$id',
       price: 100,
       docID: '$id',
@@ -50,15 +50,12 @@ Future<void> populateFakeUserContentInFirestore(
   final uid = firestore is FakeFirebaseFirestore
       ? FirebaseMocks.firebaseMockUser.uid
       : firebaseConfig?.auth.currentUser?.uid;
-  final doc = firestore.collection(FirestorePaths.userCollection).doc(uid);
-  await doc
-      .set(KalaUser.fromSocialAuthUser(FirebaseMocks.firebaseMockUser).toMap());
 
   for (var i = 0; i < length; i++) {
     await Future<void>.delayed(const Duration(milliseconds: 500));
 
-    await doc
-        .collection(FirestorePaths.userPaths.userContent)
-        .add(ContentMock.fakeContent(i).toMap());
+    await firestore
+        .collection(FirestorePaths.fakeContentCollection)
+        .add(ContentMock.fakeContent(i, uid).toMap());
   }
 }

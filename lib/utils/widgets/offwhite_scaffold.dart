@@ -116,7 +116,7 @@ class _PageNavArrow extends StatelessWidget {
 
   bool isPageEndOfPages(DashState state) {
     return state.pageIndex == 0 && navArrowType == NavArrowType.left ||
-        state.pageIndex == state.pages.length - 1 &&
+        state.pageIndex == DashState.pages.length - 1 &&
             navArrowType == NavArrowType.right;
   }
 
@@ -138,25 +138,24 @@ class _PageNavArrow extends StatelessWidget {
             icon = Icons.arrow_forward_ios;
             break;
         }
-        return BlocBuilder<DashController, DashState>(
-          builder: (context, state) {
-            return isPageEndOfPages(state)
-                ? Container()
-                : GestureDetector(
-                    onTap: onTap,
-                    key: ValueKey(
-                      NavWidgetKeys.pageNavArrowKey(
-                        pageKey.value.toString(),
-                        navArrowType,
-                      ),
-                    ),
-                    child: Icon(
-                      icon,
-                      size: 14,
-                      color: Colors.black,
-                    ),
-                  );
+        return GestureDetector(
+          onTap: () {
+            return onTap();
           },
+          key: ValueKey(
+            NavWidgetKeys.pageNavArrowKey(
+              pageKey.value.toString(),
+              navArrowType,
+            ),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            child: Icon(
+              icon,
+              size: 14,
+              color: Colors.black,
+            ),
+          ),
         );
       },
     );

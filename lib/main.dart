@@ -4,11 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
+import 'package:kala/artist_page/widgets/artist_page.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
@@ -44,7 +46,9 @@ Future<void> setupFirebase(FirebaseConfig? mockFirebase) async {
     firebaseConfig = FirebaseConfig(
       auth: FirebaseAuth.instance,
       firestore: FirebaseFirestore.instance,
+      remoteConfig: RemoteConfig.instance,
     );
+    await firebaseConfig?.remoteConfig.fetchAndActivate();
   } else {
     firebaseConfig = mockFirebase;
     isTestMode = true;
@@ -52,6 +56,9 @@ Future<void> setupFirebase(FirebaseConfig? mockFirebase) async {
 }
 
 Future<void> setupCrashlytics() async {
+  if (isTestMode) {
+    return;
+  }
   if (kDebugMode) {
     // Force disable Crashlytics collection while doing every day development.
     // Temporarily toggle this to true if you want to test crash reporting in your app.
@@ -78,12 +85,7 @@ class KalaApp extends StatelessWidget {
               lazy: false,
               create: (context) => KalaUserBloc(),
             ),
-            BlocProvider(
-              lazy: false,
-              create: (context) => KalaUserContentCubit(
-                kalaUserBloc: context.read<KalaUserBloc>(),
-              ),
-            ),
+           
             BlocProvider(
               lazy: false,
               create: (context) => GalleryBloc(

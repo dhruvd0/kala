@@ -20,14 +20,17 @@ class FirestoreQueries {
     PaginationRequestState request,
   ) async {
     try {
-      QuerySnapshot<Json>? querySnapshot;
+      QuerySnapshot? querySnapshot;
       var collection = firestore?.collection(request.collection);
-      if (request.subCollection != null) {
-        collection = collection
-            ?.doc(request.subDocID.toString())
-            .collection(request.subCollection.toString());
+
+      Query? baseQuery = collection?.where(FieldPath.documentId, isNull: false);
+      if (request.whereQueryEquals != null &&
+          (request.whereQueryEquals?.keys.isNotEmpty ?? false)) {
+        final field = request.whereQueryEquals?.keys.first;
+        final value = request.whereQueryEquals?[field];
+        baseQuery = collection?.where(field!, isEqualTo: value.toString());
       }
-      final orderByQuery = collection?.orderBy(
+      final orderByQuery = baseQuery?.orderBy(
         request.orderByField,
         descending: request.orderIsDescending,
       );
@@ -65,10 +68,15 @@ class FirestoreQueries {
     }
   }
 
-  List<Json> jsonListFromDocSnaps(QuerySnapshot<Json> querySnapshot) {
+  List<Json> jsonListFromDocSnaps(QuerySnapshot querySnapshot) {
     final jsonList = <Json>[];
     for (final doc in querySnapshot.docs) {
-      final data = doc.data()..putIfAbsent('docID', () => doc.id);
+      final docData = doc.data();
+      if (docData == null) {
+        continue;
+      }
+      final jsonData = docData as Map<String, dynamic>;
+      final data = jsonData..putIfAbsent('docID', () => doc.id);
       jsonList.add(data);
     }
     return jsonList;

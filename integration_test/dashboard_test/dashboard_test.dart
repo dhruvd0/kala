@@ -59,5 +59,5 @@ void dashboardIntegrationTests() {
 }
 
 void main() {
-  dashboardIntegrationTests();
+  
 }
