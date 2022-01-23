@@ -11,7 +11,7 @@ class BioWidget extends StatelessWidget {
     return BlocBuilder<KalaUserContentBloc, KalaUserContentState>(
       builder: (context, state) {
         return Container(
-          margin: EdgeInsets.only(left: 22, right: 22),
+          margin: const EdgeInsets.only(left: 22, right: 22),
         );
       },
     );

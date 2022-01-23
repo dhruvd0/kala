@@ -21,7 +21,7 @@ class FirestoreQueries {
   ) async {
     try {
       QuerySnapshot? querySnapshot;
-      var collection = firestore?.collection(request.collection);
+      final collection = firestore?.collection(request.collection);
 
       Query? baseQuery = collection?.where(FieldPath.documentId, isNull: false);
       if (request.whereQueryEquals != null &&

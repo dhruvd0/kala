@@ -5,7 +5,7 @@ import 'package:kala/dashboard/bloc/dash_state.dart';
 class DashController extends Cubit<DashState> {
   DashController()
       : super(
-          DashState(
+          const DashState(
             pageIndex: 0,
           ),
         );

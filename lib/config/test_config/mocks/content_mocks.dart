@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:kala/auth/models/kala_user.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/gallery/content/models/content.dart';

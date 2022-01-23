@@ -6,16 +6,17 @@ import 'package:kala/gallery/widgets/page/gallery_page.dart';
 
 @immutable
 class DashState {
-  DashState({
+  const DashState({
     required this.pageIndex,
   });
 
-  final int pageIndex;
- static final List<Widget> pages = [
+  static final List<Widget> pages = [
     const GalleryPage(),
     const ArtistPage(),
     const AcquiresPage()
   ];
+
+  final int pageIndex;
 
   @override
   bool operator ==(Object other) {

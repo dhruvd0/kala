@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +12,6 @@ import 'package:kala/auth/bloc/kala_user_state.dart';
 import 'package:kala/config/remote_config_data.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/main.dart';
-import 'package:fluentui_icons/fluentui_icons.dart';
 
 class CoverContent extends StatelessWidget {
   const CoverContent({Key? key}) : super(key: key);
@@ -26,11 +26,12 @@ class CoverContent extends StatelessWidget {
             maxHeight: 182.h,
           ),
           decoration: BoxDecoration(
-            border: Border.all(width: 1),
-            
+            border: Border.all(),
           ),
           margin: EdgeInsets.symmetric(horizontal: 40.w),
-          child: userState.isEditMode ? AddCoverContent() : CoverImage(),
+          child: userState.isEditMode
+              ? const AddCoverContent()
+              : const CoverImage(),
         );
       },
     );
@@ -65,7 +66,7 @@ class AddCoverContent extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(FluentSystemIcons.ic_fluent_slide_add_regular),
+                      const Icon(FluentSystemIcons.ic_fluent_slide_add_regular),
                       SizedBox(
                         height: 16.h,
                       ),
@@ -73,7 +74,8 @@ class AddCoverContent extends StatelessWidget {
                         padding: EdgeInsets.only(left: 47.w, right: 37.w),
                         child: AutoSizeText(
                           firebaseConfig?.remoteConfig.getString(
-                                  RemoteConfigKeys.addNewContentPlaceholder) ??
+                                RemoteConfigKeys.addNewContentPlaceholder,
+                              ) ??
                               '',
                           style: TextThemeContext(context).bodyText2,
                           textAlign: TextAlign.center,

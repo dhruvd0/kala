@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:kala/auth/social_integration/auth_types.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
 

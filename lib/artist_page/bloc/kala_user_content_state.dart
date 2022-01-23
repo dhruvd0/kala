@@ -1,6 +1,3 @@
-// ignore_for_file: avoid_dynamic_calls
-
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,18 +11,18 @@ class KalaUserContentState extends Equatable {
   const KalaUserContentState({
     required this.bio,
     required this.coverContent,
-    this.lastFetchedTimestamp,
     required this.newContent,
     required this.userContent,
     required this.uid,
+    this.lastFetchedTimestamp,
   }) : assert(coverContent is File || coverContent is String);
 
   final String bio;
   final dynamic coverContent;
   final Timestamp? lastFetchedTimestamp;
   final Content newContent;
-  final List<Content> userContent;
   final String uid;
+  final List<Content> userContent;
 
   @override
   List<dynamic> get props {
@@ -46,7 +43,7 @@ class KalaUserContentState extends Equatable {
 
   KalaUserContentState copyWith({
     String? bio,
-    dynamic? coverContent,
+    dynamic coverContent,
     Timestamp? lastFetchedTimestamp,
     Content? newContent,
     List<Content>? userContent,
@@ -61,6 +58,4 @@ class KalaUserContentState extends Equatable {
       uid: uid ?? this.uid,
     );
   }
-
-  
 }

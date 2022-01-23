@@ -16,38 +16,39 @@ class ArtistPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        lazy: false,
-        create: (context) => KalaUserContentBloc(
-              kalaUserBloc: context.read<KalaUserBloc>(),
-              userID: userID,
+      lazy: false,
+      create: (context) => KalaUserContentBloc(
+        kalaUserBloc: context.read<KalaUserBloc>(),
+        userID: userID,
+      ),
+      child: BlocBuilder<KalaUserBloc, KalaUserState>(
+        key: UniqueKey(),
+        builder: (context, state) {
+          return OffWhiteScaffold(
+            trailing: GestureDetector(
+              onTap: () {
+                BlocProvider.of<KalaUserBloc>(context, listen: false)
+                    .toggleEditMode();
+              },
+              child: const Icon(
+                Icons.edit,
+                color: Colors.black,
+              ),
             ),
-        child: BlocBuilder<KalaUserBloc, KalaUserState>(
-          key: UniqueKey(),
-          builder: (context, state) {
-            return OffWhiteScaffold(
-              trailing: GestureDetector(
-                onTap: () {
-                  BlocProvider.of<KalaUserBloc>(context, listen: false)
-                      .toggleEditMode();
-                },
-                child: const Icon(
-                  Icons.edit,
-                  color: Colors.black,
+            scaffoldKey: const ValueKey(ScaffoldKeys.artistPageKey),
+            enablePageNavigationArrows: true,
+            centerTitle: state.kalaUser.name,
+            body: Column(
+              children: [
+                SizedBox(
+                  height: 40.h,
                 ),
-              ),
-              scaffoldKey: const ValueKey(ScaffoldKeys.artistPageKey),
-              enablePageNavigationArrows: true,
-              centerTitle: state.kalaUser.name,
-              body: Column(
-                children: [
-                  SizedBox(
-                    height: 40.h,
-                  ),
-                  Flexible(child: CoverContent())
-                ],
-              ),
-            );
-          },
-        ));
+                const Flexible(child: CoverContent())
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }
