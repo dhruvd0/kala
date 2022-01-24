@@ -4,7 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/auth/bloc/kala_user_state.dart';
+
+import 'package:kala/auth/models/kala_user.dart';
 import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
@@ -24,15 +25,15 @@ class GalleryBloc extends Cubit<GalleryState> {
 
     kalaUserStateStream =
         kalaUserBloc.stream.asBroadcastStream().listen((state) {
-      if (state is AuthenticatedKalaUserState) {
-        getContentList(0);
+      if (state.kalaUserState==KalaUserState.authenticated) {
+        getContentList(1);
       }
     });
   }
 
   final PaginationCubit contentPaginationCubit =
       PaginationCubit.galleryContentPagination();
-  StreamSubscription<KalaUserState>? kalaUserStateStream;
+  StreamSubscription<KalaUser>? kalaUserStateStream;
 
   @override
   Future<void> close() async {

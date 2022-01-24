@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/auth/bloc/kala_user_state.dart';
+import 'package:kala/auth/models/kala_user.dart';
+
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 class AcquiresPage extends StatelessWidget {
@@ -9,7 +10,7 @@ class AcquiresPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KalaUserBloc, KalaUserState>(
+    return BlocBuilder<KalaUserBloc, KalaUser>(
       builder: (context, state) {
         return OffWhiteScaffold(
           scaffoldKey: const ValueKey('AcquiresPage'),

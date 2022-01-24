@@ -1,18 +1,21 @@
 // ignore_for_file: unawaited_futures, cascade_invocations
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document_scanner_flutter/document_scanner_flutter.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_state.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/auth/models/kala_user.dart';
+
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/gallery/content/models/content.dart';
@@ -24,20 +27,23 @@ import 'package:permission_handler/permission_handler.dart';
 
 class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   KalaUserContentBloc({
-    required this.kalaUserBloc,
+    this.kalaUserBloc,
     this.firebaseFirestore,
     this.customStorage,
     String? userID,
-  }) : super(
+  })  : assert(kalaUserBloc != null || userID != null),
+        super(
           KalaUserContentState(
             userContent: const [],
-            bio: '',
+            bio: 'Empty Bio',
             coverContent: '',
             uid: userID ?? firebaseConfig?.auth.currentUser?.uid ?? '',
             newContent: initialNewContent(),
+            isEditMode: false,
           ),
         ) {
-    setupUserContentPaginationCubit();
+    setupUserContentPaginationCubit(userID);
+    setupKalaUserBlocListener();
   }
 
   factory KalaUserContentBloc.mock() {
@@ -45,13 +51,42 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
       kalaUserBloc: KalaUserBloc(),
       firebaseFirestore: FirebaseMocks.mockFirestore,
       customStorage: FirebaseMocks.mockFirebaseStorage,
+      userID: FirebaseMocks.firebaseMockUser.uid,
     );
   }
 
   PaginationCubit? contentPaginationCubit;
   FirebaseStorage? customStorage;
   FirebaseFirestore? firebaseFirestore;
-  final KalaUserBloc kalaUserBloc;
+  final KalaUserBloc? kalaUserBloc;
+  StreamSubscription<KalaUser>? kalaUserStream;
+
+  @override
+  Future<void> close() async {
+    kalaUserStream?.cancel();
+    super.close();
+  }
+
+  @override
+  void onChange(Change<KalaUserContentState> change) {
+    if (change.currentState.isEditMode == true &&
+        change.nextState.isEditMode == false) {
+      publishChanges();
+    }
+    super.onChange(change);
+  }
+
+  Future<void> loadCoverImageFromCache() async {
+    if (state.coverContent is String &&
+        state.coverContent.toString().isNotEmpty &&
+        state.coverContent.toString().contains('firebasestorage')) {
+      final fileInfo = await DefaultCacheManager()
+          .getFileFromCache(state.coverContent.toString());
+      if (fileInfo?.file != null) {
+        emit(state.copyWith(coverContent: fileInfo?.file));
+      }
+    }
+  }
 
   static Content initialNewContent() => Content.fromMap(
         <String, dynamic>{
@@ -77,7 +112,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
           newContent: state.newContent.copyWith(
             artistName: isTestMode
                 ? FirebaseMocks.firebaseMockUser.displayName
-                : kalaUserBloc.state.kalaUser.name,
+                : kalaUserBloc?.state.name,
           ),
         ),
       );
@@ -142,7 +177,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
     final uploadedContentDocID = await setInitialContentData();
     assert(state.newContent.imageFile != null);
     final imageUrl = await uploadImageAndGetUrl(
-      '${FirestorePaths.fakeContentCollection}/$uploadedContentDocID/',
+      '${FirestorePaths.contentCollection}/$uploadedContentDocID/',
     );
     emitLocalNewContentState(
       imageUrl,
@@ -197,35 +232,62 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
 
   Future<String> setInitialContentData() {
     return FirestoreUpdateRequest(firestore: firebaseFirestore).set(
-      FirestorePaths.fakeContentCollection,
+      FirestorePaths.contentCollection,
       state.newContent.toMap(),
     );
   }
 
-  void publishChanges() {}
-
-  void setupUserContentPaginationCubit() {
-    if (firebaseFirestore is FakeFirebaseFirestore) {
-      contentPaginationCubit = PaginationCubit.userContentPagination(
-        FirebaseMocks.firebaseMockUser.uid,
+  Future<void> publishChanges() async {
+    if (state.coverContent is File) {
+      FirebaseStorageRequest()
+          .uploadFile(
+        '${FirestorePaths.userCollection}/${state.uid}/cover/${(state.coverContent as File).path}',
+        state.coverContent,
+      )
+          .then(
+        (url) {
+          return FirestoreUpdateRequest().update(
+            FirestorePaths.userCollection,
+            state.uid,
+            {
+              'coverContent': url,
+            },
+          );
+        },
       );
+    }
+    await FirestoreUpdateRequest()
+        .update(FirestorePaths.userCollection, state.uid, {
+      'bio': state.bio,
+      'name': kalaUserBloc?.state.name,
+    });
+  }
+
+  void setupUserContentPaginationCubit([String? customUid]) {
+    contentPaginationCubit = PaginationCubit.userContentPagination(
+      customUid ?? kalaUserBloc?.state.uid ?? '',
+    );
+    if (firebaseFirestore != null) {
       contentPaginationCubit?.firestore = firebaseFirestore;
     }
-      
-    firebaseConfig?.auth.userChanges().asBroadcastStream().listen((user) {
-      if (user == null) {
-        return;
-      }
-      
-      emit(state.copyWith(uid: user.uid));
-      contentPaginationCubit = PaginationCubit.userContentPagination(
-       user.uid,
-      );
-      if (firebaseFirestore != null) {
-        contentPaginationCubit?.firestore = firebaseFirestore;
-      }
+  }
+
+  void setupKalaUserBlocListener() {
+    if (kalaUserBloc?.state.kalaUserState == KalaUserState.active) {
+      handleKalaUserState(kalaUserBloc!.state);
+    }
+    kalaUserStream =
+        kalaUserBloc?.stream.asBroadcastStream().listen(handleKalaUserState);
+  }
+
+  void handleKalaUserState(KalaUser userState) {
+    if (userState.kalaUserState == KalaUserState.active) {
+      final kalaUserContentState =
+          KalaUserContentState.fromMap(userState.userMapData);
+      emit(kalaUserContentState);
+      loadCoverImageFromCache();
       getUserContent(0);
-    });
+    }
   }
 
   Future<File?> scanImage(BuildContext context) async {
@@ -246,14 +308,18 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
     if (newContent?.isNotEmpty ?? false) {
       emit(
         state.copyWith(
-          userContent: (newContent ?? <Content>[])
-              .map((dynamic e) {
-                return e as Content;
-              })
-              .toList(),
+          userContent: (newContent ?? <Content>[]).map((dynamic e) {
+            return e as Content;
+          }).toList(),
           lastFetchedTimestamp: Timestamp.now(),
         ),
       );
     }
   }
+
+  void toggleEditMode() {
+    emit(state.copyWith(isEditMode: !state.isEditMode));
+  }
 }
+
+class ArtistPageContentBloc extends KalaUserContentBloc {}

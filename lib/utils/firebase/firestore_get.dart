@@ -23,7 +23,7 @@ class FirestoreQueries {
       QuerySnapshot? querySnapshot;
       final collection = firestore?.collection(request.collection);
 
-      Query? baseQuery = collection?.where(FieldPath.documentId, isNull: false);
+      Query? baseQuery = collection;
       if (request.whereQueryEquals != null &&
           (request.whereQueryEquals?.keys.isNotEmpty ?? false)) {
         final field = request.whereQueryEquals?.keys.first;

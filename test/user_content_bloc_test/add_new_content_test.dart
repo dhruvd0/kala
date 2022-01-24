@@ -23,7 +23,7 @@ void main() {
       log(FirebaseMocks.mockFirestore.dump());
       await kalaUserContentCubit.getUserContent(2);
 
-      expect(kalaUserContentCubit.state.userContent.length, 1);
+      expect(kalaUserContentCubit.state.userContent?.length, 1);
     },
   );
 }

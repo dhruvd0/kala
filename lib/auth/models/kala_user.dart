@@ -1,19 +1,28 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 
-// ignore_for_file: implicit_dynamic_map_literal
-// ignore_for_file: argument_type_not_assignable
-@immutable
-class KalaUser {
+import 'package:kala/config/typedefs.dart';
+import 'package:kala/main.dart';
+
+enum KalaUserState {
+  unauthenticated,
+  active,
+  authenticated,
+}
+
+class KalaUser extends Equatable {
   const KalaUser({
-    required this.name,
     required this.authType,
-    required this.photoURL,
     required this.contactURL,
+    required this.kalaUserState,
     required this.lastSignIn,
+    required this.name,
+    required this.photoURL,
+    required this.uid,
+    required this.userMapData,
   });
 
   factory KalaUser.fromJson(String source) =>
@@ -21,11 +30,16 @@ class KalaUser {
 
   factory KalaUser.fromMap(Map<String, dynamic> map) {
     return KalaUser(
-      name: map['name'] ?? '',
       authType: map['authType'] ?? '',
-      photoURL: map['photoURL'] ?? '',
       contactURL: map['contactURL'] ?? '',
+      kalaUserState: firebaseConfig?.auth.currentUser == null
+          ? KalaUserState.unauthenticated
+          : KalaUserState.authenticated,
       lastSignIn: map['lastSignIn'],
+      name: map['name'] ?? '',
+      photoURL: map['photoURL'],
+      userMapData: map,
+      uid: map['uid'] ?? '',
     );
   }
 
@@ -38,6 +52,9 @@ class KalaUser {
       authType: authType.toString(),
       lastSignIn: Timestamp.now(),
       photoURL: user.photoURL ?? '',
+      kalaUserState: KalaUserState.authenticated,
+      uid: user.uid,
+      userMapData: const {},
       contactURL: user.phoneNumber ?? user.email.toString(),
     );
   }
@@ -47,64 +64,68 @@ class KalaUser {
   final String authType;
 
   final String contactURL;
+  final KalaUserState kalaUserState;
   final Timestamp? lastSignIn;
   final String name;
+
   /// Profile image ulr
   final String? photoURL;
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-
-    return other is KalaUser &&
-        other.name == name &&
-        other.authType == authType &&
-        other.photoURL == photoURL &&
-        other.contactURL == contactURL &&
-        other.lastSignIn == lastSignIn;
-  }
+  final String uid;
+  final Json userMapData;
 
   @override
-  int get hashCode {
-    return name.hashCode ^
-        authType.hashCode ^
-        photoURL.hashCode ^
-        contactURL.hashCode ^
-        lastSignIn.hashCode;
+  List<dynamic> get props {
+    return [
+      authType,
+      contactURL,
+      kalaUserState,
+      lastSignIn,
+      name,
+      photoURL,
+      uid,
+      userMapData,
+    ];
   }
 
   @override
   String toString() {
-    return 'KalaUser(name: $name, authType: $authType, photoURL: $photoURL, contactURL: $contactURL, lastSignIn: $lastSignIn)';
+    return 'KalaUser(authType: $authType, contactURL: $contactURL, kalaUserState: $kalaUserState, lastSignIn: $lastSignIn, name: $name, photoURL: $photoURL, uid: $uid)';
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
       'authType': authType,
-      'photoURL': photoURL,
       'contactURL': contactURL,
-      'lastSignIn': lastSignIn
+      'kalaUserState': kalaUserState,
+      'lastSignIn': lastSignIn,
+      'name': name,
+      'photoURL': photoURL,
+      'uid': uid,
     };
   }
 
   String toJson() => json.encode(toMap());
 
   KalaUser copyWith({
-    String? name,
     String? authType,
-    String? photoURL,
     String? contactURL,
+    KalaUserState? kalaUserState,
     Timestamp? lastSignIn,
+    String? name,
+    String? photoURL,
+    String? uid,
+    Json? userMapData,
   }) {
     return KalaUser(
-      name: name ?? this.name,
       authType: authType ?? this.authType,
-      photoURL: photoURL ?? this.photoURL,
       contactURL: contactURL ?? this.contactURL,
+      kalaUserState: kalaUserState ?? this.kalaUserState,
       lastSignIn: lastSignIn ?? this.lastSignIn,
+      name: name ?? this.name,
+      photoURL: photoURL ?? this.photoURL,
+      uid: uid ?? this.uid,
+      userMapData: userMapData ?? this.userMapData,
     );
   }
 

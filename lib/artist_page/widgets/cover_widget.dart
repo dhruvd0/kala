@@ -7,10 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_state.dart';
-import 'package:kala/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/auth/bloc/kala_user_state.dart';
+
 import 'package:kala/config/remote_config_data.dart';
 import 'package:kala/config/theme/theme.dart';
+import 'package:kala/gallery/content/widgets/content_image.dart';
 import 'package:kala/main.dart';
 
 class CoverContent extends StatelessWidget {
@@ -18,20 +18,22 @@ class CoverContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KalaUserBloc, KalaUserState>(
+    return BlocBuilder<KalaUserContentBloc, KalaUserContentState>(
       builder: (context, userState) {
         return Container(
           width: 1.sw,
           constraints: BoxConstraints(
-            maxHeight: 182.h,
+            minHeight: 300.h,
+            maxHeight: (1.sh) / 2,
           ),
           decoration: BoxDecoration(
             border: Border.all(),
+            color: Colors.transparent,
           ),
           margin: EdgeInsets.symmetric(horizontal: 40.w),
           child: userState.isEditMode
               ? const AddCoverContent()
-              : const CoverImage(),
+              : ContentImage(image: userState.coverContent),
         );
       },
     );
@@ -87,14 +89,5 @@ class AddCoverContent extends StatelessWidget {
               );
       },
     );
-  }
-}
-
-class CoverImage extends StatelessWidget {
-  const CoverImage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/auth/bloc/kala_user_state.dart';
+import 'package:kala/auth/models/kala_user.dart';
+
 import 'package:kala/auth/social_integration/auth_types.dart';
 import 'package:kala/auth/widgets/auth_btn.dart';
 import 'package:kala/config/nav/route_names.dart';
@@ -21,9 +22,9 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
       scaffoldKey: const ValueKey(ScaffoldKeys.authPageKey),
-      body: BlocListener<KalaUserBloc, KalaUserState>(
+      body: BlocListener<KalaUserBloc, KalaUser>(
         listener: (_, state) {
-          if (state is AuthenticatedKalaUserState) {
+          if (state.kalaUserState == KalaUserState.authenticated) {
             Navigator.of(context).pushReplacementNamed(Routes.gallery);
           }
         },

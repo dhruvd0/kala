@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,7 +32,9 @@ Future<void> main({FirebaseConfig? mockFirebase}) async {
 
       runApp(const KalaApp());
     },
-    (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack),
+    (error, stack) => isTestMode
+        ? log(error.toString(), stackTrace: stack)
+        : FirebaseCrashlytics.instance.recordError(error, stack),
   );
 }
 
@@ -60,7 +63,11 @@ Future<void> setupCrashlytics() async {
   if (kDebugMode) {
     // Force disable Crashlytics collection while doing every day development.
     // Temporarily toggle this to true if you want to test crash reporting in your app.
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+    try {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+    } on FirebaseException catch (e) {
+      log(e.message.toString());
+    }
   } else {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   }
@@ -83,7 +90,6 @@ class KalaApp extends StatelessWidget {
               lazy: false,
               create: (context) => KalaUserBloc(),
             ),
-           
             BlocProvider(
               lazy: false,
               create: (context) => GalleryBloc(

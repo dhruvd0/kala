@@ -37,7 +37,7 @@ Future<void> populateFakeContentInFirestore(
   for (var i = 0; i < length; i++) {
     await Future<void>.delayed(const Duration(milliseconds: 500));
     await firestore
-        .collection(FirestorePaths.fakeContentCollection)
+        .collection(FirestorePaths.contentCollection)
         .add(ContentMock.fakeContent(i).toMap());
   }
 }
@@ -54,7 +54,7 @@ Future<void> populateFakeUserContentInFirestore(
     await Future<void>.delayed(const Duration(milliseconds: 500));
 
     await firestore
-        .collection(FirestorePaths.fakeContentCollection)
+        .collection(FirestorePaths.contentCollection)
         .add(ContentMock.fakeContent(i, uid).toMap());
   }
 }

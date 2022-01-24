@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,14 +7,14 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:kala/auth/bloc/kala_user_state.dart';
+
 import 'package:kala/auth/models/kala_user.dart';
 import 'package:kala/auth/social_integration/auth_types.dart';
 import 'package:kala/auth/social_integration/google.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/main.dart';
 
-class KalaUserBloc extends Cubit<KalaUserState> {
+class KalaUserBloc extends Cubit<KalaUser> {
   KalaUserBloc() : super(unauthenticatedBaseUser()) {
     registerAuthListener();
   }
@@ -27,11 +28,6 @@ class KalaUserBloc extends Cubit<KalaUserState> {
   }
 
   @override
-  void onChange(Change<KalaUserState> change) {
-    super.onChange(change);
-  }
-
-  @override
   void onError(Object error, StackTrace stackTrace) {
     super.onError(error, stackTrace);
   }
@@ -40,10 +36,8 @@ class KalaUserBloc extends Cubit<KalaUserState> {
     authStream = firebaseConfig?.auth.authStateChanges().listen((user) {
       if (user != null && user.uid.isNotEmpty) {
         emit(
-          AuthenticatedKalaUserState(
-            KalaUser.fromSocialAuthUser(
-              user,
-            ),
+          KalaUser.fromSocialAuthUser(
+            user,
           ),
         );
         startUserSnapshotFetcher();
@@ -53,15 +47,16 @@ class KalaUserBloc extends Cubit<KalaUserState> {
     });
   }
 
-  static UnauthenticatedKalaUserState unauthenticatedBaseUser() {
-    return const UnauthenticatedKalaUserState(
-      KalaUser(
-        name: '',
-        authType: '',
-        photoURL: '',
-        contactURL: '',
-        lastSignIn: null,
-      ),
+  static KalaUser unauthenticatedBaseUser() {
+    return const KalaUser(
+      name: '',
+      authType: '',
+      photoURL: '',
+      contactURL: '',
+      lastSignIn: null,
+      uid: '',
+      userMapData: {},
+      kalaUserState: KalaUserState.unauthenticated,
     );
   }
 
@@ -97,7 +92,7 @@ class KalaUserBloc extends Cubit<KalaUserState> {
     if (firebaseConfig?.auth.currentUser == null) {
       await Fluttertoast.showToast(msg: 'Log in First');
     }
-    assert(state.kalaUser.validateUser());
+    assert(state.validateUser());
     await firebaseConfig?.firestore
         .collection(FirestorePaths.userCollection)
         .doc(uid)
@@ -112,20 +107,25 @@ class KalaUserBloc extends Cubit<KalaUserState> {
           .doc(uid)
           .snapshots()
           .listen((event) async {
-        if (event.data() == null) {
+        final data = event.data();
+        if (data == null) {
           await addKalaUserToFirestore();
 
           return;
         }
-        final userFromSnapshot = KalaUser.fromMap(
-          event.data()!,
+        data['uid'] = firebaseConfig?.auth.currentUser?.uid;
+        var userFromSnapshot = KalaUser.fromMap(
+          data,
         );
+        userFromSnapshot =
+            userFromSnapshot.copyWith(kalaUserState: KalaUserState.active);
 
         assert(userFromSnapshot.validateUser());
         try {
-          emit(ActiveKalaUserState(userFromSnapshot));
-          // ignore: avoid_catching_errors
+          emit(userFromSnapshot);
+        // ignore: avoid_catching_errors
         } on StateError {
+          log('State Error');
           return;
         }
       });
@@ -158,13 +158,10 @@ class KalaUserBloc extends Cubit<KalaUserState> {
         authType: 'mock-$authType',
       )..validateUser();
 
-      emit(AuthenticatedKalaUserState(kalaUser));
+      emit(kalaUser);
     }
   }
 
-  void getUserContent() {}
 
-  void toggleEditMode() {
-    emit(ActiveKalaUserState(state.kalaUser, editMode: !state.isEditMode));
-  }
+  
 }

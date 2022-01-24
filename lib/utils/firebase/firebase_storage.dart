@@ -6,7 +6,7 @@ import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class FirebaseStorageRequest {
-  FirebaseStorageRequest(FirebaseStorage? firebaseStorage) {
+  FirebaseStorageRequest([FirebaseStorage? firebaseStorage]) {
     this.firebaseStorage = firebaseStorage ?? FirebaseStorage.instance;
   }
 
@@ -24,8 +24,9 @@ class FirebaseStorageRequest {
       if (firebaseStorage is MockFirebaseStorage) {
         final mock = firebaseStorage! as MockFirebaseStorage;
         log(mock.storedFilesMap.toString());
+        return 'test_url';
       }
-      return 'test_url';
+      return ref.getDownloadURL();
     } on Exception catch (e) {
       await Fluttertoast.showToast(msg: e.toString());
       return ' ';

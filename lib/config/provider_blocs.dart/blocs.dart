@@ -17,7 +17,7 @@
 //               create: (context) => GalleryBloc(
 //                 kalaUserBloc: context.read<KalaUserBloc>(),
 //                 contentPaginationCubit: ContentPaginationCubit(
-//                   collection: FirestorePaths.fakeContentCollection,
+//                   collection: FirestorePaths.contentCollection,
 //                   orderIsDescending: true,
 //                   orderByField: 'uploadTimestamp',
 //                 ),

@@ -33,7 +33,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
         );
   factory PaginationCubit.galleryContentPagination() {
     return PaginationCubit(
-      collection: FirestorePaths.fakeContentCollection,
+      collection: FirestorePaths.contentCollection,
       orderIsDescending: true,
       dataFromMap: Content.fromMap,
       orderByField: 'uploadTimestamp',
@@ -41,14 +41,11 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
   }
   factory PaginationCubit.userContentPagination(String uid) {
     return PaginationCubit(
-      collection: FirestorePaths.fakeContentCollection,
+      collection: FirestorePaths.contentCollection,
       orderIsDescending: true,
       orderByField: 'uploadTimestamp',
       dataFromMap: Content.fromMap,
-      whereQueryEquals: {
-        'artistID':uid
-      },
-     
+      whereQueryEquals: {'artistID': uid},
     );
   }
 
