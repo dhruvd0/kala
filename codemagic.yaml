@@ -67,15 +67,12 @@ workflows:
       - |
         # set up local properties
         echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+      - flutter clean
       - flutter packages pub get
       - flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
       - flutter build apk --release
     artifacts:
-      - build/**/outputs/apk/**/*.apk
-      - build/**/outputs/bundle/**/*.aab
-      - build/**/outputs/**/mapping.txt
-      - '*.snap'
-      - build/windows/**/*.msix
+      - build/**/outputs/apk/release/*.apk
       - flutter_drive.log
     publishing:
       email:
