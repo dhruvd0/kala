@@ -5,6 +5,7 @@ import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/artist_page/widgets/bio.dart';
 import 'package:kala/artist_page/widgets/cover_widget.dart';
 import 'package:kala/artist_page/widgets/keys/artist_page/artist_page_keys.dart';
+import 'package:kala/artist_page/widgets/keys/artist_page/gallery_grid.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
@@ -33,17 +34,24 @@ class ArtistPage extends StatelessWidget {
       enablePageNavigationArrows: true,
       centerTitle:
           BlocProvider.of<KalaUserBloc>(context, listen: false).state.name,
-      body: Column(
-        children: [
-          SizedBox(
-            height: 40.h,
-          ),
-          const Flexible(child: CoverContent()),
-          SizedBox(
-            height: 40.h,
-          ),
-          const BioWidget()
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 40.h,
+            ),
+            const Flexible(child: CoverContent()),
+            SizedBox(
+              height: 40.h,
+            ),
+            const BioWidget(),
+            SizedBox(
+              height: 50.h,
+            ),
+            Flexible(child: GalleryGridView())
+          ],
+        ),
       ),
     );
   }

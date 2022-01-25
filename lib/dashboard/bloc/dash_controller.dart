@@ -10,7 +10,7 @@ class DashController extends Cubit<DashState> {
           ),
         );
 
-  static final PageController pageController = PageController();
+  static final PageController pageController = PageController(initialPage: 1);
 
   Future<void> nextPage() async {
     if (DashController.pageController.hasClients) {

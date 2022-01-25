@@ -23,11 +23,15 @@ class CoverContent extends StatelessWidget {
         return Container(
           width: 1.sw,
           constraints: BoxConstraints(
-            minHeight: 300.h,
-            maxHeight: (1.sh) / 2,
+            minHeight: 100.h,
+            maxHeight: (1.sh-100) / 2,
           ),
           decoration: BoxDecoration(
-            border: Border.all(),
+            borderRadius: BorderRadius.circular(5),
+            border:!userState.isEditMode && (userState.coverContent is File) ||
+                    userState.isContentImageUrlValid()
+                ? null
+                : Border.all(),
             color: Colors.transparent,
           ),
           margin: EdgeInsets.symmetric(horizontal: 40.w),
@@ -47,46 +51,43 @@ class AddCoverContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<KalaUserContentBloc, KalaUserContentState>(
       builder: (context, state) {
-        return state.coverContent is File
-            ? Image.file(
-                state.coverContent,
-                fit: BoxFit.fitWidth,
-              )
-            : GestureDetector(
-                onTap: () {
-                  final bloc = BlocProvider.of<KalaUserContentBloc>(
-                    context,
-                    listen: false,
-                  );
-                  bloc.scanImage(context).then((value) {
-                    if (value is File) {
-                      bloc.changeCover(value);
-                    }
-                  });
-                },
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(FluentSystemIcons.ic_fluent_slide_add_regular),
-                      SizedBox(
-                        height: 16.h,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 47.w, right: 37.w),
-                        child: AutoSizeText(
-                          firebaseConfig?.remoteConfig.getString(
-                                RemoteConfigKeys.addNewContentPlaceholder,
-                              ) ??
-                              '',
-                          style: TextThemeContext(context).bodyText2,
-                          textAlign: TextAlign.center,
-                        ),
-                      )
-                    ],
-                  ),
+        return GestureDetector(
+          onTap: () {
+            final bloc = BlocProvider.of<KalaUserContentBloc>(
+              context,
+              listen: false,
+            );
+            bloc.scanImage(context).then((value) {
+              if (value is File) {
+                bloc
+                  ..changeCover(value)
+                  ..toggleEditMode();
+              }
+            });
+          },
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(FluentSystemIcons.ic_fluent_slide_add_regular),
+                SizedBox(
+                  height: 16.h,
                 ),
-              );
+                Padding(
+                  padding: EdgeInsets.only(left: 47.w, right: 37.w),
+                  child: AutoSizeText(
+                    firebaseConfig?.remoteConfig.getString(
+                          RemoteConfigKeys.addNewContentPlaceholder,
+                        ) ??
+                        '',
+                    style: TextThemeContext(context).bodyText2,
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
       },
     );
   }

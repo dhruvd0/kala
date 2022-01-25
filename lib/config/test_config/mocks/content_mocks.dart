@@ -18,6 +18,7 @@ class ContentMock {
       artistName: 'Artist#$id',
       artistID: overrideArtistID ?? 'AA##$id',
       title: 'A$id',
+      viewMode: ContentViewMode.grid,
       price: 100,
       docID: '$id',
       fileSize: 200,

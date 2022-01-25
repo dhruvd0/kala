@@ -52,6 +52,12 @@ class KalaUserContentState extends Equatable {
     ];
   }
 
+  bool isContentImageUrlValid() {
+    return coverContent is String &&
+        coverContent.toString().isNotEmpty &&
+        coverContent.toString().contains('firebasestorage');
+  }
+
   @override
   String toString() {
     return 'KalaUserContentState(bio: $bio, coverContent: $coverContent, lastFetchedTimestamp: $lastFetchedTimestamp, newContent: $newContent, uid: $uid, userContent: $userContent, isEditMode: $isEditMode)';

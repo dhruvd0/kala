@@ -40,62 +40,66 @@ class OffWhiteScaffold extends StatelessWidget {
       body: body,
       key: scaffoldKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50.h),
-        child: AppBar(
-          elevation: 0,
-          backgroundColor: BasicColors.backgroundOffWhite,
-          actions: trailing == null
-              ? null
-              : [
-                  trailing!,
-                  SizedBox(
-                    width: 10.w,
-                  )
-                ],
-          leading: enableBackArrow == null
-              ? null
-              : enableBackArrow ?? false
-                  ? GestureDetector(
-                      onTap: onBack,
-                      child: Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
+        preferredSize: Size.fromHeight(60.h),
+        child: Container(
+          margin: EdgeInsets.only(top: 20.h),
+          child: AppBar(
+            
+            elevation: 0,
+            backgroundColor: BasicColors.backgroundOffWhite,
+            actions: trailing == null
+                ? null
+                : [
+                    trailing!,
+                    SizedBox(
+                      width: 10.w,
                     )
-                  : null,
-          centerTitle: true,
-          title: centerTitle == null
-              ? null
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (enablePageNavigationArrows ?? false)
-                      _PageNavArrow(
-                        navArrowType: NavArrowType.left,
-                        pageKey: scaffoldKey,
+                  ],
+            leading: enableBackArrow == null
+                ? null
+                : enableBackArrow ?? false
+                    ? GestureDetector(
+                        onTap: onBack,
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
                       )
-                    else
-                      Container(),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15.w),
-                      child: Title(
-                        color: Colors.black,
-                        child: Text(
-                          centerTitle.toString(),
-                          style: TextThemeContext(context).headline1,
+                    : null,
+            centerTitle: true,
+            title: centerTitle == null
+                ? null
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (enablePageNavigationArrows ?? false)
+                        _PageNavArrow(
+                          navArrowType: NavArrowType.left,
+                          pageKey: scaffoldKey,
+                        )
+                      else
+                        Container(),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 15.w),
+                        child: Title(
+                          color: Colors.black,
+                          child: Text(
+                            centerTitle.toString(),
+                            style: TextThemeContext(context).headline1,
+                          ),
                         ),
                       ),
-                    ),
-                    if (enablePageNavigationArrows ?? false)
-                      _PageNavArrow(
-                        navArrowType: NavArrowType.right,
-                        pageKey: scaffoldKey,
-                      )
-                    else
-                      Container(),
-                  ],
-                ),
+                      if (enablePageNavigationArrows ?? false)
+                        _PageNavArrow(
+                          navArrowType: NavArrowType.right,
+                          pageKey: scaffoldKey,
+                        )
+                      else
+                        Container(),
+                    ],
+                  ),
+          ),
         ),
       ),
     );

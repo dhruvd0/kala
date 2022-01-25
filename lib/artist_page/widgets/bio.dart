@@ -38,7 +38,7 @@ class _BioWidgetState extends State<BioWidget> {
                 ),
                 child: Center(
                   child: Container(
-                    margin: activeTextField ? EdgeInsets.only(top: 10.h) : null,
+                    padding: activeTextField ?const EdgeInsets.all(5) : null,
                     child: TextField(
                       key: const ValueKey(ArtistPageKeys.editBioKey),
                       onTap: () {
@@ -52,7 +52,7 @@ class _BioWidgetState extends State<BioWidget> {
                         });
                       },
                       textAlign: TextAlign.center,
-                      maxLines: activeTextField ? 5 : 1,
+                      maxLines: 5,
                       decoration: InputDecoration(
                         hintText: firebaseConfig?.remoteConfig
                             .getString(RemoteConfigKeys.addBioPlaceholder),

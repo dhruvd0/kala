@@ -32,7 +32,7 @@ Future<void> main({FirebaseConfig? mockFirebase}) async {
       WidgetsFlutterBinding.ensureInitialized();
       await setupFirebase(mockFirebase);
       await setupCrashlytics();
-
+    
       runApp(const KalaApp());
     },
     (error, stack) => isTestMode

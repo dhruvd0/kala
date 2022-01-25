@@ -77,11 +77,10 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   }
 
   Future<void> loadCoverImageFromCache() async {
-    if (state.coverContent is String &&
-        state.coverContent.toString().isNotEmpty &&
-        state.coverContent.toString().contains('firebasestorage')) {
+    if (state.isContentImageUrlValid()) {
       final fileInfo = await DefaultCacheManager()
           .getFileFromCache(state.coverContent.toString());
+
       if (fileInfo?.file != null) {
         emit(state.copyWith(coverContent: fileInfo?.file));
       }
@@ -282,11 +281,13 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
 
   void handleKalaUserState(KalaUser userState) {
     if (userState.kalaUserState == KalaUserState.active) {
+      
       final kalaUserContentState =
           KalaUserContentState.fromMap(userState.userMapData);
+
       emit(kalaUserContentState);
       loadCoverImageFromCache();
-      getUserContent(0);
+      getUserContent(1);
     }
   }
 
@@ -304,12 +305,12 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   Future<void> getUserContent(int scrollPosition) async {
     assert(contentPaginationCubit != null);
     final newContent = await contentPaginationCubit?.getTList(scrollPosition);
-
+    newContent?.insert(0, Content.fromMap(const {}));
     if (newContent?.isNotEmpty ?? false) {
       emit(
         state.copyWith(
           userContent: (newContent ?? <Content>[]).map((dynamic e) {
-            return e as Content;
+            return (e as Content).copyWith(viewMode: ContentViewMode.grid);
           }).toList(),
           lastFetchedTimestamp: Timestamp.now(),
         ),

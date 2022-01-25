@@ -1,12 +1,20 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
+enum ContentViewMode{
+  scroll,
+  grid
+}
+
+
 // ignore_for_file: implicit_dynamic_map_literal
 // ignore_for_file: argument_type_not_assignable
+
 @immutable
 class Content extends Equatable {
   const Content({
@@ -15,13 +23,15 @@ class Content extends Equatable {
     required this.description,
     required this.docID,
     required this.fileSize,
-    required this.price,
+   
     required this.imageUrl,
     required this.imgHeight,
     required this.imgWidth,
+    required this.price,
     required this.title,
     required this.uploadTimestamp,
-    this.imageFile,
+    required this.viewMode,
+     this.imageFile,
   });
 
   factory Content.fromJson(String source) =>
@@ -34,12 +44,13 @@ class Content extends Equatable {
       description: map['description'] ?? '',
       docID: map['docID'] ?? '',
       fileSize: map['fileSize']?.toInt() ?? 0,
-      price: map['price']?.toInt() ?? 0,
-      imageUrl: map['imageUrl'] ?? '',
+      imageUrl: map['imageUrl'],
       imgHeight: map['imgHeight']?.toDouble() ?? 0.0,
       imgWidth: map['imgWidth']?.toDouble() ?? 0.0,
+      price: map['price']?.toInt() ?? 0,
       title: map['title'] ?? '',
-      uploadTimestamp: map['uploadTimestamp'],
+      uploadTimestamp: map['uploadTimestamp'] ,
+      viewMode: (map['viewMode'])??ContentViewMode.scroll,
     );
   }
 
@@ -55,28 +66,30 @@ class Content extends Equatable {
   final int price;
   final String title;
   final Timestamp? uploadTimestamp;
+  final ContentViewMode viewMode;
 
   @override
-  List<Object> get props {
+  List<dynamic> get props {
     return [
       artistID,
       artistName,
       description,
       docID,
       fileSize,
-      imageFile.toString(),
-      imageUrl.toString(),
+      imageFile,
+      imageUrl,
       imgHeight,
       imgWidth,
       price,
       title,
-      uploadTimestamp.toString(),
+      uploadTimestamp,
+      viewMode,
     ];
   }
 
   @override
   String toString() {
-    return 'Content(artistID: $artistID, artistName: $artistName, description: $description, docID: $docID, fileSize: $fileSize, price: $price, imageUrl: $imageUrl, imgHeight: $imgHeight, imgWidth: $imgWidth, title: $title, uploadTimestamp: $uploadTimestamp)';
+    return 'Content(artistID: $artistID, artistName: $artistName, description: $description, docID: $docID, fileSize: $fileSize, imageFile: $imageFile, imageUrl: $imageUrl, imgHeight: $imgHeight, imgWidth: $imgWidth, price: $price, title: $title, uploadTimestamp: $uploadTimestamp, viewMode: $viewMode)';
   }
 
   Content copyWith({
@@ -85,13 +98,14 @@ class Content extends Equatable {
     String? description,
     String? docID,
     int? fileSize,
-    int? price,
     File? imageFile,
     String? imageUrl,
     double? imgHeight,
     double? imgWidth,
+    int? price,
     String? title,
     Timestamp? uploadTimestamp,
+    ContentViewMode? viewMode,
   }) {
     return Content(
       artistID: artistID ?? this.artistID,
@@ -99,13 +113,14 @@ class Content extends Equatable {
       description: description ?? this.description,
       docID: docID ?? this.docID,
       fileSize: fileSize ?? this.fileSize,
-      price: price ?? this.price,
       imageFile: imageFile ?? this.imageFile,
       imageUrl: imageUrl ?? this.imageUrl,
       imgHeight: imgHeight ?? this.imgHeight,
       imgWidth: imgWidth ?? this.imgWidth,
+      price: price ?? this.price,
       title: title ?? this.title,
       uploadTimestamp: uploadTimestamp ?? this.uploadTimestamp,
+      viewMode: viewMode ?? this.viewMode,
     );
   }
 
@@ -116,26 +131,36 @@ class Content extends Equatable {
       'description': description,
       'docID': docID,
       'fileSize': fileSize,
-      'price': price,
+      
       'imageUrl': imageUrl,
       'imgHeight': imgHeight,
       'imgWidth': imgWidth,
+      'price': price,
       'title': title,
       'uploadTimestamp': uploadTimestamp,
+      
     };
   }
 
   String toJson() => json.encode(toMap());
 
-  void validate() {
-    assert(title.isNotEmpty);
-    assert(artistID.isNotEmpty);
-    assert(artistName.isNotEmpty);
-    assert(imageFile != null);
-    assert(fileSize > 1);
-    assert(imgHeight > 1);
-    assert(imgWidth > 1);
-    assert(imageUrl?.isNotEmpty ?? false);
+  bool validate() {
+    try {
+      assert(title.isNotEmpty);
+      assert(artistID.isNotEmpty);
+      assert(artistName.isNotEmpty);
+     
+      assert(fileSize > 1);
+      assert(imgHeight > 1);
+      assert(imgWidth > 1);
+      assert(imageUrl?.isNotEmpty ?? false);
+
+      return true;
+      // ignore: avoid_catching_errors
+    } on AssertionError catch (e) {
+      log(e.toString());
+      return false;
+    }
   }
 }
 

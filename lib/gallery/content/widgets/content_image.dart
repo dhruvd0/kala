@@ -47,7 +47,7 @@ class ContentImage extends StatelessWidget {
           ? const CircularProgressIndicator()
           : Image(
               image: imageProvider!,
-              fit: BoxFit.contain,
+              fit: BoxFit.fill,
               filterQuality: FilterQuality.high,
             ),
     );
