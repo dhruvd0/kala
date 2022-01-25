@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "709816759828-gv3mu2491jn23dcb22bo8gf5rue6lmbl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kala.app",
+            "certificate_hash": "0b029a90a083c60bf97696097d6d7a7cd79dfbd2"
+          }
+        },
+        {
           "client_id": "709816759828-04c8g0m6hnu862uhjm23ss4u9949mtmm.apps.googleusercontent.com",
           "client_type": 3
         }
