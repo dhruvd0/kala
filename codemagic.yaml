@@ -13,7 +13,7 @@ workflows:
       events:
         - push
       branch_patterns:
-        - pattern: '*'
+        - pattern: 'main'
           include: true
           source: true
       tag_patterns:
@@ -108,7 +108,13 @@ workflows:
         - pattern: '*'
           include: true
     scripts:
-      - flutter emulators --launch emulator
+      - name: Launch emulator
+        script: |
+          set -e # exit on first failed command
+
+          cd $ANDROID_HOME/tools
+          emulator -avd emulator &
+          adb wait-for-device
       - flutter packages pub get
       - flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
       - flutter test
