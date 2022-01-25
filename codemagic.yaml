@@ -1,0 +1,122 @@
+# Automatically generated on 2022-01-25 UTC from https://codemagic.io/app/61e95f674d0eb9401e8a225d/settings
+# Note that this configuration is not an exact match to UI settings. Review and adjust as necessary.
+
+workflows:
+  test-on-push:
+    name: Test On Push
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: '*'
+          include: true
+          source: true
+      tag_patterns:
+        - pattern: '*'
+          include: true
+    scripts:
+      - flutter packages pub get
+      - flutter analyze
+      - flutter test
+    artifacts:
+      - '*.snap'
+      - build/windows/**/*.msix
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - dhruv_devasthale@outlook.com
+      firebase:
+        firebase_token: Encrypted(Z0FBQUFBQmg3OUlpVmVULTlXMms5RC1rZnJZVDdoRVFVUnNFcXpxdVZ2NWxlLTEzQ2MzZmVzazJUd05jeXVsZWtMal9ORnFaWjhwbEo3WmZUNUJvYlRneTFzbTNHMTZOMDBhOFdSU2tyYWNUNGZqdEktMmZHYVAzaUxDT0FlTjNfTzVXN0tGWUx1OWJWdUV5REZEZkVzMU5Xd042LWZpRG5YbmlSZ0JQLVg2MVZzNWhqSmdyMU9mb3p3TXNtMFFuaHh2dGs1SFBKYXBTWXNlZkxIdFRINW9DdEwyRnIzOEdrUT09)
+  dev-(firebase-app-distribution)-:
+    name: 'Dev (Firebase App Distribution) '
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - tag
+      branch_patterns:
+        - pattern: dev
+          include: true
+          source: true
+      tag_patterns:
+        - pattern: '*'
+          include: true
+    scripts:
+      - flutter emulators --launch emulator
+      - |
+        # set up debug keystore
+        rm -f ~/.android/debug.keystore
+        keytool -genkeypair \
+          -alias androiddebugkey \
+          -keypass android \
+          -keystore ~/.android/debug.keystore \
+          -storepass android \
+          -dname 'CN=Android Debug,O=Android,C=US' \
+          -keyalg 'RSA' \
+          -keysize 2048 \
+          -validity 10000
+      - |
+        # set up local properties
+        echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+      - flutter packages pub get
+      - flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+      - flutter build apk --release
+    artifacts:
+      - build/**/outputs/apk/**/*.apk
+      - build/**/outputs/bundle/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - '*.snap'
+      - build/windows/**/*.msix
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - dhruv_devasthale@outlook.com
+      firebase:
+        firebase_token: Encrypted(Z0FBQUFBQmg3OUlpOE5WUXZSQndjVHZoT3E4ZWxGc1luUm5nOG0wT2NEZXRNTllVMGJER1JaenplbmtpQ3lFdVdtWUdRaGx2eE9rVnFpS0Rha0VQVGhDcFNQTjBaaWtValM1R2RyR3BoMlhmeEZidGF2eXVvVFVPS0haZVdVaDR2emxVLUh5OWs3TE5zai1ob3pTNXJXVGhyWkdIYzZCNTJEckpQNER5ZFRZRWRTblVUWlVRVnVFZTlvaTZYb0JmZDlzMldaLU11VTcyamNIaVRCOTV6T2ZvVHRPSlNjMlNsZz09)
+        android:
+          app_id: 1:709816759828:android:f1e954a7ae9176d3401901
+          groups:
+            - dev
+          artifact_type: apk
+  dev-pr:
+    name: Dev PR
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - pull_request
+      branch_patterns:
+        - pattern: dev
+          include: true
+          source: true
+      tag_patterns:
+        - pattern: '*'
+          include: true
+    scripts:
+      - flutter emulators --launch emulator
+      - flutter packages pub get
+      - flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+      - flutter test
+    artifacts:
+      - '*.snap'
+      - build/windows/**/*.msix
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - dhruv_devasthale@outlook.com
+      firebase:
+        firebase_token: Encrypted(Z0FBQUFBQmg3OUlpZzVmRWRPY0w1YWVualdrQVAwcDNXTUEtWXU4Njd1WFJDZnBxUFpCQWJkZTNHbS16MEJ1MXdVRGZYTHZSQmZCREZkTG1Rem9ybjdkemJleHd5RUV0RjZSODFIay1DY1ZMbEtpbzJQY1FZaW1kMDNJU1JpM1RhZUhIMWtBeFhjMHYtTEJTZWFyYVo0TmNoVURxNDZIVFZaUWlia0x0aXBOLWxVY2I1ZldBVHRuNnB0OTRfRDRhOV9DQXo2ZkM1eE83cURBRGptZXJMQmpvaGRyVVF3WlU3UT09)
