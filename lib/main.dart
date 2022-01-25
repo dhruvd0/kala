@@ -24,6 +24,9 @@ FirebaseConfig? firebaseConfig;
 
 bool isTestMode = true;
 Future<void> main({FirebaseConfig? mockFirebase}) async {
+  if (kReleaseMode) {
+    isTestMode = false;
+  }
   await runZonedGuarded<Future<void>>(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
