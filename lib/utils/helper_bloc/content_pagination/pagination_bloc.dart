@@ -26,7 +26,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
             orderByField: orderByField,
             whereQueryEquals: whereQueryEquals,
             subDocID: subDocID,
-            scrollPosition: 0,
+            scrollPosition: -1,
             lastFetchedTimestamp: Timestamp.now(),
             data: const <dynamic>[],
           ),
@@ -37,6 +37,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       orderIsDescending: true,
       dataFromMap: Content.fromMap,
       orderByField: 'uploadTimestamp',
+    
     );
   }
   factory PaginationCubit.userContentPagination(String uid) {

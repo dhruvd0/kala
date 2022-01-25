@@ -1,48 +1,77 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/auth/social_integration/auth_types.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
+import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/main.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 /// The first widget to display for Kala App
-class Splash extends StatelessWidget {
+class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
 
-  Widget handleUseAuthState(
-    AsyncSnapshot<User?> userSnapshot,
-    BuildContext context,
-  ) {
-    if (userSnapshot.connectionState == ConnectionState.waiting) {
-      return const LogoSplash();
-    }
+  @override
+  State<Splash> createState() => _SplashState();
+}
 
+class _SplashState extends State<Splash> {
+  StreamSubscription? streamSubscription;
+
+  @override
+  void dispose() {
+    streamSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
+      streamSubscription =
+          firebaseConfig?.auth.userChanges().listen(handleUseAuthState);
+    });
+  }
+
+  Future<Widget> handleUseAuthState(
+    User? user,
+  ) async {
     var nextRoute = '';
-    final user = userSnapshot.data;
+
     if (user == null) {
       nextRoute = Routes.auth;
     } else {
       if (isTestMode) {
-        BlocProvider.of<KalaUserBloc>(context, listen: false)
+        await BlocProvider.of<KalaUserBloc>(context, listen: false)
             .authenticateWithSocialAuth(AuthTypes.google);
       }
+      if (mounted) {
+        await BlocProvider.of<GalleryBloc>(context, listen: false)
+            .getContentList(1);
+      }
+      if (mounted) {
+        await BlocProvider.of<KalaUserContentBloc>(context, listen: false)
+            .getUserContent(1);
+      }
+
       nextRoute = Routes.dashboard;
     }
-    return NavigatorController.getWidgetFromRoute(nextRoute);
+    if (mounted) {
+      await Navigator.pushReplacementNamed(context, nextRoute);
+    }
+    return const LogoSplash();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: firebaseConfig?.auth.userChanges(),
-      builder: (context, userSnapshot) {
-        return handleUseAuthState(userSnapshot, context);
-      },
-    );
+    return const LogoSplash();
   }
 }
 
@@ -55,11 +84,24 @@ class LogoSplash extends StatelessWidget {
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
       scaffoldKey: const ValueKey(ScaffoldKeys.splashKey),
-      body: Center(
-        child: Text(
-          'K',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline1,
+      body: Container(
+        height: 1.sh,
+        width: 1.sw,
+        child: Stack(
+          alignment: AlignmentDirectional.topCenter,
+          children: [
+            Positioned(
+              top: 280.h,
+              child: Text(
+                'Kala',
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1
+                    ?.copyWith(fontSize: 64.sp),
+              ),
+            ),
+          ],
         ),
       ),
     );

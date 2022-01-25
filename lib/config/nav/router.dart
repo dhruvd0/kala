@@ -5,7 +5,7 @@ import 'package:kala/dashboard/widgets/dashboard_page.dart';
 import 'package:kala/gallery/widgets/page/gallery_page.dart';
 import 'package:kala/startup/splash.dart';
 
-class NavigatorController {
+class NavigationController {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute<dynamic>(
       builder: (context) {

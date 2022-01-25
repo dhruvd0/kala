@@ -1,6 +1,7 @@
 import 'dart:math' hide log;
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,30 +18,37 @@ class ContentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ContentBloc, Content>(
+      key: UniqueKey(),
       builder: (context, state) {
         return Container(
           constraints: !SizeUtils.isMobileSize()
               ? null
               : BoxConstraints(
-                  maxHeight: state.validate()
-                      ? state.viewMode == ContentViewMode.grid
-                          ? 80.h
-                          : max(state.imgHeight.h, 1.sh - 70)
-                      : 100.h,
-                ),
-          margin: state.viewMode == ContentViewMode.grid
-              ? EdgeInsets.only(left: 1.w)
-              : EdgeInsets.symmetric(
-                  horizontal: kIsWeb ? 0 : 40.w,
-                  vertical: 20.h,
+                  minHeight: !state.isValid()
+                      ? 100.h
+                      : (state.viewMode == ContentViewMode.scroll &&
+                              state.imgWidth > 1)
+                          ? (state.imgWidth)
+                          : 100.h,
+                  maxHeight: state.viewMode == ContentViewMode.grid
+                      ? 100.h
+                      : max(state.imgHeight.h, 1.sh - 70),
                 ),
           decoration: BoxDecoration(
-            
-            border: state.validate() ? null : Border.all(),
+            border: state.isValid() ? null : Border.all(),
           ),
-          child: !state.validate()
-              ? const Center(
-                  child: Icon(Icons.add),
+          margin: state.viewMode == ContentViewMode.grid || !state.isValid()
+              ? null
+              : EdgeInsets.symmetric(
+                  horizontal: 40.w,
+                  vertical: 20.h,
+                ),
+          child: !state.isValid()
+              ? Container(
+                  height: 70.h,
+                  child: Center(
+                    child: Icon(FluentSystemIcons.ic_fluent_add_regular),
+                  ),
                 )
               : Column(
                   mainAxisSize: MainAxisSize.min,

@@ -144,7 +144,7 @@ class Content extends Equatable {
 
   String toJson() => json.encode(toMap());
 
-  bool validate() {
+  bool isValid() {
     try {
       assert(title.isNotEmpty);
       assert(artistID.isNotEmpty);

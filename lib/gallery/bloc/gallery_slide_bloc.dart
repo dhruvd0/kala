@@ -26,7 +26,7 @@ class GalleryBloc extends Cubit<GalleryState> {
     kalaUserStateStream =
         kalaUserBloc.stream.asBroadcastStream().listen((state) {
       if (state.kalaUserState==KalaUserState.authenticated) {
-        getContentList(1);
+        getContentList(0);
       }
     });
   }

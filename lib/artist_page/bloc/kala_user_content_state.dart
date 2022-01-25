@@ -17,12 +17,15 @@ class KalaUserContentState extends Equatable {
     required this.isEditMode,
     this.lastFetchedTimestamp,
     this.userContent,
+    this.coverContentUrl,
   }) : assert(coverContent is File || coverContent is String);
 
   factory KalaUserContentState.fromMap(Map<String, dynamic> map) {
     return KalaUserContentState(
       bio: map['bio'] ?? '',
       coverContent: map['coverContent'],
+      coverContentUrl:
+          map['coverContent'] is String ? map['coverContent'] : null,
       lastFetchedTimestamp: map['lastFetchedTimestamp'],
       newContent: Content.fromMap(const {}),
       uid: map['uid'] ?? '',
@@ -33,6 +36,7 @@ class KalaUserContentState extends Equatable {
 
   final String bio;
   final dynamic coverContent;
+  final String? coverContentUrl;
   final bool isEditMode;
   final Timestamp? lastFetchedTimestamp;
   final Content newContent;
@@ -52,35 +56,15 @@ class KalaUserContentState extends Equatable {
     ];
   }
 
-  bool isContentImageUrlValid() {
-    return coverContent is String &&
-        coverContent.toString().isNotEmpty &&
-        coverContent.toString().contains('firebasestorage');
-  }
-
   @override
   String toString() {
     return 'KalaUserContentState(bio: $bio, coverContent: $coverContent, lastFetchedTimestamp: $lastFetchedTimestamp, newContent: $newContent, uid: $uid, userContent: $userContent, isEditMode: $isEditMode)';
   }
 
-  KalaUserContentState copyWith({
-    String? bio,
-    dynamic coverContent,
-    Timestamp? lastFetchedTimestamp,
-    Content? newContent,
-    String? uid,
-    List<Content>? userContent,
-    bool? isEditMode,
-  }) {
-    return KalaUserContentState(
-      bio: bio ?? this.bio,
-      coverContent: coverContent ?? this.coverContent,
-      lastFetchedTimestamp: lastFetchedTimestamp ?? this.lastFetchedTimestamp,
-      newContent: newContent ?? this.newContent,
-      uid: uid ?? this.uid,
-      userContent: userContent ?? this.userContent,
-      isEditMode: isEditMode ?? this.isEditMode,
-    );
+  bool isContentImageUrlValid() {
+    return coverContent is String &&
+        coverContent.toString().isNotEmpty &&
+        coverContent.toString().contains('firebasestorage');
   }
 
   Map<String, dynamic> toMap() {
@@ -95,4 +79,26 @@ class KalaUserContentState extends Equatable {
   }
 
   String toJson() => json.encode(toMap());
+
+  KalaUserContentState copyWith({
+    String? bio,
+    dynamic? coverContent,
+    String? coverContentUrl,
+    bool? isEditMode,
+    Timestamp? lastFetchedTimestamp,
+    Content? newContent,
+    String? uid,
+    List<Content>? userContent,
+  }) {
+    return KalaUserContentState(
+      bio: bio ?? this.bio,
+      coverContent: coverContent ?? this.coverContent,
+      coverContentUrl: coverContentUrl ?? this.coverContentUrl,
+      isEditMode: isEditMode ?? this.isEditMode,
+      lastFetchedTimestamp: lastFetchedTimestamp ?? this.lastFetchedTimestamp,
+      newContent: newContent ?? this.newContent,
+      uid: uid ?? this.uid,
+      userContent: userContent ?? this.userContent,
+    );
+  }
 }

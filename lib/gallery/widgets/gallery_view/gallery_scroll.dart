@@ -66,6 +66,7 @@ class ContentBlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
+      key: UniqueKey(),
       create: (context) => ContentBloc(content),
       child: const ContentCard(),
     );

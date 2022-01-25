@@ -19,16 +19,24 @@ class CoverContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<KalaUserContentBloc, KalaUserContentState>(
+      // buildWhen: (previous, current) {
+      //   final isCoverImageUnchanged = !current.isEditMode &&
+      //       (previous.coverContent == current.coverContent);
+      //   if (isCoverImageUnchanged) {
+      //     return false;
+      //   }
+      //   return true;
+      // },
       builder: (context, userState) {
         return Container(
           width: 1.sw,
           constraints: BoxConstraints(
             minHeight: 100.h,
-            maxHeight: (1.sh-100) / 2,
+            maxHeight:userState.isEditMode?200.h: (1.sh - 100) / 2,
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            border:!userState.isEditMode && (userState.coverContent is File) ||
+            border: !userState.isEditMode && (userState.coverContent is File) ||
                     userState.isContentImageUrlValid()
                 ? null
                 : Border.all(),

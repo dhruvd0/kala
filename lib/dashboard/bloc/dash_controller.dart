@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:kala/dashboard/bloc/dash_state.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 
 class DashController extends Cubit<DashState> {
   DashController()
@@ -10,7 +11,8 @@ class DashController extends Cubit<DashState> {
           ),
         );
 
-  static final PageController pageController = PageController(initialPage: 1);
+  static final PreloadPageController pageController =
+      PreloadPageController(initialPage: 0);
 
   Future<void> nextPage() async {
     if (DashController.pageController.hasClients) {

@@ -12,15 +12,17 @@ void main() {
     () async {
       final kalaUserContentCubit = KalaUserContentBloc.mock();
       final image = File('test_data/content/test_image.jpg');
+      kalaUserContentCubit.toggleEditMode(forceToggle: true);
       await kalaUserContentCubit.editNewContent(ContentProps.image, image);
       await kalaUserContentCubit.editNewContent(
         ContentProps.title,
         'test_title',
       );
       await kalaUserContentCubit.editNewContent(ContentProps.price, 100);
-    
+
       await kalaUserContentCubit.addNewContent();
       log(FirebaseMocks.mockFirestore.dump());
+      kalaUserContentCubit.toggleEditMode();
       await kalaUserContentCubit.getUserContent(2);
 
       expect(kalaUserContentCubit.state.userContent?.length, 1);

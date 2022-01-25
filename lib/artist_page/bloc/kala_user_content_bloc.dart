@@ -182,7 +182,10 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
       imageUrl,
       uploadedContentDocID,
     );
-    state.newContent.validate();
+
+    if (!state.newContent.isValid()) {
+      throw Exception('Invalid Exception: ${state.newContent.toString()}');
+    }
     await updateNewContentImageURL(
       uploadedContentDocID,
       imageUrl,
@@ -219,7 +222,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
 
   Future<String> uploadImageAndGetUrl(
     String contentStoragePath,
-  ) {
+  ) async {
     return FirebaseStorageRequest(customStorage).uploadFile(
       '$contentStoragePath/$correctFilePath',
       state.newContent.imageFile!,
@@ -238,33 +241,50 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
 
   Future<void> publishChanges() async {
     if (state.coverContent is File) {
-      FirebaseStorageRequest()
-          .uploadFile(
-        '${FirestorePaths.userCollection}/${state.uid}/cover/${(state.coverContent as File).path}',
-        state.coverContent,
-      )
-          .then(
-        (url) {
-          return FirestoreUpdateRequest().update(
-            FirestorePaths.userCollection,
-            state.uid,
-            {
-              'coverContent': url,
-            },
-          );
-        },
-      );
+      final fileName = (await DefaultCacheManager()
+              .getSingleFile(state.coverContentUrl.toString()))
+          .basename;
+
+      final fileDoesntExistInStorage =
+          !(fileName == (state.coverContent as File).path.split('/').last);
+      if (fileDoesntExistInStorage && state.coverContentUrl != null) {
+        FirebaseStorageRequest()
+            .uploadFile(
+          '${FirestorePaths.userCollection}/${state.uid}/cover/${(state.coverContent as File).path}',
+          state.coverContent,
+        )
+            .then(
+          (url) {
+            if (url.isNotEmpty) {
+              FirestoreUpdateRequest().update(
+                FirestorePaths.userCollection,
+                state.uid,
+                {
+                  'coverContent': url,
+                },
+              );
+            }
+          },
+        );
+      }
     }
-    await FirestoreUpdateRequest()
-        .update(FirestorePaths.userCollection, state.uid, {
-      'bio': state.bio,
-      'name': kalaUserBloc?.state.name,
-    });
+    if (state.bio != kalaUserBloc?.state.userMapData['bio']) {
+      await FirestoreUpdateRequest()
+          .update(FirestorePaths.userCollection, state.uid, {
+        'bio': state.bio,
+      });
+    }
+    if (kalaUserBloc?.state.name != kalaUserBloc?.state.userMapData['name']) {
+      await FirestoreUpdateRequest()
+          .update(FirestorePaths.userCollection, state.uid, {
+        'name': kalaUserBloc?.state.name,
+      });
+    }
   }
 
   void setupUserContentPaginationCubit([String? customUid]) {
     contentPaginationCubit = PaginationCubit.userContentPagination(
-      customUid ?? kalaUserBloc?.state.uid ?? '',
+      customUid ?? firebaseConfig?.auth?.currentUser?.uid as String,
     );
     if (firebaseFirestore != null) {
       contentPaginationCubit?.firestore = firebaseFirestore;
@@ -281,13 +301,19 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
 
   void handleKalaUserState(KalaUser userState) {
     if (userState.kalaUserState == KalaUserState.active) {
-      
-      final kalaUserContentState =
+      final userContent = state.userContent;
+      var kalaUserContentState =
           KalaUserContentState.fromMap(userState.userMapData);
+      if (kalaUserContentState.userContent?.isEmpty ?? false) {
+        kalaUserContentState =
+            kalaUserContentState.copyWith(userContent: userContent);
+      }
 
       emit(kalaUserContentState);
       loadCoverImageFromCache();
-      getUserContent(1);
+      if (userContent?.isEmpty ?? false) {
+        getUserContent(2);
+      }
     }
   }
 
@@ -305,7 +331,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   Future<void> getUserContent(int scrollPosition) async {
     assert(contentPaginationCubit != null);
     final newContent = await contentPaginationCubit?.getTList(scrollPosition);
-    newContent?.insert(0, Content.fromMap(const {}));
+
     if (newContent?.isNotEmpty ?? false) {
       emit(
         state.copyWith(
@@ -318,8 +344,20 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
     }
   }
 
-  void toggleEditMode() {
-    emit(state.copyWith(isEditMode: !state.isEditMode));
+  void toggleEditMode({bool? forceToggle}) {
+    List<Content>? newContent = state.userContent?.toList();
+    if (state.isEditMode) {
+      newContent?.removeWhere((element) => !element.isValid());
+    } else {
+      newContent?.insert(0, Content.fromMap(const {}));
+    }
+
+    emit(
+      state.copyWith(
+        isEditMode: forceToggle ?? !state.isEditMode,
+        userContent: newContent,
+      ),
+    );
   }
 }
 

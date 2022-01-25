@@ -5,6 +5,7 @@ import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/dashboard/bloc/dash_controller.dart';
 import 'package:kala/dashboard/bloc/dash_state.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -16,19 +17,17 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      lazy: false,
-      create: (context) => KalaUserContentBloc(
-        kalaUserBloc: context.read<KalaUserBloc>(),
-      ),
-      child: PageView.builder(
+    return Container(
+    
+      child: PreloadPageView.builder(
         key: const ValueKey(ScaffoldKeys.dashboard),
         physics: const BouncingScrollPhysics(),
-      
+    
         controller: DashController.pageController,
         itemBuilder: (_, index) {
           return DashState.pages[index];
         },
+        preloadPagesCount: 2,
         itemCount: DashState.pages.length,
       ),
     );
