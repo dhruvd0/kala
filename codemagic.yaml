@@ -51,7 +51,13 @@ workflows:
         - pattern: '*'
           include: true
     scripts:
-      - flutter emulators --launch emulator
+      - name: Launch emulator
+        script: |
+          set -e # exit on first failed command
+
+          cd $ANDROID_HOME/tools
+          emulator -avd emulator &
+          adb wait-for-device
       - |
         # set up debug keystore
         rm -f ~/.android/debug.keystore
@@ -83,7 +89,7 @@ workflows:
           app_id: 1:709816759828:android:f1e954a7ae9176d3401901
           groups:
             - dev
-          artifact_type: apk
+          artifact_type: 'apk'
   dev-pr:
     name: Dev PR
     max_build_duration: 60
