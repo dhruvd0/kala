@@ -30,7 +30,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
     required this.kalaUserBloc,
     this.firebaseFirestore,
     this.customStorage,
-  })  : super(
+  }) : super(
           KalaUserContentState(
             userContent: const [],
             bio: 'Empty Bio',
@@ -48,7 +48,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
       kalaUserBloc: KalaUserBloc(),
       firebaseFirestore: FirebaseMocks.mockFirestore,
       customStorage: FirebaseMocks.mockFirebaseStorage,
-    );
+    )..setupUserContentPaginationCubit(FirebaseMocks.firebaseMockUser.uid);
   }
 
   PaginationCubit? contentPaginationCubit;
@@ -345,8 +345,8 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   }
 
   void toggleEditMode({bool? forceToggle}) {
-   // ignore: prefer_final_locals
-   var newContent = state.userContent?.toList();
+    // ignore: prefer_final_locals
+    var newContent = state.userContent?.toList();
     if (state.isEditMode) {
       newContent?.removeWhere((element) => !element.isValid());
     } else {
