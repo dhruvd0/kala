@@ -47,7 +47,7 @@ class _ContentImageState extends State<ContentImage> {
   void didChangeDependencies() {
     if (widget.imageProvider != null) {
       precacheImage(widget.imageProvider!, context,
-          onError: (e, stack) => log(e.toString(), stackTrace: stack));
+          onError: (e, stack) => log(e.toString(), stackTrace: stack),);
     }
 
     super.didChangeDependencies();

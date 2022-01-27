@@ -2,25 +2,17 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:kala/main.dart' as app;
 
 import 'artist_page_test/artist_page_test.dart';
 import 'auth_test/login_flow_test.dart';
-import 'config/widget_tester.dart';
 import 'dashboard_test/dashboard_test.dart';
 import 'gallery_test/gallery_test.dart';
+import 'startup_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets(
-    'App Start',
-    (tester) async {
-      app.main();
-      final widgetTesterHandler = WidgetTesterHandler(tester);
-      await widgetTesterHandler.startAppWithMockFirebase();
-    },
-  );
+  startupTest();
   group(
     'Authentication Tests',
     loginTestFlow,

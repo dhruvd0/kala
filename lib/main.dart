@@ -16,7 +16,7 @@ import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
-import 'package:kala/dashboard/bloc/dash_controller.dart';
+
 import 'package:kala/firebase_options.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/startup/splash.dart';
@@ -106,10 +106,7 @@ class KalaApp extends StatelessWidget {
                 kalaUserBloc: context.read<KalaUserBloc>(),
               ),
             ),
-            BlocProvider(
-              lazy: false,
-              create: (context) => DashController(),
-            ),
+           
           ],
           child: MaterialApp(
             title: 'Kala',

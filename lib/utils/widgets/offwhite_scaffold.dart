@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/config/colors/basic_colors.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/config/widget_keys/nav_keys.dart';
-import 'package:kala/dashboard/bloc/dash_controller.dart';
-import 'package:kala/dashboard/bloc/dash_state.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 
 class OffWhiteScaffold extends StatelessWidget {
   OffWhiteScaffold({
@@ -16,12 +14,17 @@ class OffWhiteScaffold extends StatelessWidget {
     this.onBack,
     this.enablePageNavigationArrows,
     this.trailing,
+    this.controller,
   }) : super(key: scaffoldKey) {
     if (enableBackArrow ?? false) {
       assert(onBack != null);
+      
     }
     if (onBack != null) {
       assert(enableBackArrow ?? false);
+    }
+    if(enablePageNavigationArrows??false){
+      assert(controller != null);
     }
   }
 
@@ -32,7 +35,7 @@ class OffWhiteScaffold extends StatelessWidget {
   final VoidCallback? onBack;
   final ValueKey<String> scaffoldKey;
   final Widget? trailing;
-
+  final PreloadPageController? controller;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +47,6 @@ class OffWhiteScaffold extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.only(top: 20.h),
           child: AppBar(
-            
             elevation: 0,
             backgroundColor: BasicColors.backgroundOffWhite,
             actions: trailing == null
@@ -77,6 +79,7 @@ class OffWhiteScaffold extends StatelessWidget {
                         _PageNavArrow(
                           navArrowType: NavArrowType.left,
                           pageKey: scaffoldKey,
+                          controller: controller!,
                         )
                       else
                         Container(),
@@ -94,6 +97,7 @@ class OffWhiteScaffold extends StatelessWidget {
                         _PageNavArrow(
                           navArrowType: NavArrowType.right,
                           pageKey: scaffoldKey,
+                          controller: controller!,
                         )
                       else
                         Container(),
@@ -112,33 +116,42 @@ class _PageNavArrow extends StatelessWidget {
   const _PageNavArrow({
     required this.navArrowType,
     required this.pageKey,
+    required this.controller,
     Key? key,
   }) : super(key: key);
 
   final NavArrowType navArrowType;
   final ValueKey pageKey;
+  final PreloadPageController controller;
 
-  bool isPageEndOfPages(DashState state) {
-    return state.pageIndex == 0 && navArrowType == NavArrowType.left ||
-        state.pageIndex == DashState.pages.length - 1 &&
-            navArrowType == NavArrowType.right;
-  }
+  // bool isPageEndOfPages() {
+  //   return state.pageIndex == 0 && navArrowType == NavArrowType.left ||
+  //       state.pageIndex == 3 - 1 && navArrowType == NavArrowType.right;
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
-        final dashController =
-            BlocProvider.of<DashController>(context, listen: false);
         void Function() onTap;
         IconData icon;
         switch (navArrowType) {
           case NavArrowType.left:
-            onTap = dashController.previousPage;
+            onTap = () {
+              controller.previousPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.ease,
+              );
+            };
             icon = Icons.arrow_back_ios_new;
             break;
           case NavArrowType.right:
-            onTap = dashController.nextPage;
+            onTap = () {
+              controller.nextPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.ease,
+              );
+            };
             icon = Icons.arrow_forward_ios;
             break;
         }

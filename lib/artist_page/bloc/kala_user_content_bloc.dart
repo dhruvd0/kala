@@ -27,22 +27,19 @@ import 'package:permission_handler/permission_handler.dart';
 
 class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   KalaUserContentBloc({
-    this.kalaUserBloc,
+    required this.kalaUserBloc,
     this.firebaseFirestore,
     this.customStorage,
-    String? userID,
-  })  : assert(kalaUserBloc != null || userID != null),
-        super(
+  })  : super(
           KalaUserContentState(
             userContent: const [],
             bio: 'Empty Bio',
             coverContent: '',
-            uid: userID ?? firebaseConfig?.auth.currentUser?.uid ?? '',
+            uid: kalaUserBloc.state.uid,
             newContent: initialNewContent(),
             isEditMode: false,
           ),
         ) {
-    setupUserContentPaginationCubit(userID);
     setupKalaUserBlocListener();
   }
 
@@ -51,14 +48,13 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
       kalaUserBloc: KalaUserBloc(),
       firebaseFirestore: FirebaseMocks.mockFirestore,
       customStorage: FirebaseMocks.mockFirebaseStorage,
-      userID: FirebaseMocks.firebaseMockUser.uid,
     );
   }
 
   PaginationCubit? contentPaginationCubit;
   FirebaseStorage? customStorage;
   FirebaseFirestore? firebaseFirestore;
-  final KalaUserBloc? kalaUserBloc;
+  final KalaUserBloc kalaUserBloc;
   StreamSubscription<KalaUser>? kalaUserStream;
 
   @override
@@ -111,7 +107,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
           newContent: state.newContent.copyWith(
             artistName: isTestMode
                 ? FirebaseMocks.firebaseMockUser.displayName
-                : kalaUserBloc?.state.name,
+                : kalaUserBloc.state.name,
           ),
         ),
       );
@@ -245,9 +241,9 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
               .getSingleFile(state.coverContentUrl.toString()))
           .basename;
 
-      final fileDoesntExistInStorage =
+      final fileDoesNotExistInStorage =
           !(fileName == (state.coverContent as File).path.split('/').last);
-      if (fileDoesntExistInStorage && state.coverContentUrl != null) {
+      if (fileDoesNotExistInStorage && state.coverContentUrl != null) {
         FirebaseStorageRequest()
             .uploadFile(
           '${FirestorePaths.userCollection}/${state.uid}/cover/${(state.coverContent as File).path}',
@@ -268,23 +264,25 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
         );
       }
     }
-    if (state.bio != kalaUserBloc?.state.userMapData['bio']) {
+    if (state.bio != kalaUserBloc.state.userMapData['bio']) {
       await FirestoreUpdateRequest()
           .update(FirestorePaths.userCollection, state.uid, {
         'bio': state.bio,
       });
     }
-    if (kalaUserBloc?.state.name != kalaUserBloc?.state.userMapData['name']) {
+    if (kalaUserBloc.state.name != kalaUserBloc.state.userMapData['name']) {
       await FirestoreUpdateRequest()
           .update(FirestorePaths.userCollection, state.uid, {
-        'name': kalaUserBloc?.state.name,
+        'name': kalaUserBloc.state.name,
       });
     }
   }
 
   void setupUserContentPaginationCubit([String? customUid]) {
     contentPaginationCubit = PaginationCubit.userContentPagination(
-      customUid ?? firebaseConfig?.auth?.currentUser?.uid as String,
+      customUid ??
+          firebaseConfig?.auth.currentUser?.uid ??
+          kalaUserBloc.state.uid,
     );
     if (firebaseFirestore != null) {
       contentPaginationCubit?.firestore = firebaseFirestore;
@@ -292,11 +290,11 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   }
 
   void setupKalaUserBlocListener() {
-    if (kalaUserBloc?.state.kalaUserState == KalaUserState.active) {
-      handleKalaUserState(kalaUserBloc!.state);
+    if (kalaUserBloc.state.kalaUserState == KalaUserState.active) {
+      handleKalaUserState(kalaUserBloc.state);
     }
     kalaUserStream =
-        kalaUserBloc?.stream.asBroadcastStream().listen(handleKalaUserState);
+        kalaUserBloc.stream.asBroadcastStream().listen(handleKalaUserState);
   }
 
   void handleKalaUserState(KalaUser userState) {
@@ -310,6 +308,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
       }
 
       emit(kalaUserContentState);
+      setupUserContentPaginationCubit();
       loadCoverImageFromCache();
       if (userContent?.isEmpty ?? false) {
         getUserContent(2);
@@ -330,6 +329,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
 
   Future<void> getUserContent(int scrollPosition) async {
     assert(contentPaginationCubit != null);
+
     final newContent = await contentPaginationCubit?.getTList(scrollPosition);
 
     if (newContent?.isNotEmpty ?? false) {
@@ -345,7 +345,8 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   }
 
   void toggleEditMode({bool? forceToggle}) {
-    List<Content>? newContent = state.userContent?.toList();
+   // ignore: prefer_final_locals
+   var newContent = state.userContent?.toList();
     if (state.isEditMode) {
       newContent?.removeWhere((element) => !element.isValid());
     } else {
@@ -360,5 +361,3 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
     );
   }
 }
-
-class ArtistPageContentBloc extends KalaUserContentBloc {}

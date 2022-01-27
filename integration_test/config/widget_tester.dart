@@ -1,4 +1,6 @@
+// ignore_for_file: avoid_catching_errors
 
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -43,15 +45,31 @@ class WidgetTesterHandler {
     // ignore: unawaited_futures
     app.main(mockFirebase: mockFirebaseConfig);
 
-    await pumTenFrames();
-    if (kDebugMode) {
-      print('App Started');
+    await waitForFrames();
+    
+  }
+
+  bool isWidgetInTree(String key) {
+    try {
+      expect(findWidgetByKey(key), findsWidgets);
+      return true;
+    } on TestFailure {
+      return false;
     }
   }
+  
 
   Future<void> pumTenFrames() async {
     for (var i = 0; i < 10; i++) {
       await tester.pump();
+    }
+  }
+  Future<void> waitForFrames() async {
+    try {
+      await tester.pumpAndSettle(const Duration(seconds: 3),
+          EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10),);
+    } on FlutterError {
+      log('Animations Complete, App Started');
     }
   }
 }

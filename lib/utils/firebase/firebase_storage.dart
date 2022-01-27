@@ -1,10 +1,7 @@
-import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class FirebaseStorageRequest {
@@ -26,7 +23,6 @@ class FirebaseStorageRequest {
 
       await ref!.putFile(data, SettableMetadata(customMetadata: metaData));
       if (firebaseStorage is MockFirebaseStorage) {
-        final mock = firebaseStorage! as MockFirebaseStorage;
 
         return 'test_url';
       }

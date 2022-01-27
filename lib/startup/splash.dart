@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
-import 'package:kala/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/auth/social_integration/auth_types.dart';
 import 'package:kala/config/nav/route_names.dart';
-import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/main.dart';
@@ -48,18 +45,17 @@ class _SplashState extends State<Splash> {
     if (user == null) {
       nextRoute = Routes.auth;
     } else {
-      if (isTestMode) {
-        await BlocProvider.of<KalaUserBloc>(context, listen: false)
-            .authenticateWithSocialAuth(AuthTypes.google);
-      }
-      if (mounted) {
-        await BlocProvider.of<GalleryBloc>(context, listen: false)
-            .getContentList(1);
-      }
-      if (mounted) {
-        await BlocProvider.of<KalaUserContentBloc>(context, listen: false)
-            .getUserContent(1);
-      }
+      await Future.doWhile(() {
+        final isDataLoaded = BlocProvider.of<GalleryBloc>(context, listen: false)
+                .state
+                .contentSlideList
+                .isNotEmpty &&
+            BlocProvider.of<KalaUserContentBloc>(context, listen: false)
+                    .state
+                    .userContent !=
+                null;
+        return isDataLoaded;
+      });
 
       nextRoute = Routes.dashboard;
     }
@@ -84,7 +80,7 @@ class LogoSplash extends StatelessWidget {
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
       scaffoldKey: const ValueKey(ScaffoldKeys.splashKey),
-      body: Container(
+      body: SizedBox(
         height: 1.sh,
         width: 1.sw,
         child: Stack(

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
@@ -18,7 +17,7 @@ class KalaUserContentState extends Equatable {
     this.lastFetchedTimestamp,
     this.userContent,
     this.coverContentUrl,
-  }) : assert(coverContent is File || coverContent is String);
+  });
 
   factory KalaUserContentState.fromMap(Map<String, dynamic> map) {
     return KalaUserContentState(
@@ -82,7 +81,7 @@ class KalaUserContentState extends Equatable {
 
   KalaUserContentState copyWith({
     String? bio,
-    dynamic? coverContent,
+    dynamic coverContent,
     String? coverContentUrl,
     bool? isEditMode,
     Timestamp? lastFetchedTimestamp,

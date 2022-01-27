@@ -37,10 +37,10 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       orderIsDescending: true,
       dataFromMap: Content.fromMap,
       orderByField: 'uploadTimestamp',
-    
     );
   }
   factory PaginationCubit.userContentPagination(String uid) {
+    assert(uid.isNotEmpty);
     return PaginationCubit(
       collection: FirestorePaths.contentCollection,
       orderIsDescending: true,

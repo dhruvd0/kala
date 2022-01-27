@@ -2,7 +2,6 @@ import 'dart:math' hide log;
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,10 +43,10 @@ class ContentCard extends StatelessWidget {
                   vertical: 20.h,
                 ),
           child: !state.isValid()
-              ? Container(
+              ? SizedBox(
                   height: 70.h,
-                  child: Center(
-                    child: Icon(FluentSystemIcons.ic_fluent_add_regular),
+                  child: const Center(
+                    child:  Icon(FluentSystemIcons.ic_fluent_add_regular),
                   ),
                 )
               : Column(
