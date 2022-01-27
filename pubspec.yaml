@@ -65,6 +65,7 @@ dependencies:
   hydrated_bloc: ^8.0.0
   image_size_getter: ^1.0.0
   interactiveviewer_gallery: ^0.6.0
+  modal_bottom_sheet: ^2.0.0
   path_provider: ^2.0.8
   permission_handler: ^8.3.0
   pinch_zoom: ^1.0.0

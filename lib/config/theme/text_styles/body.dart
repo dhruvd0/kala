@@ -18,4 +18,8 @@ class BodyTextStyle {
     fontSize: 14.sm,
     color: Colors.black,
   );
+  static final TextStyle subtitle2 = GoogleFonts.raleway(
+    fontSize: 14.sm,
+    color: Colors.black,
+  );
 }

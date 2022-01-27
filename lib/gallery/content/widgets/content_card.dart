@@ -5,11 +5,14 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kala/artist_page/add_new_content/widgets/add_new_content_sheet.dart';
+import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/config/size/size.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/gallery/content/bloc/content_bloc.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/gallery/content/widgets/content_image.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ContentCard extends StatelessWidget {
   const ContentCard({Key? key}) : super(key: key);
@@ -43,10 +46,32 @@ class ContentCard extends StatelessWidget {
                   vertical: 20.h,
                 ),
           child: !state.isValid()
-              ? SizedBox(
-                  height: 70.h,
-                  child: const Center(
-                    child:  Icon(FluentSystemIcons.ic_fluent_add_regular),
+              ? GestureDetector(
+                  onTap: () {
+                    final bloc = BlocProvider.of<KalaUserContentBloc>(
+                      context,
+                      listen: false,
+                    );
+                    bloc.scanImage(context).then(
+                      (file) {
+                        if (file != null) {
+                          bloc.editNewContent(ContentProps.image, file).then(
+                                (value) => showCupertinoModalBottomSheet(
+                                  context: context,
+                                  expand: true,
+                                  isDismissible: true,
+                                  builder: (context) => AddNewContentSheet(),
+                                ),
+                              );
+                        }
+                      },
+                    );
+                  },
+                  child: SizedBox(
+                    height: 70.h,
+                    child: const Center(
+                      child: Icon(FluentSystemIcons.ic_fluent_add_regular),
+                    ),
                   ),
                 )
               : Column(

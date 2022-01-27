@@ -237,28 +237,27 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
 
   Future<void> publishChanges() async {
     if (state.coverContent is File) {
-      final fileName = (await DefaultCacheManager()
-              .getSingleFile(state.coverContentUrl.toString()))
-          .basename;
+      String? fileName;
+      try {
+        fileName = (await DefaultCacheManager()
+                .getSingleFile(state.coverContentUrl.toString()))
+            .basename;
+      } catch (e) {
+        fileName = null;
+      }
 
       final fileDoesNotExistInStorage =
           !(fileName == (state.coverContent as File).path.split('/').last);
       if (fileDoesNotExistInStorage && state.coverContentUrl != null) {
         FirebaseStorageRequest()
             .uploadFile(
-          '${FirestorePaths.userCollection}/${state.uid}/cover/${(state.coverContent as File).path}',
+          '${FirestorePaths.userCollection}/${state.uid}/cover/${(state.coverContent as File).path.split('/').last}',
           state.coverContent,
         )
             .then(
           (url) {
             if (url.isNotEmpty) {
-              FirestoreUpdateRequest().update(
-                FirestorePaths.userCollection,
-                state.uid,
-                {
-                  'coverContent': url,
-                },
-              );
+              updateCoverImageUrl(url);
             }
           },
         );
@@ -276,6 +275,16 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
         'name': kalaUserBloc.state.name,
       });
     }
+  }
+
+  void updateCoverImageUrl(String url) {
+    FirestoreUpdateRequest().update(
+      FirestorePaths.userCollection,
+      state.uid,
+      {
+        'coverContent': url,
+      },
+    );
   }
 
   void setupUserContentPaginationCubit([String? customUid]) {

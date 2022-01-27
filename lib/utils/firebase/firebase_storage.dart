@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class FirebaseStorageRequest {
@@ -17,17 +18,17 @@ class FirebaseStorageRequest {
     Map<String, String>? metaData,
   }) async {
     try {
-    
-
       final ref = firebaseStorage?.ref(path);
 
       await ref!.putFile(data, SettableMetadata(customMetadata: metaData));
       if (firebaseStorage is MockFirebaseStorage) {
-
         return 'test_url';
       }
       return ref.getDownloadURL();
     } on Exception catch (e) {
+      if (kDebugMode) {
+        rethrow;
+      }
       await Fluttertoast.showToast(msg: e.toString());
       return '';
     }
