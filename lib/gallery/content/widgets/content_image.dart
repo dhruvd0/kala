@@ -14,11 +14,12 @@ import 'package:kala/gallery/content/models/content.dart';
 class ContentImage extends StatefulWidget {
   ContentImage({
     required this.image,
+    this.overrideFit,
     Key? key,
   }) : super(key: key) {
     loadImageProvider();
   }
-
+  final BoxFit? overrideFit;
   final dynamic image;
   ImageProvider? imageProvider;
 
@@ -73,7 +74,7 @@ class _ContentImageState extends State<ContentImage> {
                   .viewMode ==
               ContentViewMode.grid
           ? 0
-          : 20;
+          : 10;
       // ignore: avoid_catching_errors
     } on AssertionError {
       return 0;
@@ -90,13 +91,12 @@ class _ContentImageState extends State<ContentImage> {
               minHeight: 100.h,
               maxHeight: (1.sh - 100) / 2,
             ),
-            child: Card(
+            child: Material(
               color: BasicColors.backgroundOffWhite,
-              key: UniqueKey(),
               elevation: imageElevation(context),
               child: Image(
                 image: widget.imageProvider!,
-                fit: BoxFit.fill,
+                fit: widget.overrideFit ?? BoxFit.fill,
                 errorBuilder: (context, error, stackTrace) {
                   return Container();
                 },

@@ -19,18 +19,15 @@ void testToAddNewContent() {
     (tester) async {
       final widgetTesterHandler = WidgetTesterHandler(tester);
       await widgetTesterHandler.startAppWithMockFirebase(signedIn: true);
-      await widgetTesterHandler.pumTenFrames();
+
       await widgetTesterHandler.tapByKey(
         NavWidgetKeys.pageNavArrowKey(
           ScaffoldKeys.galleryPageKey,
           NavArrowType.right,
         ),
       );
-      await widgetTesterHandler.tester.dragUntilVisible(
-        widgetTesterHandler.findWidgetByKey(ArtistPageKeys.toggleEditModeBtn),
-        widgetTesterHandler.findWidgetByKey(ScaffoldKeys.dashboard),
-        const Offset(200, 0),
-      );
+      await widgetTesterHandler.waitForFramesToSettle();
+
       await widgetTesterHandler.tapByKey(ArtistPageKeys.toggleEditModeBtn);
 
       await widgetTesterHandler.tapByKey(AddNewContentWidgetKeys.emptyContent);

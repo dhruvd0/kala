@@ -1,9 +1,8 @@
-import 'dart:math' hide log;
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:kala/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/config/size/size.dart';
@@ -31,23 +30,18 @@ class ContentCard extends StatelessWidget {
             constraints: !SizeUtils.isMobileSize()
                 ? null
                 : BoxConstraints(
-                    minHeight: !state.isValid()
-                        ? gridElementSize()
-                        : (state.viewMode == ContentViewMode.scroll &&
-                                state.imgWidth > 1)
-                            ? 100.h
-                            : 100.h,
+                    minHeight: (state.viewMode == ContentViewMode.scroll &&
+                            state.imgWidth > 1)
+                        ? 100.h
+                        : 100.h,
                     maxHeight: state.viewMode == ContentViewMode.grid
                         ? gridElementSize()
-                        : max(state.imgHeight.h, 1.sh - 70.h),
+                        : double.infinity,
                   ),
-            decoration: BoxDecoration(
-              border: state.isValid() ? null : Border.all(),
-            ),
-            margin: state.viewMode == ContentViewMode.grid || !state.isValid()
+            margin: state.viewMode == ContentViewMode.grid
                 ? null
                 : EdgeInsets.symmetric(
-                    horizontal: 40.w,
+                    horizontal: 10.w,
                     vertical: 20.h,
                   ),
             child: !state.isValid()
@@ -64,8 +58,19 @@ class ContentCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         if (state.viewMode == ContentViewMode.grid)
-                          ContentImage(
-                            image: state.imageUrl ?? state.imageFile,
+                          Flexible(
+                            child: ClipRect(
+                              child: OverflowBox(
+                                maxWidth: double.infinity,
+                                maxHeight: double.infinity,
+                                child: FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: ContentImage(
+                                    image: state.imageFile ?? state.imageUrl,
+                                  ),
+                                ),
+                              ),
+                            ),
                           )
                         else
                           ContentImage(
@@ -104,7 +109,7 @@ class ContentBottomRow extends StatelessWidget {
       builder: (context, state) {
         return Container(
           margin: EdgeInsets.symmetric(
-            horizontal: !SizeUtils.isMobileSize() ? 0 : 5.w,
+            horizontal: !SizeUtils.isMobileSize() ? 0 : 15.w,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +118,10 @@ class ContentBottomRow extends StatelessWidget {
               SizedBox(
                 width: !SizeUtils.isMobileSize() ? 1.sw / 10 : 1.sw / 2.5,
                 child: AutoSizeText(
-                  state.description,
+                  state.description.isEmpty
+                      ? DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY)
+                          .format(state.uploadTimestamp!.toDate())
+                      : state.description,
                   minFontSize: 8,
                   style: TextThemeContext(context).bodyText2,
                 ),

@@ -18,6 +18,7 @@ class WidgetTesterHandler {
   WT tester;
 
   Future<void> tapByKey(String key) async {
+    await tester.ensureVisible(findWidgetByKey(key));
     await tester.tap(findWidgetByKey(key));
 
     await pumTenFrames();
@@ -45,7 +46,7 @@ class WidgetTesterHandler {
     // ignore: unawaited_futures
     app.main(mockFirebase: mockFirebaseConfig);
 
-    await waitForFrames();
+    await waitForFramesToSettle();
   }
 
   bool isWidgetInTree(String key) {
@@ -67,7 +68,7 @@ class WidgetTesterHandler {
     }
   }
 
-  Future<void> waitForFrames() async {
+  Future<void> waitForFramesToSettle() async {
     try {
       await tester.pumpAndSettle(
         const Duration(seconds: 3),

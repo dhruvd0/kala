@@ -142,6 +142,8 @@ class Content extends Equatable {
       assert(title.isNotEmpty);
       assert(artistID.isNotEmpty);
       assert(artistName.isNotEmpty);
+      assert(uploadTimestamp != null);
+      assert(uploadTimestamp!.toDate().year >= 2022);
       assert(docID.isNotEmpty);
       assert(fileSize > 1);
       assert(imgHeight > 1);

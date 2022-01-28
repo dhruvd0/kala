@@ -1,13 +1,15 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
+import 'package:kala/artist_page/bloc/kala_user_content_state.dart';
 import 'package:kala/artist_page/widgets/bio.dart';
 import 'package:kala/artist_page/widgets/cover/cover_widget.dart';
 import 'package:kala/artist_page/widgets/keys/artist_page/artist_page_keys.dart';
 import 'package:kala/artist_page/widgets/keys/artist_page/gallery_grid.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
-
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/dashboard/widgets/dashboard_child_page.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
@@ -22,18 +24,22 @@ class ArtistPage extends DashBoardPage {
   @override
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
-      trailing: Container(
-        margin: EdgeInsets.only(right: 10.w),
-        child: GestureDetector(
-          onTap: () {
-            BlocProvider.of<KalaUserContentBloc>(context, listen: false)
-                .toggleEditMode();
+      trailing: InkWell(
+        key: const ValueKey(ArtistPageKeys.toggleEditModeBtn),
+        onTap: () {
+          BlocProvider.of<KalaUserContentBloc>(context, listen: false)
+              .toggleEditMode();
+        },
+        child: BlocBuilder<KalaUserContentBloc, KalaUserContentState>(
+          builder: (context, state) {
+            return Container(
+              margin: EdgeInsets.only(bottom: 5.h),
+              child: Icon(
+                state.isEditMode ? EvaIcons.eye : FontAwesomeIcons.edit,
+                color: Colors.black,
+              ),
+            );
           },
-          child: const Icon(
-            Icons.edit,
-            key: ValueKey(ArtistPageKeys.toggleEditModeBtn),
-            color: Colors.black,
-          ),
         ),
       ),
       scaffoldKey: const ValueKey(ScaffoldKeys.artistPageKey),

@@ -5,6 +5,7 @@ import 'package:kala/artist_page/add_new_content/bloc/add_new_content_bloc.dart'
 import 'package:kala/artist_page/add_new_content/widgets/keys/add_new_content_widget_keys.dart';
 import 'package:kala/config/remote_config_data.dart';
 import 'package:kala/config/theme/theme.dart';
+import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/gallery/content/widgets/content_image.dart';
 import 'package:kala/main.dart';
@@ -12,10 +13,17 @@ import 'package:kala/utils/widgets/buttons/curved_mono_button.dart';
 import 'package:kala/utils/widgets/decors/text_input_decoration.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
-class AddNewContentSheet extends StatelessWidget {
+class AddNewContentSheet extends StatefulWidget {
   const AddNewContentSheet({Key? key}) : super(key: key);
 
   static GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  @override
+  State<AddNewContentSheet> createState() => _AddNewContentSheetState();
+}
+
+class _AddNewContentSheetState extends State<AddNewContentSheet> {
+  bool uploadingContent = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +33,7 @@ class AddNewContentSheet extends StatelessWidget {
           hideAppBar: true,
           scaffoldKey: const ValueKey(AddNewContentWidgetKeys.scaffoldKey),
           body: Form(
-            key: formKey,
+            key: AddNewContentSheet.formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -40,12 +48,15 @@ class AddNewContentSheet extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextThemeContext(context).bodyText1,
                 ),
-                Flexible(
+                Expanded(
                   child: Container(
-                    constraints: BoxConstraints(maxHeight: (1.sh - 200) / 2),
+                    constraints: BoxConstraints(maxHeight: (1.sh - 100) / 2),
                     margin:
                         EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
-                    child: ContentImage(image: state.imageFile),
+                    child: ContentImage(
+                      image: state.imageFile,
+                      overrideFit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 TextFormField(
@@ -111,20 +122,37 @@ class AddNewContentSheet extends StatelessWidget {
                     'Add a Description',
                   ),
                 ),
-                RectMonoButton(
-                  text: 'LETS GO',
-                  key: const ValueKey(
-                    AddNewContentWidgetKeys.submitContentButton,
-                  ),
-                  onTap: () {
-                    if (formKey.currentState?.validate() ?? false) {
-                      BlocProvider.of<AddNewContentCubit>(
-                        context,
-                        listen: false,
-                      ).addNewContent().then((value) => Navigator.pop(context));
-                    }
-                  },
-                )
+                if (uploadingContent)
+                  const CircularProgressIndicator(
+                    color: Colors.black,
+                  )
+                else
+                  RectMonoButton(
+                    text: 'LETS GO',
+                    key: const ValueKey(
+                      AddNewContentWidgetKeys.submitContentButton,
+                    ),
+                    onTap: () {
+                      if (AddNewContentSheet.formKey.currentState?.validate() ??
+                          false) {
+                        setState(() {
+                          uploadingContent = true;
+                        });
+                        BlocProvider.of<AddNewContentCubit>(
+                          context,
+                          listen: false,
+                        ).addNewContent().then((value) async {
+                          await BlocProvider.of<GalleryBloc>(
+                            context,
+                            listen: false,
+                          ).getContentList(100);
+                          if (mounted) {
+                            Navigator.pop(context);
+                          }
+                        });
+                      }
+                    },
+                  )
               ],
             ),
           ),

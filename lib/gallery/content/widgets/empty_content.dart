@@ -13,44 +13,52 @@ class EmptyContentCard extends StatelessWidget {
   const EmptyContentCard({
     Key? key,
   }) : super(key: key);
-
+  double gridElementSize() => (1.sw - 40.w) / 3;
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddNewContentCubit, Content>(
-      key: const ValueKey(AddNewContentWidgetKeys.emptyContent),
-      builder: (context, state) {
-        return GestureDetector(
-          onTap: () {
-            final bloc = BlocProvider.of<AddNewContentCubit>(
-              context,
-              listen: false,
-            );
-            scanImage(context).then(
-              (file) {
-                if (file != null) {
-                  bloc.editNewContent(ContentProps.image, file).then(
-                        (value) => showCupertinoModalBottomSheet(
-                          context: context,
-                          expand: true,
-                          isDismissible: true,
-                          builder: (context) => BlocProvider.value(
-                            value: bloc,
-                            child: const AddNewContentSheet(),
+    return Container(
+      margin: const EdgeInsets.all(5),
+      constraints: BoxConstraints(
+        minHeight: gridElementSize(),
+        maxHeight: gridElementSize(),
+      ),
+      decoration: BoxDecoration(border: Border.all(width: 0.5)),
+      child: BlocBuilder<AddNewContentCubit, Content>(
+        key: const ValueKey(AddNewContentWidgetKeys.emptyContent),
+        builder: (context, state) {
+          return GestureDetector(
+            onTap: () {
+              final bloc = BlocProvider.of<AddNewContentCubit>(
+                context,
+                listen: false,
+              );
+              scanImage(context).then(
+                (file) {
+                  if (file != null) {
+                    bloc.editNewContent(ContentProps.image, file).then(
+                          (value) => showCupertinoModalBottomSheet(
+                            context: context,
+                            expand: true,
+                            isDismissible: true,
+                            builder: (context) => BlocProvider.value(
+                              value: bloc,
+                              child: const AddNewContentSheet(),
+                            ),
                           ),
-                        ),
-                      );
-                }
-              },
-            );
-          },
-          child: SizedBox(
-            height: 70.h,
-            child: const Center(
-              child: Icon(FluentSystemIcons.ic_fluent_add_regular),
+                        );
+                  }
+                },
+              );
+            },
+            child: SizedBox(
+              height: 70.h,
+              child: const Center(
+                child: Icon(FluentSystemIcons.ic_fluent_add_regular),
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

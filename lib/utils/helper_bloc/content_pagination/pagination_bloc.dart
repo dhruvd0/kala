@@ -55,7 +55,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
 
   Future<List<dynamic>> getTList(int scrollPosition) async {
     final firestorePageRequest = state;
-    if (scrollPosition == state.scrollPosition) {
+    if (scrollPosition == state.scrollPosition && scrollPosition != 0) {
       return <dynamic>[];
     }
     emit(state.copyWith(scrollPosition: scrollPosition));
