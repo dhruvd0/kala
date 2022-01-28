@@ -1,9 +1,9 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/firebase/page_data.dart' show FirestorePageRequest;
+
 @immutable
 class GalleryState {
   const GalleryState({

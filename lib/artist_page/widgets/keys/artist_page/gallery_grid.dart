@@ -10,8 +10,7 @@ class GalleryGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 26.w),
-      width: 1.sw,
+      margin: EdgeInsets.symmetric(horizontal: 10.w),
       child: BlocBuilder<KalaUserContentBloc, KalaUserContentState>(
         builder: (context, state) {
           if (state.userContent == null) {
@@ -24,11 +23,11 @@ class GalleryGridView extends StatelessWidget {
           const cellCount = 3;
           return StaggeredGrid.count(
             crossAxisCount: cellCount,
-            crossAxisSpacing: 20.w,
+            crossAxisSpacing: 10.w,
+            mainAxisSpacing: 10.h,
             children: state.userContent!
                 .map(
                   (e) => StaggeredGridTile.fit(
-                   
                     crossAxisCellCount: 1,
                     child: ContentBlocProvider(
                       content: e,

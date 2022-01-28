@@ -3,5 +3,5 @@ class RemoteConfigKeys {
 
   static const String addBioPlaceholder = 'addBioPlaceholder';
 
-  static const String clickPhotoToChangeContent='clickPhotoToChangeContent';
+  static const String clickPhotoToChangeContent = 'clickPhotoToChangeContent';
 }

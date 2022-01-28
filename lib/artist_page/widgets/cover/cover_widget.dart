@@ -12,6 +12,7 @@ import 'package:kala/config/remote_config_data.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/gallery/content/widgets/content_image.dart';
 import 'package:kala/main.dart';
+import 'package:kala/utils/io/scan_image.dart';
 
 class CoverContent extends StatelessWidget {
   const CoverContent({Key? key}) : super(key: key);
@@ -19,10 +20,8 @@ class CoverContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<KalaUserContentBloc, KalaUserContentState>(
-    
       builder: (context, userState) {
         return Container(
-         
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             border: !userState.isEditMode && (userState.coverContent is File) ||
@@ -54,7 +53,7 @@ class AddCoverContent extends StatelessWidget {
               context,
               listen: false,
             );
-            bloc.scanImage(context).then((value) {
+            scanImage(context).then((value) {
               if (value is File) {
                 bloc
                   ..changeCover(value)

@@ -1,6 +1,5 @@
 import 'dart:isolate';
 
-
 class CustomIsolate {
   CustomIsolate() {
     Isolate.spawn((message) {}, 'Isolate Start')
@@ -12,6 +11,6 @@ class CustomIsolate {
 
   void execute(Function<T>(Object arg) callable) {
     receivePort.sendPort.send(callable);
-   // compute
+    // compute
   }
 }

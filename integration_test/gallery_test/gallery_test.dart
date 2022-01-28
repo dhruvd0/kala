@@ -13,9 +13,7 @@ void galleryTestFlow() {
     await populateFakeContentInFirestore(FirebaseMocks.mockFirestore, 20);
     await widgetTester.startAppWithMockFirebase(signedIn: true);
     expect(find.byType(ContentCard), findsWidgets);
-    
   });
 }
-void main(){
-  
-}
+
+void main() {}

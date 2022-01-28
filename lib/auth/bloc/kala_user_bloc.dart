@@ -12,12 +12,19 @@ import 'package:kala/auth/models/kala_user.dart';
 import 'package:kala/auth/social_integration/auth_types.dart';
 import 'package:kala/auth/social_integration/google.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
+import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/main.dart';
 
 class KalaUserBloc extends Cubit<KalaUser> {
-  KalaUserBloc() : super(unauthenticatedBaseUser()) {
+  KalaUserBloc([KalaUser? customKalaUser])
+      : super(customKalaUser ?? unauthenticatedBaseUser()) {
     registerAuthListener();
   }
+
+  KalaUserBloc.mock()
+      : super(
+          KalaUser.fromSocialAuthUser(FirebaseMocks.firebaseMockUser),
+        );
 
   StreamSubscription<User?>? authStream;
 
@@ -41,8 +48,6 @@ class KalaUserBloc extends Cubit<KalaUser> {
           ),
         );
         startUserSnapshotFetcher();
-      } else {
-        emit(unauthenticatedBaseUser());
       }
     });
   }
@@ -123,7 +128,7 @@ class KalaUserBloc extends Cubit<KalaUser> {
         assert(userFromSnapshot.validateUser());
         try {
           emit(userFromSnapshot);
-        // ignore: avoid_catching_errors
+          // ignore: avoid_catching_errors
         } on StateError {
           log('State Error');
           return;
@@ -161,7 +166,4 @@ class KalaUserBloc extends Cubit<KalaUser> {
       emit(kalaUser);
     }
   }
-
-
-  
 }

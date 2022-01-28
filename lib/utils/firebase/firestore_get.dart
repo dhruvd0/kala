@@ -75,9 +75,10 @@ class FirestoreQueries {
       if (docData == null) {
         continue;
       }
-      final jsonData = docData as Map<String, dynamic>;
-      final data = jsonData..putIfAbsent('docID', () => doc.id);
-      jsonList.add(data);
+      // ignore: prefer_final_locals
+      var jsonData = docData as Map<String, dynamic>;
+
+      jsonList.add(jsonData);
     }
     return jsonList;
   }

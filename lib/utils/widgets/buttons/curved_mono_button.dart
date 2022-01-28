@@ -29,9 +29,7 @@ class RectMonoButton extends StatelessWidget {
         width: width,
         margin: margin,
         decoration: BoxDecoration(
-          border: Border.all(
-            
-          ),
+          border: Border.all(),
         ),
         child: Center(
           child: Text(

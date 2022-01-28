@@ -46,7 +46,6 @@ class WidgetTesterHandler {
     app.main(mockFirebase: mockFirebaseConfig);
 
     await waitForFrames();
-    
   }
 
   bool isWidgetInTree(String key) {
@@ -57,17 +56,24 @@ class WidgetTesterHandler {
       return false;
     }
   }
-  
+
+  Future<void> enterTextInWidget(String key, String text) async {
+    await tester.enterText(findWidgetByKey(key), text);
+  }
 
   Future<void> pumTenFrames() async {
     for (var i = 0; i < 10; i++) {
       await tester.pump();
     }
   }
+
   Future<void> waitForFrames() async {
     try {
-      await tester.pumpAndSettle(const Duration(seconds: 3),
-          EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10),);
+      await tester.pumpAndSettle(
+        const Duration(seconds: 3),
+        EnginePhase.sendSemanticsUpdate,
+        const Duration(seconds: 10),
+      );
     } on FlutterError {
       log('Animations Complete, App Started');
     }

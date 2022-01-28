@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:kala/artist_page/widgets/keys/artist_page/gallery_grid.dart';
 import 'package:kala/config/size/size.dart';

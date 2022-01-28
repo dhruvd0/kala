@@ -10,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/artist_page/add_new_content/widgets/add_new_content_sheet.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/figma/consts.dart';
@@ -37,7 +36,7 @@ Future<void> main({FirebaseConfig? mockFirebase}) async {
 
       runApp(const KalaApp());
     },
-    (error, stack) => isTestMode
+    (error, stack) => isTestMode || kIsWeb
         ? log(error.toString(), stackTrace: stack)
         : FirebaseCrashlytics.instance.recordError(error, stack),
   );
@@ -62,6 +61,9 @@ Future<void> setupFirebase(FirebaseConfig? mockFirebase) async {
 }
 
 Future<void> setupCrashlytics() async {
+  if (kIsWeb) {
+    return;
+  }
   if (isTestMode) {
     return;
   }
@@ -107,7 +109,6 @@ class KalaApp extends StatelessWidget {
                 kalaUserBloc: context.read<KalaUserBloc>(),
               ),
             ),
-           
           ],
           child: MaterialApp(
             title: 'Kala',

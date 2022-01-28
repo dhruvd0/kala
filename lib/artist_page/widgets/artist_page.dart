@@ -18,19 +18,22 @@ class ArtistPage extends DashBoardPage {
       : super(controller: controller);
 
   final String? userID;
-  
+
   @override
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
-      trailing: GestureDetector(
-        key: const ValueKey(ArtistPageKeys.toggleEditModeBtn),
-        onTap: () {
-          BlocProvider.of<KalaUserContentBloc>(context, listen: false)
-              .toggleEditMode();
-        },
-        child: const Icon(
-          Icons.edit,
-          color: Colors.black,
+      trailing: Container(
+        margin: EdgeInsets.only(right: 10.w),
+        child: GestureDetector(
+          onTap: () {
+            BlocProvider.of<KalaUserContentBloc>(context, listen: false)
+                .toggleEditMode();
+          },
+          child: const Icon(
+            Icons.edit,
+            key: ValueKey(ArtistPageKeys.toggleEditModeBtn),
+            color: Colors.black,
+          ),
         ),
       ),
       scaffoldKey: const ValueKey(ScaffoldKeys.artistPageKey),
@@ -53,7 +56,7 @@ class ArtistPage extends DashBoardPage {
             SizedBox(
               height: 50.h,
             ),
-            Flexible(child: GalleryGridView())
+            GalleryGridView()
           ],
         ),
       ),

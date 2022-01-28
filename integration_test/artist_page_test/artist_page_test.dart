@@ -1,4 +1,3 @@
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kala/artist_page/widgets/keys/artist_page/artist_page_keys.dart';
 import 'package:kala/config/widget_keys/nav_keys.dart';

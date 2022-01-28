@@ -1,5 +1,5 @@
 import 'package:kala/config/nav/route_names.dart';
 
-String getRouteAfterSplash()  {
+String getRouteAfterSplash() {
   return Routes.splash;
 }

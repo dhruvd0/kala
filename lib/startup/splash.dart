@@ -46,14 +46,15 @@ class _SplashState extends State<Splash> {
       nextRoute = Routes.auth;
     } else {
       await Future.doWhile(() {
-        final isDataLoaded = BlocProvider.of<GalleryBloc>(context, listen: false)
-                .state
-                .contentSlideList
-                .isNotEmpty &&
-            BlocProvider.of<KalaUserContentBloc>(context, listen: false)
+        final isDataLoaded =
+            BlocProvider.of<GalleryBloc>(context, listen: false)
                     .state
-                    .userContent !=
-                null;
+                    .contentSlideList
+                    .isNotEmpty &&
+                BlocProvider.of<KalaUserContentBloc>(context, listen: false)
+                        .state
+                        .userContent !=
+                    null;
         return isDataLoaded;
       });
 

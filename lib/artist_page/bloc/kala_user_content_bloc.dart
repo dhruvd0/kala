@@ -4,14 +4,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:image_size_getter/file_input.dart';
-import 'package:image_size_getter/image_size_getter.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_state.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/auth/models/kala_user.dart';
@@ -23,7 +18,6 @@ import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/firebase_storage.dart';
 import 'package:kala/utils/firebase/firestore_update.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   KalaUserContentBloc({
@@ -36,7 +30,6 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
             bio: 'Empty Bio',
             coverContent: '',
             uid: kalaUserBloc.state.uid,
-            newContent: initialNewContent(),
             isEditMode: false,
           ),
         ) {
@@ -45,7 +38,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
 
   factory KalaUserContentBloc.mock() {
     return KalaUserContentBloc(
-      kalaUserBloc: KalaUserBloc(),
+      kalaUserBloc: KalaUserBloc.mock(),
       firebaseFirestore: FirebaseMocks.mockFirestore,
       customStorage: FirebaseMocks.mockFirebaseStorage,
     )..setupUserContentPaginationCubit(FirebaseMocks.firebaseMockUser.uid);
@@ -99,142 +92,6 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
     emit(state.copyWith(coverContent: image));
   }
 
-  Future<void> editNewContent(ContentProps contentProp, dynamic data) async {
-    assert(data != null);
-    if (state.newContent.artistName.isEmpty) {
-      emit(
-        state.copyWith(
-          newContent: state.newContent.copyWith(
-            artistName: isTestMode
-                ? FirebaseMocks.firebaseMockUser.displayName
-                : kalaUserBloc.state.name,
-          ),
-        ),
-      );
-    }
-
-    switch (contentProp) {
-      case ContentProps.title:
-        contentStringPropAssertions(data);
-        emit(
-          state.copyWith(
-            newContent: state.newContent.copyWith(
-              title: data.toString(),
-              uploadTimestamp: Timestamp.now(),
-            ),
-          ),
-        );
-        break;
-      case ContentProps.price:
-        contentIntPropsAssertions(data);
-        emit(
-          state.copyWith(
-            newContent: state.newContent.copyWith(price: data as int),
-          ),
-        );
-        break;
-      case ContentProps.image:
-        final value = ImageSizeGetter.getSize(FileInput(data));
-        emit(
-          state.copyWith(
-            newContent: state.newContent.copyWith(
-              imageFile: data as File,
-              fileSize: await data.length(),
-              imgHeight: value.height.toDouble(),
-              imgWidth: value.width.toDouble(),
-            ),
-          ),
-        );
-
-        break;
-      case ContentProps.description:
-        contentStringPropAssertions(data);
-        emit(
-          state.copyWith(
-            newContent: state.newContent.copyWith(description: data.toString()),
-          ),
-        );
-        break;
-    }
-  }
-
-  void contentIntPropsAssertions(dynamic data) {
-    assert(data is int);
-    assert((data as int) >= 0);
-  }
-
-  void contentStringPropAssertions(dynamic data) {
-    assert(data is String);
-    assert(data.toString().isNotEmpty);
-  }
-
-  Future<void> addNewContent() async {
-    final uploadedContentDocID = await setInitialContentData();
-    assert(state.newContent.imageFile != null);
-    final imageUrl = await uploadImageAndGetUrl(
-      '${FirestorePaths.contentCollection}/$uploadedContentDocID/',
-    );
-    emitLocalNewContentState(
-      imageUrl,
-      uploadedContentDocID,
-    );
-
-    if (!state.newContent.isValid()) {
-      throw Exception('Invalid Exception: ${state.newContent.toString()}');
-    }
-    await updateNewContentImageURL(
-      uploadedContentDocID,
-      imageUrl,
-    );
-
-    emit(
-      state.copyWith(
-        newContent: initialNewContent(),
-      ),
-    );
-  }
-
-  void emitLocalNewContentState(String imageUrl, String uploadedContentDocID) {
-    emit(
-      state.copyWith(
-        newContent: state.newContent.copyWith(
-          imageUrl: imageUrl,
-          docID: uploadedContentDocID,
-        ),
-      ),
-    );
-  }
-
-  Future<void> updateNewContentImageURL(
-    String uploadedContentDocID,
-    String imageUrl,
-  ) async {
-    await FirestoreUpdateRequest(firestore: firebaseFirestore).update(
-      FirestorePaths.contentCollection,
-      uploadedContentDocID,
-      <String, String>{'imageURl': imageUrl},
-    );
-  }
-
-  Future<String> uploadImageAndGetUrl(
-    String contentStoragePath,
-  ) async {
-    return FirebaseStorageRequest(customStorage).uploadFile(
-      '$contentStoragePath/$correctFilePath',
-      state.newContent.imageFile!,
-    );
-  }
-
-  String? get correctFilePath =>
-      state.newContent.imageFile?.path.split('/').last;
-
-  Future<String> setInitialContentData() {
-    return FirestoreUpdateRequest(firestore: firebaseFirestore).set(
-      FirestorePaths.contentCollection,
-      state.newContent.toMap(),
-    );
-  }
-
   Future<void> publishChanges() async {
     if (state.coverContent is File) {
       String? fileName;
@@ -242,7 +99,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
         fileName = (await DefaultCacheManager()
                 .getSingleFile(state.coverContentUrl.toString()))
             .basename;
-      } catch (e) {
+      } on Exception {
         fileName = null;
       }
 
@@ -325,17 +182,6 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
     }
   }
 
-  Future<File?> scanImage(BuildContext context) async {
-    if (await Permission.camera.request().isGranted) {
-      try {
-        final scannedDoc = await DocumentScannerFlutter.launch(context);
-        return scannedDoc;
-      } on PlatformException {
-        // 'Failed to get document path or operation cancelled!';
-      }
-    }
-  }
-
   Future<void> getUserContent(int scrollPosition) async {
     assert(contentPaginationCubit != null);
 
@@ -359,7 +205,10 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
     if (state.isEditMode) {
       newContent?.removeWhere((element) => !element.isValid());
     } else {
-      newContent?.insert(0, Content.fromMap(const {}));
+      newContent?.insert(
+        0,
+        Content.fromMap(const {}).copyWith(viewMode: ContentViewMode.grid),
+      );
     }
 
     emit(

@@ -6,11 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
-enum ContentViewMode{
-  scroll,
-  grid
-}
-
+enum ContentViewMode { scroll, grid }
 
 // ignore_for_file: implicit_dynamic_map_literal
 // ignore_for_file: argument_type_not_assignable
@@ -23,7 +19,6 @@ class Content extends Equatable {
     required this.description,
     required this.docID,
     required this.fileSize,
-   
     required this.imageUrl,
     required this.imgHeight,
     required this.imgWidth,
@@ -31,7 +26,7 @@ class Content extends Equatable {
     required this.title,
     required this.uploadTimestamp,
     required this.viewMode,
-     this.imageFile,
+    this.imageFile,
   });
 
   factory Content.fromJson(String source) =>
@@ -49,8 +44,8 @@ class Content extends Equatable {
       imgWidth: map['imgWidth']?.toDouble() ?? 0.0,
       price: map['price']?.toInt() ?? 0,
       title: map['title'] ?? '',
-      uploadTimestamp: map['uploadTimestamp'] ,
-      viewMode: (map['viewMode'])??ContentViewMode.scroll,
+      uploadTimestamp: map['uploadTimestamp'],
+      viewMode: (map['viewMode']) ?? ContentViewMode.scroll,
     );
   }
 
@@ -131,14 +126,12 @@ class Content extends Equatable {
       'description': description,
       'docID': docID,
       'fileSize': fileSize,
-      
       'imageUrl': imageUrl,
       'imgHeight': imgHeight,
       'imgWidth': imgWidth,
       'price': price,
       'title': title,
       'uploadTimestamp': uploadTimestamp,
-      
     };
   }
 
@@ -149,7 +142,7 @@ class Content extends Equatable {
       assert(title.isNotEmpty);
       assert(artistID.isNotEmpty);
       assert(artistName.isNotEmpty);
-     
+      assert(docID.isNotEmpty);
       assert(fileSize > 1);
       assert(imgHeight > 1);
       assert(imgWidth > 1);

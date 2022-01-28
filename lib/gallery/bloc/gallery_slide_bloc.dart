@@ -20,12 +20,12 @@ class GalleryBloc extends Cubit<GalleryState> {
           ),
         ) {
     if (firebaseFirestore != null) {
-      contentPaginationCubit.firestore=firebaseFirestore;
+      contentPaginationCubit.firestore = firebaseFirestore;
     }
 
     kalaUserStateStream =
         kalaUserBloc.stream.asBroadcastStream().listen((state) {
-      if (state.kalaUserState==KalaUserState.authenticated) {
+      if (state.kalaUserState == KalaUserState.authenticated) {
         getContentList(0);
       }
     });

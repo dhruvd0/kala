@@ -14,19 +14,19 @@ class FirestoreUpdateRequest {
   Future<String> update(
     String collection,
     String? docID,
-    Map<String, dynamic> data, 
-    
+    Map<String, dynamic> data,
   ) async {
     try {
       final doc = firestore?.collection(collection).doc(docID);
       await doc?.update(data);
-      return doc?.id??'';
+      return doc?.id ?? '';
     } on Exception catch (e) {
       await Fluttertoast.showToast(msg: e.toString());
       return '';
     }
   }
-    Future<String> set(
+
+  Future<String> set(
     String collection,
     Map<String, dynamic> data, {
     String? docID,
@@ -34,7 +34,7 @@ class FirestoreUpdateRequest {
     try {
       final doc = firestore?.collection(collection).doc(docID);
       await doc?.set(data);
-      return doc?.id ?? '';
+      return doc!.id;
     } on Exception catch (e) {
       await Fluttertoast.showToast(msg: e.toString());
       return '';

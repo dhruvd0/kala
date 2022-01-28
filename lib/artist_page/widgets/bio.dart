@@ -38,7 +38,7 @@ class _BioWidgetState extends State<BioWidget> {
                 ),
                 child: Center(
                   child: Container(
-                    padding: activeTextField ?const EdgeInsets.all(5) : null,
+                    padding: activeTextField ? const EdgeInsets.all(5) : null,
                     child: TextField(
                       key: const ValueKey(ArtistPageKeys.editBioKey),
                       onTap: () {

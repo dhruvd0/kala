@@ -67,6 +67,7 @@ class KalaUser extends Equatable {
   final KalaUserState kalaUserState;
   final Timestamp? lastSignIn;
   final String name;
+
   /// Profile image ulr
   final String? photoURL;
 

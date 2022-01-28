@@ -6,7 +6,6 @@ import 'package:kala/config/theme/text_styles/button.dart';
 import 'package:kala/config/theme/text_styles/heading.dart';
 
 final ThemeData lightTheme = ThemeData(
-  
   iconTheme: const IconThemeData(color: Colors.black),
   textTheme: TextTheme(
     headline1: HeadingStyles.heading1,

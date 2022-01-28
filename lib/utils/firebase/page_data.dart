@@ -43,6 +43,4 @@ class FirestorePageResponse {
 }
 
 @immutable
-class FirestorePageRequest {
-  
-}
+class FirestorePageRequest {}

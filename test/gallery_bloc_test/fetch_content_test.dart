@@ -36,7 +36,6 @@ Future<GalleryBloc> galleryBlocSetup() async {
 
   final galleryBloc = GalleryBloc(
     kalaUserBloc: KalaUserBloc(),
-   
   );
   return galleryBloc;
 }

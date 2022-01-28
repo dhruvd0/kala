@@ -42,22 +42,17 @@ void dashboardIntegrationTests() {
         NavArrowType.left,
       ),
     );
-     await widgetTester.tapByKey(
+    await widgetTester.tapByKey(
       NavWidgetKeys.pageNavArrowKey(
         ScaffoldKeys.artistPageKey,
         NavArrowType.left,
       ),
     );
-      expect(
+    expect(
       widgetTester.findWidgetByKey(ScaffoldKeys.galleryPageKey),
       findsWidgets,
     );
-
-
-    
   });
 }
 
-void main() {
-  
-}
+void main() {}

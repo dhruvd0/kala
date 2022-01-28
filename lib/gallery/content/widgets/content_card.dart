@@ -1,112 +1,96 @@
 import 'dart:math' hide log;
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/artist_page/add_new_content/widgets/add_new_content_sheet.dart';
+import 'package:kala/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/config/size/size.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/gallery/content/bloc/content_bloc.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/gallery/content/widgets/content_image.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:kala/gallery/content/widgets/empty_content.dart';
+import 'package:kala/gallery/content/widgets/keys.dart';
 
 class ContentCard extends StatelessWidget {
   const ContentCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ContentBloc, Content>(
-      key: UniqueKey(),
-      builder: (context, state) {
-        return Container(
-          constraints: !SizeUtils.isMobileSize()
-              ? null
-              : BoxConstraints(
-                  minHeight: !state.isValid()
-                      ? 100.h
-                      : (state.viewMode == ContentViewMode.scroll &&
-                              state.imgWidth > 1)
-                          ? (state.imgWidth)
-                          : 100.h,
-                  maxHeight: state.viewMode == ContentViewMode.grid
-                      ? 100.h
-                      : max(state.imgHeight.h, 1.sh - 70),
-                ),
-          decoration: BoxDecoration(
-            border: state.isValid() ? null : Border.all(),
-          ),
-          margin: state.viewMode == ContentViewMode.grid || !state.isValid()
-              ? null
-              : EdgeInsets.symmetric(
-                  horizontal: 40.w,
-                  vertical: 20.h,
-                ),
-          child: !state.isValid()
-              ? GestureDetector(
-                  onTap: () {
-                    final bloc = BlocProvider.of<KalaUserContentBloc>(
-                      context,
-                      listen: false,
-                    );
-                    bloc.scanImage(context).then(
-                      (file) {
-                        if (file != null) {
-                          bloc.editNewContent(ContentProps.image, file).then(
-                                (value) => showCupertinoModalBottomSheet(
-                                  context: context,
-                                  expand: true,
-                                  isDismissible: true,
-                                  builder: (context) => AddNewContentSheet(),
-                                ),
-                              );
-                        }
-                      },
-                    );
-                  },
-                  child: SizedBox(
-                    height: 70.h,
-                    child: const Center(
-                      child: Icon(FluentSystemIcons.ic_fluent_add_regular),
+    return BlocProvider(
+      lazy: false,
+      create: (_) => AddNewContentCubit(
+        kalaUserContent: context.read<KalaUserContentBloc>(),
+      ),
+      child: BlocBuilder<ContentBloc, Content>(
+        key: UniqueKey(),
+        builder: (context, state) {
+          return Container(
+            constraints: !SizeUtils.isMobileSize()
+                ? null
+                : BoxConstraints(
+                    minHeight: !state.isValid()
+                        ? gridElementSize()
+                        : (state.viewMode == ContentViewMode.scroll &&
+                                state.imgWidth > 1)
+                            ? 100.h
+                            : 100.h,
+                    maxHeight: state.viewMode == ContentViewMode.grid
+                        ? gridElementSize()
+                        : max(state.imgHeight.h, 1.sh - 70.h),
+                  ),
+            decoration: BoxDecoration(
+              border: state.isValid() ? null : Border.all(),
+            ),
+            margin: state.viewMode == ContentViewMode.grid || !state.isValid()
+                ? null
+                : EdgeInsets.symmetric(
+                    horizontal: 40.w,
+                    vertical: 20.h,
+                  ),
+            child: !state.isValid()
+                ? state.viewMode == ContentViewMode.scroll
+                    ? Container()
+                    : const EmptyContentCard()
+                : Container(
+                    constraints: BoxConstraints(maxWidth: 1.sw / 3),
+                    key: ValueKey(
+                      ContentCardKey.key(state.viewMode, state.docID),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (state.viewMode == ContentViewMode.grid)
+                          ContentImage(
+                            image: state.imageUrl ?? state.imageFile,
+                          )
+                        else
+                          ContentImage(
+                            image: state.imageUrl ?? state.imageFile,
+                          ),
+                        if (state.viewMode == ContentViewMode.grid)
+                          const SizedBox()
+                        else
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                        if (state.viewMode == ContentViewMode.grid)
+                          const SizedBox()
+                        else
+                          const ContentBottomRow()
+                      ],
                     ),
                   ),
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (state.viewMode == ContentViewMode.grid)
-                      Expanded(
-                        child: ContentImage(
-                          image: state.imageUrl ?? state.imageFile,
-                        ),
-                      )
-                    else
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: ContentImage(
-                          image: state.imageUrl ?? state.imageFile,
-                        ),
-                      ),
-                    if (state.viewMode == ContentViewMode.grid)
-                      const SizedBox()
-                    else
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                    if (state.viewMode == ContentViewMode.grid)
-                      const SizedBox()
-                    else
-                      const ContentBottomRow()
-                  ],
-                ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
+
+  double gridElementSize() => (1.sw - 40.w) / 3;
 }
 
 class ContentBottomRow extends StatelessWidget {

@@ -11,7 +11,6 @@ class KalaUserContentState extends Equatable {
   const KalaUserContentState({
     required this.bio,
     required this.coverContent,
-    required this.newContent,
     required this.uid,
     required this.isEditMode,
     this.lastFetchedTimestamp,
@@ -26,7 +25,6 @@ class KalaUserContentState extends Equatable {
       coverContentUrl:
           map['coverContent'] is String ? map['coverContent'] : null,
       lastFetchedTimestamp: map['lastFetchedTimestamp'],
-      newContent: Content.fromMap(const {}),
       uid: map['uid'] ?? '',
       userContent: const [],
       isEditMode: map['isEditMode'] ?? false,
@@ -38,7 +36,6 @@ class KalaUserContentState extends Equatable {
   final String? coverContentUrl;
   final bool isEditMode;
   final Timestamp? lastFetchedTimestamp;
-  final Content newContent;
   final String uid;
   final List<Content>? userContent;
 
@@ -49,15 +46,9 @@ class KalaUserContentState extends Equatable {
       coverContent,
       isEditMode,
       lastFetchedTimestamp,
-      newContent,
       uid,
       userContent,
     ];
-  }
-
-  @override
-  String toString() {
-    return 'KalaUserContentState(bio: $bio, coverContent: $coverContent, lastFetchedTimestamp: $lastFetchedTimestamp, newContent: $newContent, uid: $uid, userContent: $userContent, isEditMode: $isEditMode)';
   }
 
   bool isContentImageUrlValid() {
@@ -71,7 +62,6 @@ class KalaUserContentState extends Equatable {
       'bio': bio,
       'coverContent': coverContent,
       'lastFetchedTimestamp': lastFetchedTimestamp,
-      'newContent': newContent.toMap(),
       'uid': uid,
       'isEditMode': isEditMode,
     };
@@ -85,7 +75,6 @@ class KalaUserContentState extends Equatable {
     String? coverContentUrl,
     bool? isEditMode,
     Timestamp? lastFetchedTimestamp,
-    Content? newContent,
     String? uid,
     List<Content>? userContent,
   }) {
@@ -95,7 +84,6 @@ class KalaUserContentState extends Equatable {
       coverContentUrl: coverContentUrl ?? this.coverContentUrl,
       isEditMode: isEditMode ?? this.isEditMode,
       lastFetchedTimestamp: lastFetchedTimestamp ?? this.lastFetchedTimestamp,
-      newContent: newContent ?? this.newContent,
       uid: uid ?? this.uid,
       userContent: userContent ?? this.userContent,
     );

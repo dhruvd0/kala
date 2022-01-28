@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -32,11 +31,14 @@ class ContentImage extends StatefulWidget {
         imageProvider = null;
       } else {
         try {
-          imageProvider = CachedNetworkImageProvider(image.toString(),
-              cacheKey: image.toString(),
-              cacheManager: DefaultCacheManager(), errorListener: () {
-            imageProvider = null;
-          });
+          imageProvider = CachedNetworkImageProvider(
+            image.toString(),
+            cacheKey: image.toString(),
+            cacheManager: DefaultCacheManager(),
+            errorListener: () {
+              imageProvider = null;
+            },
+          );
         } on HttpException {
           imageProvider = null;
         }
@@ -56,7 +58,9 @@ class _ContentImageState extends State<ContentImage> {
           widget.imageProvider!,
           context,
         );
-      } on HttpException {}
+      } on HttpException {
+        // url error
+      }
     }
 
     super.didChangeDependencies();

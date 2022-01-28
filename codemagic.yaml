@@ -21,6 +21,7 @@ workflows:
           include: true
     scripts:
       - flutter packages pub get
+      - flutter format lib test integration_test
       - flutter analyze
       - flutter test
     artifacts:

@@ -29,8 +29,7 @@ class _DashboardState extends State<Dashboard> {
         key: const ValueKey(ScaffoldKeys.dashboard),
         physics: const BouncingScrollPhysics(),
         controller: pageController,
-        preloadPagesCount: 3,
-        
+        preloadPagesCount: 2,
         children: [
           GalleryPage(pageController),
           ArtistPage(
