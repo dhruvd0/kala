@@ -31,8 +31,8 @@ class AddNewContentCubit extends Cubit<Content> {
   factory AddNewContentCubit.mock() {
     return AddNewContentCubit(
       kalaUserContent: KalaUserContentBloc.mock(),
-      firebaseFirestore: FirebaseMocks.mockFirestore,
-      customStorage: FirebaseMocks.mockFirebaseStorage,
+      firebaseFirestore: firebaseConfig?.firestore,
+      customStorage: firebaseConfig?.storage,
     );
   }
 
@@ -64,7 +64,7 @@ class AddNewContentCubit extends Cubit<Content> {
       emit(
         state.copyWith(
           artistName: isTestMode
-              ? FirebaseMocks.firebaseMockUser.displayName
+              ? FirebaseMocks().firebaseMockUser.displayName
               : kalaUserContent.kalaUserBloc.state.name,
         ),
       );

@@ -18,6 +18,7 @@ import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/firebase_storage.dart';
 import 'package:kala/utils/firebase/firestore_update.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
+import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   KalaUserContentBloc({
@@ -39,9 +40,9 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   factory KalaUserContentBloc.mock() {
     return KalaUserContentBloc(
       kalaUserBloc: KalaUserBloc.mock(),
-      firebaseFirestore: FirebaseMocks.mockFirestore,
-      customStorage: FirebaseMocks.mockFirebaseStorage,
-    )..setupUserContentPaginationCubit(FirebaseMocks.firebaseMockUser.uid);
+      firebaseFirestore: firebaseConfig?.firestore,
+      customStorage: firebaseConfig?.storage,
+    )..setupUserContentPaginationCubit(FirebaseMocks().firebaseMockUser.uid);
   }
 
   PaginationCubit? contentPaginationCubit;
@@ -79,7 +80,7 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   static Content initialNewContent() => Content.fromMap(
         <String, dynamic>{
           'artistID': isTestMode
-              ? FirebaseMocks.firebaseMockUser.uid
+              ? FirebaseMocks().firebaseMockUser.uid
               : firebaseConfig?.auth.currentUser?.uid,
         },
       );
@@ -177,15 +178,24 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
       setupUserContentPaginationCubit();
       loadCoverImageFromCache();
       if (userContent?.isEmpty ?? false) {
-        getUserContent(2);
+        getUserContent(
+          2,
+          collectionSegment: CollectionSegment.initial,
+        );
       }
     }
   }
 
-  Future<void> getUserContent(int scrollPosition) async {
+  Future<void> getUserContent(
+    int scrollPosition, {
+    required CollectionSegment collectionSegment,
+  }) async {
     assert(contentPaginationCubit != null);
 
-    final newContent = await contentPaginationCubit?.getTList(scrollPosition);
+    final newContent = await contentPaginationCubit?.getTList(
+      scrollPosition,
+      segment: collectionSegment,
+    );
 
     if (newContent?.isNotEmpty ?? false) {
       emit(

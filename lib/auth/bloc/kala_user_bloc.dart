@@ -23,7 +23,7 @@ class KalaUserBloc extends Cubit<KalaUser> {
 
   KalaUserBloc.mock()
       : super(
-          KalaUser.fromSocialAuthUser(FirebaseMocks.firebaseMockUser),
+          KalaUser.fromSocialAuthUser(FirebaseMocks().firebaseMockUser),
         );
 
   StreamSubscription<User?>? authStream;

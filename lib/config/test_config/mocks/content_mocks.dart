@@ -1,8 +1,11 @@
-import 'dart:math';
+import 'dart:developer' show log;
+import 'dart:math' hide log;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:kala/config/firebase/firestore_paths.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart'
+    show FakeFirebaseFirestore;
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:kala/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/main.dart';
@@ -29,33 +32,41 @@ class ContentMock {
           'Description Description Description Description Description Description Description',
     );
   }
-}
 
-Future<void> populateFakeContentInFirestore(
-  FirebaseFirestore firestore,
-  int length,
-) async {
-  for (var i = 0; i < length; i++) {
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-    await firestore
-        .collection(FirestorePaths.contentCollection)
-        .add(ContentMock.fakeContent(i).toMap());
+  Future<void> populateFakeContentInFirestore(
+    int length,
+  ) async {
+    firebaseConfig ??=
+        await FirebaseMocks().getMockFirebaseConfig(signedIn: true);
+    assert(firebaseConfig != null);
+    for (var i = 0; i < length; i++) {
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      await addNewMockContent(i);
+    }
+    assert(firebaseConfig != null);
+    if (firebaseConfig!.firestore is FakeFirebaseFirestore) {
+      log((firebaseConfig!.firestore as FakeFirebaseFirestore).dump());
+    }
   }
-}
 
-Future<void> populateFakeUserContentInFirestore(
-  FirebaseFirestore firestore,
-  int length,
-) async {
-  final uid = firestore is FakeFirebaseFirestore
-      ? FirebaseMocks.firebaseMockUser.uid
-      : firebaseConfig?.auth.currentUser?.uid;
+  Future<void> addNewMockContent([int? index]) async {
+    firebaseConfig ??=
+        await FirebaseMocks().getMockFirebaseConfig(signedIn: true);
 
-  for (var i = 0; i < length; i++) {
-    await Future<void>.delayed(const Duration(milliseconds: 500));
+    final addNewContentCubit = AddNewContentCubit.mock();
+    assert(firebaseConfig != null);
 
-    await firestore
-        .collection(FirestorePaths.contentCollection)
-        .add(ContentMock.fakeContent(i, uid).toMap());
+    final image = await DefaultCacheManager()
+        .getSingleFile(ContentMock.fakeContent(1).imageUrl.toString());
+    final fileExists = await image.exists();
+    assert(fileExists);
+    await addNewContentCubit.editNewContent(ContentProps.image, image);
+    await addNewContentCubit.editNewContent(
+      ContentProps.title,
+      index == null ? 'test_title' : '$index',
+    );
+    await addNewContentCubit.editNewContent(ContentProps.price, 100);
+    assert(firebaseConfig != null);
+    await addNewContentCubit.addNewContent();
   }
 }

@@ -9,6 +9,7 @@ import 'package:kala/auth/models/kala_user.dart';
 import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
+import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class GalleryBloc extends Cubit<GalleryState> {
   GalleryBloc({
@@ -26,7 +27,10 @@ class GalleryBloc extends Cubit<GalleryState> {
     kalaUserStateStream =
         kalaUserBloc.stream.asBroadcastStream().listen((state) {
       if (state.kalaUserState == KalaUserState.authenticated) {
-        getContentList(0);
+        getContentList(
+          0,
+          collectionSegment: CollectionSegment.initial,
+        );
       }
     });
   }
@@ -46,9 +50,12 @@ class GalleryBloc extends Cubit<GalleryState> {
     super.onChange(change);
   }
 
-  Future<void> getContentList(int scrollPosition) async {
-    final newGalleryContent =
-        await contentPaginationCubit.getTList(scrollPosition);
+  Future<void> getContentList(
+    int scrollPosition, {
+    required CollectionSegment collectionSegment,
+  }) async {
+    final newGalleryContent = await contentPaginationCubit
+        .getTList(scrollPosition, segment: collectionSegment);
 
     if (newGalleryContent.isNotEmpty) {
       emit(
@@ -60,4 +67,21 @@ class GalleryBloc extends Cubit<GalleryState> {
       );
     }
   }
+
+//   Future<void> cacheContentImages() {
+//     state.contentSlideList.forEach((e) {
+//       if(e.isValid()){
+// CachedNetworkImageProvider(
+//           widget.image.toString(),
+//           cacheKey: widget.image.toString(),
+//           cacheManager: DefaultCacheManager(),
+//           errorListener: () {
+//             imageProvider = null;
+//           },
+//         );
+//       }
+
+//     });
+
+//   }
 }

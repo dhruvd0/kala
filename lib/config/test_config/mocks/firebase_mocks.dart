@@ -7,7 +7,7 @@ import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/remote_config_data.dart';
 
 class FirebaseMocks {
-  static final firebaseMockUser = MockUser(
+  final firebaseMockUser = MockUser(
     isAnonymous: true,
     uid: 'test_id',
     email: 'bob@somedomain.com',
@@ -15,14 +15,14 @@ class FirebaseMocks {
     photoURL: 'photo',
   );
 
-  static final FakeRemoteConfig fakeRemoteConfig = FakeRemoteConfig();
+  final FakeRemoteConfig fakeRemoteConfig = FakeRemoteConfig();
 
-  static final MockFirebaseStorage mockFirebaseStorage = MockFirebaseStorage();
+  final MockFirebaseStorage mockFirebaseStorage = MockFirebaseStorage();
 
-  static final MockGoogleSignIn googleAuthMock = MockGoogleSignIn();
-  static final FakeFirebaseFirestore mockFirestore = FakeFirebaseFirestore();
+  final MockGoogleSignIn googleAuthMock = MockGoogleSignIn();
+  final FakeFirebaseFirestore firebaseFirestore = FakeFirebaseFirestore();
 
-  static Future<MockFirebaseAuth> getMockAuthFromGoogleAuthMock({
+  Future<MockFirebaseAuth> getMockAuthFromGoogleAuthMock({
     bool? signedIn,
   }) async {
     try {
@@ -42,16 +42,16 @@ class FirebaseMocks {
     }
   }
 
-  static Future<FirebaseConfig> getMockFirebaseConfig({bool? signedIn}) async {
+  Future<FirebaseConfig> getMockFirebaseConfig({bool? signedIn}) async {
     fakeRemoteConfig.loadMockData({
       RemoteConfigKeys.addNewContentPlaceholder: 'Add new cover'
       // ...
     });
     final mockFirebaseConfig = FirebaseConfig(
-      firestore: FirebaseMocks.mockFirestore,
+      firestore: firebaseFirestore,
       remoteConfig: fakeRemoteConfig,
-      auth:
-          await FirebaseMocks.getMockAuthFromGoogleAuthMock(signedIn: signedIn),
+      storage: mockFirebaseStorage,
+      auth: await getMockAuthFromGoogleAuthMock(signedIn: signedIn),
     );
     if (signedIn ?? false) {
       assert(mockFirebaseConfig.auth.currentUser != null);

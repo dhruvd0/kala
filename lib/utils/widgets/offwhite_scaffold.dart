@@ -15,6 +15,7 @@ class OffWhiteScaffold extends StatelessWidget {
     this.onBack,
     this.enablePageNavigationArrows,
     this.trailing,
+    this.onTapTitle,
     this.controller,
   }) : super(key: scaffoldKey) {
     if (enableBackArrow ?? false) {
@@ -36,6 +37,7 @@ class OffWhiteScaffold extends StatelessWidget {
   final ValueKey<String> scaffoldKey;
   final Widget? trailing;
   final bool? hideAppBar;
+  final Function? onTapTitle;
   final PreloadPageController? controller;
   @override
   Widget build(BuildContext context) {
@@ -46,9 +48,9 @@ class OffWhiteScaffold extends StatelessWidget {
       appBar: hideAppBar ?? false
           ? null
           : PreferredSize(
-              preferredSize: Size.fromHeight(60.h),
+              preferredSize: Size.fromHeight(80.h),
               child: Container(
-                margin: EdgeInsets.only(top: 20.h),
+                margin: EdgeInsets.only(top: 20.h, bottom: 20.h),
                 child: AppBar(
                   elevation: 0,
                   backgroundColor: BasicColors.backgroundOffWhite,

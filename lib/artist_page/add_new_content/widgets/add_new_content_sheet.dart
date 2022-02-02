@@ -1,14 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
 import 'package:kala/artist_page/add_new_content/widgets/keys/add_new_content_widget_keys.dart';
+import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/config/remote_config_data.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/gallery/content/widgets/content_image.dart';
 import 'package:kala/main.dart';
+import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 import 'package:kala/utils/widgets/buttons/curved_mono_button.dart';
 import 'package:kala/utils/widgets/decors/text_input_decoration.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
@@ -142,10 +146,29 @@ class _AddNewContentSheetState extends State<AddNewContentSheet> {
                           context,
                           listen: false,
                         ).addNewContent().then((value) async {
-                          await BlocProvider.of<GalleryBloc>(
+                          unawaited(
+                            BlocProvider.of<GalleryBloc>(
+                              context,
+                              listen: false,
+                            ).getContentList(
+                              100,
+                              collectionSegment: CollectionSegment.previous,
+                            ),
+                          );
+                          await BlocProvider.of<KalaUserContentBloc>(
                             context,
                             listen: false,
-                          ).getContentList(100);
+                          ).getUserContent(
+                            100,
+                            collectionSegment: CollectionSegment.previous,
+                          );
+                          if (mounted) {
+                            BlocProvider.of<KalaUserContentBloc>(
+                              context,
+                              listen: false,
+                            ).toggleEditMode(forceToggle: false);
+                          }
+
                           if (mounted) {
                             Navigator.pop(context);
                           }

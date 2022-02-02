@@ -5,6 +5,7 @@ import 'package:kala/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/gallery/content/bloc/content_bloc.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/gallery/content/widgets/content_card.dart';
+import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class GalleryScroll extends StatefulWidget {
   const GalleryScroll({
@@ -25,9 +26,10 @@ class _GalleryScrollState extends State<GalleryScroll> {
       scrollController.addListener(() {
         if (scrollController.hasClients) {
           if (scrollController.offset / 300 > 5) {
-            context
-                .read<GalleryBloc>()
-                .getContentList(scrollController.offset.toInt());
+            context.read<GalleryBloc>().getContentList(
+                  scrollController.offset.toInt(),
+                  collectionSegment: CollectionSegment.next,
+                );
           }
         }
       });

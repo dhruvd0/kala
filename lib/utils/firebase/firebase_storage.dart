@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:kala/config/test_config/mocks/content_mocks.dart';
 
 class FirebaseStorageRequest {
   FirebaseStorageRequest([FirebaseStorage? firebaseStorage]) {
@@ -22,7 +23,7 @@ class FirebaseStorageRequest {
 
       await ref!.putFile(data, SettableMetadata(customMetadata: metaData));
       if (firebaseStorage is MockFirebaseStorage) {
-        return 'test_url';
+        return ContentMock.fakeContent(100).imageUrl ?? '';
       }
       return ref.getDownloadURL();
     } on Exception catch (e) {

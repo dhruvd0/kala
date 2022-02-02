@@ -5,8 +5,11 @@ import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 import '../config/widget_tester.dart';
+import 'add_new_content_test.dart';
 
 void artistPageTests() {
+  testToAddNewContent();
+
   group('Test to edit bio, name and cover content', () {
     testWidgets('Test to edit Bio', (tester) async {
       final widgetTester = WidgetTesterHandler(tester);

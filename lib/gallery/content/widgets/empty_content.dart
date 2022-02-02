@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
 import 'package:kala/artist_page/add_new_content/widgets/add_new_content_sheet.dart';
 import 'package:kala/artist_page/add_new_content/widgets/keys/add_new_content_widget_keys.dart';
+import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
+import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/gallery/content/models/content.dart';
 import 'package:kala/utils/io/scan_image.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -44,7 +46,19 @@ class EmptyContentCard extends StatelessWidget {
                               value: bloc,
                               child: const AddNewContentSheet(),
                             ),
-                          ),
+                          ).then((value) {
+                            final isInEditMode =
+                                !BlocProvider.of<KalaUserContentBloc>(
+                              context,
+                              listen: false,
+                            ).state.isEditMode;
+                            if (!isInEditMode) {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Routes.dashboard,
+                              );
+                            }
+                          }),
                         );
                   }
                 },

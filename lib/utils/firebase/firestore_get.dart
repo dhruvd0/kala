@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/config/typedefs.dart';
 import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
@@ -10,15 +9,15 @@ import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart'
 
 class FirestoreQueries {
   FirestoreQueries({this.firestore}) {
-    firestore =
-        firestore ?? firebaseConfig?.firestore ?? FirebaseMocks.mockFirestore;
+    firestore = firestore ?? firebaseConfig!.firestore;
   }
 
   FirebaseFirestore? firestore;
 
   Future<FirestorePageResponse?> paginateCollectionDocuments(
-    PaginationRequestState request,
-  ) async {
+    PaginationRequestState request, {
+    CollectionSegment? collectionSegment,
+  }) async {
     try {
       QuerySnapshot? querySnapshot;
       final collection = firestore?.collection(request.collection);
@@ -30,18 +29,16 @@ class FirestoreQueries {
         final value = request.whereQueryEquals?[field];
         baseQuery = collection?.where(field!, isEqualTo: value.toString());
       }
-      final orderByQuery = baseQuery?.orderBy(
+      baseQuery = baseQuery?.orderBy(
         request.orderByField,
         descending: request.orderIsDescending,
       );
-      if (request.lastDocument == null) {
-        querySnapshot = await orderByQuery?.limit(10).get();
-      } else {
-        querySnapshot = await orderByQuery
-            ?.startAfterDocument(request.lastDocument!)
-            .limit(10)
-            .get();
-      }
+
+      querySnapshot = await getQueryForCollectionSegment(
+        collectionSegment,
+        baseQuery,
+        request,
+      );
 
       if (querySnapshot == null || querySnapshot.docs.isEmpty) {
         await setCrashlyticsCustomKey('collection', request.collection);
@@ -54,6 +51,7 @@ class FirestoreQueries {
         return const FirestorePageResponse(
           currentJsonList: [],
           lastDocSnap: null,
+          firstDocSnap: null,
         );
       }
 
@@ -62,10 +60,42 @@ class FirestoreQueries {
       return FirestorePageResponse(
         currentJsonList: jsonListFromDocSnaps2,
         lastDocSnap: querySnapshot.docs.last,
+        firstDocSnap: querySnapshot.docs.first,
       );
     } on PlatformException {
       await Fluttertoast.showToast(msg: 'No Internet');
     }
+  }
+
+  Future<QuerySnapshot?> getQueryForCollectionSegment(
+    CollectionSegment? collectionSegment,
+    Query? baseQuery,
+    PaginationRequestState request,
+  ) async {
+    QuerySnapshot? querySnapshot;
+    switch (collectionSegment) {
+      case null:
+        querySnapshot = await baseQuery?.limit(10).get();
+        break;
+      case CollectionSegment.initial:
+        querySnapshot = await baseQuery?.limit(10).get();
+        break;
+      case CollectionSegment.previous:
+        assert(request.firstDocument != null);
+        querySnapshot = await baseQuery
+            ?.endBeforeDocument(request.firstDocument!)
+            .limit(10)
+            .get();
+        break;
+      case CollectionSegment.next:
+        assert(request.lastDocument != null);
+        querySnapshot = await baseQuery
+            ?.startAfterDocument(request.lastDocument!)
+            .limit(10)
+            .get();
+        break;
+    }
+    return querySnapshot;
   }
 
   List<Json> jsonListFromDocSnaps(QuerySnapshot querySnapshot) {

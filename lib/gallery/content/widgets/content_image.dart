@@ -12,29 +12,29 @@ import 'package:kala/gallery/content/models/content.dart';
 
 // ignore: must_be_immutable
 class ContentImage extends StatefulWidget {
-  ContentImage({
+  const ContentImage({
     required this.image,
     this.overrideFit,
-    Key? key,
-  }) : super(key: key) {
-    loadImageProvider();
-  }
+   
+  });
   final BoxFit? overrideFit;
   final dynamic image;
-  ImageProvider? imageProvider;
-
   @override
   State<ContentImage> createState() => _ContentImageState();
+}
+
+class _ContentImageState extends State<ContentImage> {
+  ImageProvider? imageProvider;
 
   void loadImageProvider() {
-    if (image is String) {
-      if (image.toString().isEmpty) {
+    if (widget.image is String) {
+      if (widget.image.toString().isEmpty) {
         imageProvider = null;
       } else {
         try {
           imageProvider = CachedNetworkImageProvider(
-            image.toString(),
-            cacheKey: image.toString(),
+            widget.image.toString(),
+            cacheKey: widget.image.toString(),
             cacheManager: DefaultCacheManager(),
             errorListener: () {
               imageProvider = null;
@@ -44,19 +44,23 @@ class ContentImage extends StatefulWidget {
           imageProvider = null;
         }
       }
-    } else if (image is File) {
-      imageProvider = FileImage(image as File);
+    } else if (widget.image is File) {
+      imageProvider = FileImage(widget.image as File);
     }
   }
-}
 
-class _ContentImageState extends State<ContentImage> {
+  @override
+  void initState() {
+    loadImageProvider();
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
-    if (widget.imageProvider != null) {
+    if (imageProvider != null) {
       try {
         precacheImage(
-          widget.imageProvider!,
+          imageProvider!,
           context,
         );
       } on HttpException {
@@ -83,7 +87,7 @@ class _ContentImageState extends State<ContentImage> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.imageProvider == null
+    return imageProvider == null
         ? Container()
         : Container(
             width: 1.sw,
@@ -95,7 +99,7 @@ class _ContentImageState extends State<ContentImage> {
               color: BasicColors.backgroundOffWhite,
               elevation: imageElevation(context),
               child: Image(
-                image: widget.imageProvider!,
+                image: imageProvider!,
                 fit: widget.overrideFit ?? BoxFit.fill,
                 errorBuilder: (context, error, stackTrace) {
                   return Container();

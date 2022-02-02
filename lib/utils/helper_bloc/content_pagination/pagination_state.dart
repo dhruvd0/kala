@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
+enum CollectionSegment { initial, previous, next }
+
 class PaginationRequestState extends Equatable {
   const PaginationRequestState({
     required this.collection,
@@ -11,12 +13,14 @@ class PaginationRequestState extends Equatable {
     required this.scrollPosition,
     this.lastDocument,
     this.whereQueryEquals,
+    this.firstDocument,
     this.subDocID,
   });
 
   final String collection;
   final List<dynamic> data;
   final DocumentSnapshot? lastDocument;
+  final DocumentSnapshot? firstDocument;
   final Timestamp lastFetchedTimestamp;
   final String orderByField;
   final bool orderIsDescending;
@@ -30,6 +34,7 @@ class PaginationRequestState extends Equatable {
       collection,
       data,
       lastDocument,
+      firstDocument,
       lastFetchedTimestamp,
       orderByField,
       orderIsDescending,
@@ -42,23 +47,25 @@ class PaginationRequestState extends Equatable {
     String? collection,
     List<dynamic>? data,
     DocumentSnapshot? lastDocument,
+    DocumentSnapshot? firstDocument,
     Timestamp? lastFetchedTimestamp,
     String? orderByField,
     bool? orderIsDescending,
-    Map<String, dynamic>? whereQueryEquals,
-    String? subDocID,
     int? scrollPosition,
+    String? subDocID,
+    Map<String, dynamic>? whereQueryEquals,
   }) {
     return PaginationRequestState(
       collection: collection ?? this.collection,
       data: data ?? this.data,
       lastDocument: lastDocument ?? this.lastDocument,
+      firstDocument: firstDocument ?? this.firstDocument,
       lastFetchedTimestamp: lastFetchedTimestamp ?? this.lastFetchedTimestamp,
       orderByField: orderByField ?? this.orderByField,
       orderIsDescending: orderIsDescending ?? this.orderIsDescending,
-      whereQueryEquals: whereQueryEquals ?? this.whereQueryEquals,
-      subDocID: subDocID ?? this.subDocID,
       scrollPosition: scrollPosition ?? this.scrollPosition,
+      subDocID: subDocID ?? this.subDocID,
+      whereQueryEquals: whereQueryEquals ?? this.whereQueryEquals,
     );
   }
 }

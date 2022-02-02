@@ -55,4 +55,6 @@ void dashboardIntegrationTests() {
   });
 }
 
-void main() {}
+void main() {
+  dashboardIntegrationTests();
+}

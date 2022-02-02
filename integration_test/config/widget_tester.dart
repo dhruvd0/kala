@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_catching_errors
 
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,9 +18,9 @@ class WidgetTesterHandler {
 
   Future<void> tapByKey(String key) async {
     await tester.ensureVisible(findWidgetByKey(key));
-    await tester.tap(findWidgetByKey(key));
+    await tester.tap(findWidgetByKey(key),warnIfMissed: false);
 
-    await pumTenFrames();
+    await waitForFramesToSettle();
   }
 
   Finder findWidgetByText(String text) {
@@ -29,7 +28,7 @@ class WidgetTesterHandler {
   }
 
   Finder findWidgetByKey(String key) {
-    return find.byKey(ValueKey(key));
+    return find.byKey(ValueKey(key),skipOffstage: false);
   }
 
   Future<void> waitForSeconds(int seconds) async {
@@ -41,8 +40,9 @@ class WidgetTesterHandler {
   }
 
   Future<void> startAppWithMockFirebase({bool? signedIn}) async {
-    final mockFirebaseConfig =
-        await FirebaseMocks.getMockFirebaseConfig(signedIn: signedIn);
+    final firebaseMocks = FirebaseMocks();
+    final mockFirebaseConfig = app.firebaseConfig ??
+        await firebaseMocks.getMockFirebaseConfig(signedIn: signedIn);
     // ignore: unawaited_futures
     app.main(mockFirebase: mockFirebaseConfig);
 
@@ -71,12 +71,12 @@ class WidgetTesterHandler {
   Future<void> waitForFramesToSettle() async {
     try {
       await tester.pumpAndSettle(
-        const Duration(seconds: 3),
+        const Duration(milliseconds: 500),
         EnginePhase.sendSemanticsUpdate,
-        const Duration(seconds: 10),
+        const Duration(seconds: 20),
       );
     } on FlutterError {
-      log('Animations Complete, App Started');
+      //
     }
   }
 }

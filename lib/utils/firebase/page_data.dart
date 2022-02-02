@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -8,11 +9,12 @@ class FirestorePageResponse {
   const FirestorePageResponse({
     required this.currentJsonList,
     required this.lastDocSnap,
+    required this.firstDocSnap,
   });
 
   final List<Json> currentJsonList;
   final DocumentSnapshot? lastDocSnap;
-
+  final DocumentSnapshot? firstDocSnap;
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -29,18 +31,17 @@ class FirestorePageResponse {
 
   @override
   String toString() =>
-      'FirestorePageData(currentJsonList: $currentJsonList, lastDocSnap: $lastDocSnap)';
+      'FirestorePageResponse(currentJsonList: $currentJsonList, lastDocSnap: $lastDocSnap, firstDocSnap: $firstDocSnap)';
 
   FirestorePageResponse copyWith({
     List<Json>? currentJsonList,
     DocumentSnapshot? lastDocSnap,
+    DocumentSnapshot? firstDocSnap,
   }) {
     return FirestorePageResponse(
       currentJsonList: currentJsonList ?? this.currentJsonList,
       lastDocSnap: lastDocSnap ?? this.lastDocSnap,
+      firstDocSnap: firstDocSnap ?? this.firstDocSnap,
     );
   }
 }
-
-@immutable
-class FirestorePageRequest {}
