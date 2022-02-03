@@ -6,6 +6,7 @@ import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/typedefs.dart';
 
 import 'package:kala/gallery/content/models/content.dart';
+import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
 import 'package:kala/utils/firebase/firestore_get.dart';
 import 'package:kala/utils/firebase/page_data.dart';
@@ -160,4 +161,11 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       _firebaseFirestore = firebaseFirestore;
 
   FirebaseFirestore? get firestore => _firebaseFirestore;
+}
+
+abstract class HasPaginationCubit<T> extends Cubit<T> {
+  HasPaginationCubit(initialState, {required this.paginationCubit})
+      : super(initialState);
+
+  PaginationCubit paginationCubit;
 }

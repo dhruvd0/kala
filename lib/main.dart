@@ -17,6 +17,7 @@ import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
+import 'package:kala/dashboard/widgets/dashboard_page.dart';
 
 import 'package:kala/firebase_options.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
@@ -124,7 +125,7 @@ class KalaApp extends StatelessWidget {
               );
             },
             onGenerateRoute: NavigationController.onGenerateRoute,
-            home: const Splash(),
+            home: const Dashboard(),
           ),
         );
       },

@@ -6,27 +6,27 @@ import 'package:kala/auth/models/kala_user.dart';
 
 import 'package:kala/auth/social_integration/auth_types.dart';
 import 'package:kala/auth/widgets/auth_btn.dart';
-import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
+import 'package:kala/dashboard/widgets/dashboard_child_page.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 
-class AuthPage extends StatefulWidget {
-  const AuthPage({Key? key}) : super(key: key);
+class AuthPage extends DashBoardPage {
+  const AuthPage({required PreloadPageController pageController})
+      : super(controller: pageController);
 
-  @override
-  State<AuthPage> createState() => _AuthPageState();
-}
-
-class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
       scaffoldKey: const ValueKey(ScaffoldKeys.authPageKey),
       body: BlocListener<KalaUserBloc, KalaUser>(
         listener: (_, state) {
-          if (state.kalaUserState == KalaUserState.authenticated) {
-            Navigator.of(context).pushReplacementNamed(Routes.gallery);
-          }
+          // if (state.kalaUserState == KalaUserState.authenticated) {
+          //   controller.nextPage(
+          //     duration: Duration(seconds: 200),
+          //     curve: Curves.easeIn,
+          //   );
+          // }
         },
         child: SizedBox(
           width: 1.sw,

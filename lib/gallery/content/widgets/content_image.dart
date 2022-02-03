@@ -15,7 +15,6 @@ class ContentImage extends StatefulWidget {
   const ContentImage({
     required this.image,
     this.overrideFit,
-   
   });
   final BoxFit? overrideFit;
   final dynamic image;

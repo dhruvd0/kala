@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_catching_errors
 
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -18,7 +17,7 @@ class WidgetTesterHandler {
 
   Future<void> tapByKey(String key) async {
     await tester.ensureVisible(findWidgetByKey(key));
-    await tester.tap(findWidgetByKey(key),warnIfMissed: false);
+    await tester.tap(findWidgetByKey(key), warnIfMissed: false);
 
     await waitForFramesToSettle();
   }
@@ -28,7 +27,7 @@ class WidgetTesterHandler {
   }
 
   Finder findWidgetByKey(String key) {
-    return find.byKey(ValueKey(key),skipOffstage: false);
+    return find.byKey(ValueKey(key), skipOffstage: false);
   }
 
   Future<void> waitForSeconds(int seconds) async {

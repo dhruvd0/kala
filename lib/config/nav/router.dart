@@ -18,8 +18,8 @@ class NavigationController {
     switch (route) {
       case Routes.splash:
         return const Splash();
-      case Routes.auth:
-        return const AuthPage();
+      // case Routes.auth:
+      //   return const AuthPage();
       case Routes.dashboard:
         return const Dashboard();
       default:

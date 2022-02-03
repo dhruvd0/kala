@@ -20,7 +20,7 @@ import 'package:kala/utils/firebase/firestore_update.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
-class KalaUserContentBloc extends Cubit<KalaUserContentState> {
+class KalaUserContentBloc extends HasPaginationCubit<KalaUserContentState> {
   KalaUserContentBloc({
     required this.kalaUserBloc,
     this.firebaseFirestore,
@@ -33,6 +33,8 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
             uid: kalaUserBloc.state.uid,
             isEditMode: false,
           ),
+          paginationCubit:
+              PaginationCubit.userContentPagination(kalaUserBloc.state.uid),
         ) {
     setupKalaUserBlocListener();
   }
@@ -45,7 +47,6 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
     )..setupUserContentPaginationCubit(FirebaseMocks().firebaseMockUser.uid);
   }
 
-  PaginationCubit? contentPaginationCubit;
   FirebaseStorage? customStorage;
   FirebaseFirestore? firebaseFirestore;
   final KalaUserBloc kalaUserBloc;
@@ -146,13 +147,13 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
   }
 
   void setupUserContentPaginationCubit([String? customUid]) {
-    contentPaginationCubit = PaginationCubit.userContentPagination(
+    paginationCubit = PaginationCubit.userContentPagination(
       customUid ??
           firebaseConfig?.auth.currentUser?.uid ??
           kalaUserBloc.state.uid,
     );
     if (firebaseFirestore != null) {
-      contentPaginationCubit?.firestore = firebaseFirestore;
+      paginationCubit.firestore = firebaseFirestore;
     }
   }
 
@@ -190,17 +191,16 @@ class KalaUserContentBloc extends Cubit<KalaUserContentState> {
     int scrollPosition, {
     required CollectionSegment collectionSegment,
   }) async {
-    assert(contentPaginationCubit != null);
 
-    final newContent = await contentPaginationCubit?.getTList(
+    final newContent = await paginationCubit.getTList(
       scrollPosition,
       segment: collectionSegment,
     );
 
-    if (newContent?.isNotEmpty ?? false) {
+    if (newContent.isNotEmpty) {
       emit(
         state.copyWith(
-          userContent: (newContent ?? <Content>[]).map((dynamic e) {
+          userContent: newContent.map((dynamic e) {
             return (e as Content).copyWith(viewMode: ContentViewMode.grid);
           }).toList(),
           lastFetchedTimestamp: Timestamp.now(),
