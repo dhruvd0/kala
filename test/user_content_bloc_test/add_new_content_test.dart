@@ -1,3 +1,4 @@
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
@@ -13,7 +14,9 @@ void main() {
   test(
     'Test to add new content to Kala gallery as the first content',
     () async {
-      await ContentMock().addNewMockContent();
+      final image = await DefaultCacheManager()
+          .downloadFile(ContentMock.fakeContent(1).imageUrl.toString());
+      await ContentMock().addNewMockContent(image.file);
 
       final kalaUserContentCubit = KalaUserContentBloc.mock()
         ..toggleEditMode(forceToggle: false);
@@ -51,7 +54,9 @@ void testAddNewContent() {
         1,
         collectionSegment: CollectionSegment.initial,
       );
-      await contentMock.addNewMockContent(100);
+      final image = await DefaultCacheManager()
+          .downloadFile(ContentMock.fakeContent(1).imageUrl.toString());
+      await contentMock.addNewMockContent(image.file, 100);
 
       kalaUserContentCubit.toggleEditMode(forceToggle: false);
       await kalaUserContentCubit.getUserContent(

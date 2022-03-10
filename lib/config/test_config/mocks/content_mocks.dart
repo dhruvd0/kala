@@ -1,4 +1,5 @@
 import 'dart:developer' show log;
+import 'dart:io';
 import 'dart:math' hide log;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,9 +40,11 @@ class ContentMock {
     firebaseConfig ??=
         await FirebaseMocks().getMockFirebaseConfig(signedIn: true);
     assert(firebaseConfig != null);
+     final image = await DefaultCacheManager()
+        .downloadFile(ContentMock.fakeContent(1).imageUrl.toString());
     for (var i = 0; i < length; i++) {
       await Future<void>.delayed(const Duration(milliseconds: 100));
-      await addNewMockContent(i);
+      await addNewMockContent(image.file,i);
     }
     assert(firebaseConfig != null);
     if (firebaseConfig!.firestore is FakeFirebaseFirestore) {
@@ -49,15 +52,14 @@ class ContentMock {
     }
   }
 
-  Future<void> addNewMockContent([int? index]) async {
+  Future<void> addNewMockContent(File image,[int? index]) async {
     firebaseConfig ??=
         await FirebaseMocks().getMockFirebaseConfig(signedIn: true);
 
     final addNewContentCubit = AddNewContentCubit.mock();
     assert(firebaseConfig != null);
 
-    final image = await DefaultCacheManager()
-        .getSingleFile(ContentMock.fakeContent(1).imageUrl.toString());
+   
     final fileExists = await image.exists();
     assert(fileExists);
     await addNewContentCubit.editNewContent(ContentProps.image, image);
