@@ -63,9 +63,9 @@ class _DashboardState extends State<Dashboard> {
           ),
         );
       });
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       await pageController.nextPage(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
     } else {
@@ -91,9 +91,11 @@ class _DashboardState extends State<Dashboard> {
           return false;
         }
       });
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       await pageController.nextPage(
-          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
       setState(() {
         pages
             .removeWhere((element) => element is Splash || element is AuthPage);

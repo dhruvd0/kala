@@ -21,7 +21,6 @@ import 'package:kala/dashboard/widgets/dashboard_page.dart';
 
 import 'package:kala/firebase_options.dart';
 import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
-import 'package:kala/startup/splash.dart';
 
 FirebaseConfig? firebaseConfig;
 

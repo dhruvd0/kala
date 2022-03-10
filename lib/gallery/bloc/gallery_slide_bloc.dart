@@ -54,8 +54,10 @@ class GalleryBloc extends HasPaginationCubit<GalleryState> {
     int scrollPosition, {
     required CollectionSegment collectionSegment,
   }) async {
-    final newGalleryContent = await paginationCubit.getTList(scrollPosition,
-        segment: collectionSegment);
+    final newGalleryContent = await paginationCubit.getTList(
+      scrollPosition,
+      segment: collectionSegment,
+    );
 
     if (newGalleryContent.isNotEmpty) {
       emit(
@@ -84,7 +86,7 @@ class GalleryBloc extends HasPaginationCubit<GalleryState> {
           size: Size(1.sw - 10, 200),
           onError: (e, stack) {
             log(e.toString());
-            if (kDebugMode) {
+            if (kDebugMode && (e is Exception)) {
               throw e;
             }
           },

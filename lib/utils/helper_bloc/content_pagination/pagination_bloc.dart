@@ -6,7 +6,6 @@ import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/typedefs.dart';
 
 import 'package:kala/gallery/content/models/content.dart';
-import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
 import 'package:kala/utils/firebase/firestore_get.dart';
 import 'package:kala/utils/firebase/page_data.dart';
@@ -43,7 +42,6 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
   }
 
   factory PaginationCubit.userContentPagination(String uid) {
-    assert(uid.isNotEmpty);
     return PaginationCubit(
       collection: FirestorePaths.contentCollection,
       orderIsDescending: true,

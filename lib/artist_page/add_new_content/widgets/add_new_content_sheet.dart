@@ -74,6 +74,7 @@ class _AddNewContentSheetState extends State<AddNewContentSheet> {
                     if (str.length > 10) {
                       return 'Title description is too long';
                     }
+                    return null;
                   },
                   textAlign: TextAlign.center,
                   style: TextThemeContext(context).headline1,

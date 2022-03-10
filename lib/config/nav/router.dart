@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kala/auth/widgets/auth_page.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/dashboard/widgets/dashboard_page.dart';
 import 'package:kala/startup/splash.dart';

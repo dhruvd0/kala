@@ -191,7 +191,6 @@ class KalaUserContentBloc extends HasPaginationCubit<KalaUserContentState> {
     int scrollPosition, {
     required CollectionSegment collectionSegment,
   }) async {
-
     final newContent = await paginationCubit.getTList(
       scrollPosition,
       segment: collectionSegment,

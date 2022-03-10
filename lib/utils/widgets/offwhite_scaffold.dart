@@ -16,6 +16,7 @@ class OffWhiteScaffold extends StatelessWidget {
     this.enablePageNavigationArrows,
     this.trailing,
     this.onTapTitle,
+    this.leading,
     this.controller,
   }) : super(key: scaffoldKey) {
     if (enableBackArrow ?? false) {
@@ -27,6 +28,7 @@ class OffWhiteScaffold extends StatelessWidget {
     if (enablePageNavigationArrows ?? false) {
       assert(controller != null);
     }
+    assert(leading == null || enableBackArrow == null);
   }
 
   final Widget body;
@@ -39,6 +41,7 @@ class OffWhiteScaffold extends StatelessWidget {
   final bool? hideAppBar;
   final Function? onTapTitle;
   final PreloadPageController? controller;
+  final Widget? leading;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,17 +65,18 @@ class OffWhiteScaffold extends StatelessWidget {
                             width: 10.w,
                           )
                         ],
-                  leading: enableBackArrow == null
-                      ? null
-                      : enableBackArrow ?? false
-                          ? GestureDetector(
-                              onTap: onBack,
-                              child: Icon(
-                                Icons.arrow_back_ios_new,
-                                color: Theme.of(context).iconTheme.color,
-                              ),
-                            )
-                          : null,
+                  leading: leading ??
+                      (enableBackArrow == null
+                          ? null
+                          : enableBackArrow ?? false
+                              ? GestureDetector(
+                                  onTap: onBack,
+                                  child: Icon(
+                                    Icons.arrow_back_ios_new,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                )
+                              : null),
                   centerTitle: true,
                   title: centerTitle == null
                       ? null
@@ -140,6 +144,7 @@ class _PageNavArrow extends StatelessWidget {
       builder: (context) {
         void Function() onTap;
         IconData icon;
+
         switch (navArrowType) {
           case NavArrowType.left:
             onTap = () {

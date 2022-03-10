@@ -64,6 +64,7 @@ class FirestoreQueries {
       );
     } on PlatformException {
       await Fluttertoast.showToast(msg: 'No Internet');
+      return null;
     }
   }
 

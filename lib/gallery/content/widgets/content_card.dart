@@ -42,7 +42,7 @@ class ContentCard extends StatelessWidget {
                 ? null
                 : EdgeInsets.symmetric(
                     horizontal: 10.w,
-                    vertical: 20.h,
+                    vertical: 40.h,
                   ),
             child: !state.isValid()
                 ? state.viewMode == ContentViewMode.scroll
@@ -118,10 +118,7 @@ class ContentBottomRow extends StatelessWidget {
               SizedBox(
                 width: !SizeUtils.isMobileSize() ? 1.sw / 10 : 1.sw / 2.5,
                 child: AutoSizeText(
-                  state.description.isEmpty
-                      ? DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY)
-                          .format(state.uploadTimestamp!.toDate())
-                      : state.description,
+                  '${state.description}\n\n${DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(state.uploadTimestamp!.toDate())}',
                   minFontSize: 8,
                   style: TextThemeContext(context).bodyText2,
                 ),
