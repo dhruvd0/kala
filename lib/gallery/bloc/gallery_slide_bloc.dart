@@ -71,12 +71,12 @@ class GalleryBloc extends HasPaginationCubit<GalleryState> {
   }
 
   Future<void> cacheContentImages(BuildContext context) async {
-    for (final e in state.contentSlideList) {
-      if (e.isValid()) {
+    for (final content in state.contentSlideList) {
+      if (content.isValid()) {
         await precacheImage(
           CachedNetworkImageProvider(
-            e.imageUrl.toString(),
-            cacheKey: e.imageUrl.toString(),
+            content.imageUrl.toString(),
+            cacheKey: content.imageUrl.toString(),
             cacheManager: DefaultCacheManager(),
             errorListener: () {
               //

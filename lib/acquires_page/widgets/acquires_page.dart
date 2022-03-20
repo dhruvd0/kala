@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kala/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/auth/models/kala_user.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/dashboard/widgets/dashboard_child_page.dart';
 
@@ -14,16 +11,12 @@ class AcquiresPage extends DashBoardPage {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KalaUserBloc, KalaUser>(
-      builder: (context, state) {
-        return OffWhiteScaffold(
-          scaffoldKey: const ValueKey(ScaffoldKeys.acquiresPageKey),
-          enablePageNavigationArrows: true,
-          controller: controller,
-          centerTitle: 'Acquires',
-          body: const Center(),
-        );
-      },
+    return OffWhiteScaffold(
+      scaffoldKey: const ValueKey(ScaffoldKeys.acquiresPageKey),
+      enablePageNavigationArrows: true,
+      controller: controller,
+      centerTitle: 'Acquires',
+      body: const Center(),
     );
   }
 }

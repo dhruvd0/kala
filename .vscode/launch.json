@@ -32,12 +32,5 @@
                 "7357",
             ]
         },
-        {
-            "type": "pwa-chrome",
-            "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:7357",
-            "webRoot": "${workspaceFolder}"
-        }
     ]
 }

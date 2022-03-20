@@ -37,6 +37,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       collection: FirestorePaths.contentCollection,
       orderIsDescending: true,
       dataFromMap: Content.fromMap,
+      
       orderByField: 'uploadTimestamp',
     );
   }

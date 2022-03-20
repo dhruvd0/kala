@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -63,52 +62,57 @@ class _DashboardState extends State<Dashboard> {
           ),
         );
       });
-      await Future.delayed(const Duration(seconds: 1));
-      await pageController.nextPage(
+      setState(() {
+        pages.removeAt(
+          0,
+        );
+      });
+
+      await pageController.animateToPage(
+        0,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
     } else {
-      final galleryBloc = BlocProvider.of<GalleryBloc>(context, listen: false);
-      await Future.doWhile(() {
-        final isDataLoaded = galleryBloc.state.contentSlideList.isNotEmpty &&
-            BlocProvider.of<KalaUserContentBloc>(context, listen: false)
-                    .state
-                    .userContent !=
-                null;
-        return isDataLoaded;
-      });
-      if (mounted) {
-        await galleryBloc.cacheContentImages(context);
-      }
-      setState(() {
-        pages.addAll(dashboardPages);
-      });
-      await Future.doWhile(() {
-        if (pageController.hasClients) {
-          return pageController.position.maxScrollExtent > 1000;
-        } else {
-          return false;
-        }
-      });
-      await Future.delayed(const Duration(seconds: 2));
-      await pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
-      setState(() {
-        pages
-            .removeWhere((element) => element is Splash || element is AuthPage);
-      });
+      await authenticatePageRoutine();
     }
+  }
+
+  Future<void> authenticatePageRoutine() async {
+    final galleryBloc = BlocProvider.of<GalleryBloc>(context, listen: false);
+    await Future.doWhile(() {
+      final isDataLoaded = galleryBloc.state.contentSlideList.isNotEmpty &&
+          BlocProvider.of<KalaUserContentBloc>(context, listen: false)
+                  .state
+                  .userContent !=
+              null;
+      return isDataLoaded;
+    });
+    if (mounted) {
+      await galleryBloc.cacheContentImages(context);
+    }
+    setState(() {
+      pages.addAll(dashboardPages);
+    });
+    await Future.doWhile(() {
+      if (pageController.hasClients) {
+        return pageController.position.maxScrollExtent > 1000;
+      } else {
+        return false;
+      }
+    });
+
+    await pageController.nextPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
+    setState(() {
+      pages.removeWhere((page) => page is Splash || page is AuthPage);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (pageController.hasClients) {
-      log(pageController.position.maxScrollExtent.toString());
-    }
-
     return Container(
       key: UniqueKey(),
       child: PreloadPageView(
