@@ -7,7 +7,7 @@ import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 class GalleryPage extends DashBoardPage {
-  const GalleryPage(PreloadPageController controller)
+  const GalleryPage(PreloadPageController controller,)
       : super(controller: controller);
 
   @override

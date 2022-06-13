@@ -54,7 +54,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
 
   final dynamic Function(Map<String, dynamic>) dataFromMap;
 
-  FirebaseFirestore? _firebaseFirestore;
+  FirebaseFirestore? firebaseFirestore;
 
   Future<List<dynamic>> getTList(
     int scrollPosition, {
@@ -65,7 +65,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       return <dynamic>[];
     }
     emit(state.copyWith(scrollPosition: scrollPosition));
-    final response = await FirestoreQueries(firestore: _firebaseFirestore)
+    final response = await FirestoreQueries(firestore: firebaseFirestore)
         .paginateCollectionDocuments(
       firestorePageRequest,
       collectionSegment: segment,
@@ -134,10 +134,13 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       // ignore: omit_local_variable_types
       var currentDataList = state.data.toList();
       if (segment == CollectionSegment.previous) {
-        newDataList.reversed
-            .forEach((dynamic e) => currentDataList.insert(0, e));
+        for (var e in newDataList.reversed) {
+          currentDataList.insert(0, e);
+        }
       } else {
-        newDataList.forEach((dynamic e) => currentDataList.add(e));
+        for (var e in newDataList) {
+          currentDataList.add(e);
+        }
       }
 
       emit(
@@ -157,9 +160,9 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
   }
 
   set firestore(FirebaseFirestore? firebaseFirestore) =>
-      _firebaseFirestore = firebaseFirestore;
+      firebaseFirestore = firebaseFirestore;
 
-  FirebaseFirestore? get firestore => _firebaseFirestore;
+  
 }
 
 abstract class HasPaginationCubit<T> extends Cubit<T> {

@@ -22,7 +22,7 @@ class _GalleryScrollState extends State<GalleryScroll> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       scrollController.addListener(() {
         if (scrollController.hasClients) {
           if (scrollController.offset / 300 > 5) {

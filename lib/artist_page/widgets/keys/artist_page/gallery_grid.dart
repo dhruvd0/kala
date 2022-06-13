@@ -6,6 +6,8 @@ import 'package:kala/artist_page/bloc/kala_user_content_state.dart';
 import 'package:kala/gallery/widgets/gallery_view/gallery_scroll.dart';
 
 class GalleryGridView extends StatelessWidget {
+  const GalleryGridView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<KalaUserContentBloc, KalaUserContentState>(

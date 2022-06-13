@@ -46,7 +46,7 @@ class ArtistPage extends DashBoardPage {
             return Container(
               margin: EdgeInsets.only(bottom: 5.h),
               child: Icon(
-                state.isEditMode ? EvaIcons.eye : FontAwesomeIcons.edit,
+                state.isEditMode ? EvaIcons.eye : FontAwesomeIcons.penToSquare,
                 color: Colors.black,
               ),
             );
@@ -73,7 +73,7 @@ class ArtistPage extends DashBoardPage {
             SizedBox(
               height: 50.h,
             ),
-            GalleryGridView()
+            const GalleryGridView()
           ],
         ),
       ),

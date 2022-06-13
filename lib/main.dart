@@ -52,7 +52,7 @@ Future<void> setupFirebase(FirebaseConfig? mockFirebase) async {
     firebaseConfig = FirebaseConfig(
       auth: FirebaseAuth.instance,
       firestore: FirebaseFirestore.instance,
-      remoteConfig: RemoteConfig.instance,
+      remoteConfig: FirebaseRemoteConfig.instance,
       storage: FirebaseStorage.instance,
     );
     await firebaseConfig?.remoteConfig.fetchAndActivate();

@@ -36,7 +36,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       streamSubscription =
           firebaseConfig?.auth.userChanges().listen(handleUseAuthState);
       pageController.addListener(() {

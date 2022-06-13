@@ -11,7 +11,7 @@ class GalleryContainer extends StatelessWidget {
     return Container(
       child: SizeUtils.isMobileSize()
           ? const GalleryScroll()
-          : Center(
+          : const Center(
               child: GalleryGridView(),
             ),
     );
