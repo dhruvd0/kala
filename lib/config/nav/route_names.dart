@@ -5,4 +5,6 @@ class Routes {
   static const String gallery = '/gallery';
 
   static const String dashboard = '/dashboard';
+
+  static const String content_page='/content-page';
 }

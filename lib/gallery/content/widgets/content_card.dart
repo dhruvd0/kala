@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kala/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
+import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/size/size.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/gallery/content/bloc/content_bloc.dart';
@@ -23,74 +24,83 @@ class ContentCard extends StatelessWidget {
       create: (_) => AddNewContentCubit(
         kalaUserContent: context.read<KalaUserContentBloc>(),
       ),
-      child: BlocBuilder<ContentBloc, Content>(
-        key: UniqueKey(),
-        builder: (context, state) {
-          return Container(
-            constraints: !SizeUtils.isMobileSize()
-                ? null
-                : BoxConstraints(
-                    minHeight: (state.viewMode == ContentViewMode.scroll &&
-                            state.imgWidth > 1)
-                        ? 100.h
-                        : 100.h,
-                    maxHeight: state.viewMode == ContentViewMode.grid
-                        ? gridElementSize()
-                        : double.infinity,
-                  ),
-            margin: state.viewMode == ContentViewMode.grid
-                ? null
-                : EdgeInsets.symmetric(
-                    horizontal: 10.w,
-                    vertical: 40.h,
-                  ),
-            child: !state.isValid()
-                ? state.viewMode == ContentViewMode.scroll
-                    ? Container()
-                    : const EmptyContentCard()
-                : Container(
-                    constraints: BoxConstraints(maxWidth: 1.sw / 3),
-                    key: ValueKey(
-                      ContentCardKey.key(state.viewMode, state.docID),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            Routes.content_page,
+            
+          );
+        },
+        child: BlocBuilder<ContentBloc, Content>(
+          key: UniqueKey(),
+          builder: (context, state) {
+            return Container(
+              constraints: !SizeUtils.isMobileSize()
+                  ? null
+                  : BoxConstraints(
+                      minHeight: (state.viewMode == ContentViewMode.scroll &&
+                              state.imgWidth > 1)
+                          ? 100.h
+                          : 100.h,
+                      maxHeight: state.viewMode == ContentViewMode.grid
+                          ? gridElementSize()
+                          : double.infinity,
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        if (state.viewMode == ContentViewMode.grid)
-                          Flexible(
-                            child: ClipRect(
-                              child: OverflowBox(
-                                maxWidth: double.infinity,
-                                maxHeight: double.infinity,
-                                child: FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: ContentImage(
-                                    image: state.imageFile ?? state.imageUrl,
+              margin: state.viewMode == ContentViewMode.grid
+                  ? null
+                  : EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 40.h,
+                    ),
+              child: !state.isValid()
+                  ? state.viewMode == ContentViewMode.scroll
+                      ? Container()
+                      : const EmptyContentCard()
+                  : Container(
+                      constraints: BoxConstraints(maxWidth: 1.sw / 3),
+                      key: ValueKey(
+                        ContentCardKey.key(state.viewMode, state.docID),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (state.viewMode == ContentViewMode.grid)
+                            Flexible(
+                              child: ClipRect(
+                                child: OverflowBox(
+                                  maxWidth: double.infinity,
+                                  maxHeight: double.infinity,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: ContentImage(
+                                      image: state.imageFile ?? state.imageUrl,
+                                    ),
                                   ),
                                 ),
                               ),
+                            )
+                          else
+                            ContentImage(
+                              image: state.imageUrl ?? state.imageFile,
                             ),
-                          )
-                        else
-                          ContentImage(
-                            image: state.imageUrl ?? state.imageFile,
-                          ),
-                        if (state.viewMode == ContentViewMode.grid)
-                          const SizedBox()
-                        else
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                        if (state.viewMode == ContentViewMode.grid)
-                          const SizedBox()
-                        else
-                          const ContentBottomRow()
-                      ],
+                          if (state.viewMode == ContentViewMode.grid)
+                            const SizedBox()
+                          else
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                          if (state.viewMode == ContentViewMode.grid)
+                            const SizedBox()
+                          else
+                            const ContentBottomRow()
+                        ],
+                      ),
                     ),
-                  ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
