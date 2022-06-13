@@ -60,7 +60,7 @@ class ContentMock {
     assert(firebaseConfig != null);
 
    
-    final fileExists = await image.exists();
+    final fileExists = image.existsSync();
     assert(fileExists);
     await addNewContentCubit.editNewContent(ContentProps.image, image);
     await addNewContentCubit.editNewContent(

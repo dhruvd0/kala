@@ -1,6 +1,8 @@
 
 include: package:strict/analysis_options.yaml
 analyzer:
+  plugins:
+    - dart_code_metrics
   exclude:
     - lib/generated_plugin_registrant.dart
   strong-mode:
