@@ -29,8 +29,8 @@ environment:
 dependencies:
   animated_text_kit: ^4.2.1
   auto_size_text: ^3.0.0
-  bloc: ^8.0.2
-  cached_network_image: ^3.2.0
+  bloc: ^8.0.3
+  cached_network_image: ^3.2.1
   cloud_firestore: ^3.1.4
   crashlytics: ^0.0.2
   cubit: ^0.1.2
@@ -68,7 +68,7 @@ dependencies:
   image_size_getter: ^2.1.1
   interactiveviewer_gallery: ^0.6.0
   intl: ^0.17.0
-  modal_bottom_sheet: ^2.0.0
+  modal_bottom_sheet: ^2.0.1
   path_provider: ^2.0.8
   permission_handler: ^9.2.0
   pinch_zoom: ^1.0.0

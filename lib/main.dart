@@ -92,7 +92,7 @@ class KalaApp extends StatelessWidget {
         FigmaConstants.figmaScreenWidth,
         FigmaConstants.figmaScreenHeight,
       ),
-      builder: () {
+      builder: (_,__) {
         return MultiBlocProvider(
           providers: [
             BlocProvider(
@@ -116,7 +116,7 @@ class KalaApp extends StatelessWidget {
             title: 'Kala',
             theme: lightTheme,
             builder: (context, widget) {
-              ScreenUtil.setContext(context);
+              ScreenUtil.init(context);
 
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
