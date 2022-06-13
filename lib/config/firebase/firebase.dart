@@ -13,13 +13,13 @@ class FirebaseConfig {
 
   final FirebaseAuth auth;
   final FirebaseFirestore firestore;
-  final RemoteConfig remoteConfig;
+  final FirebaseRemoteConfig remoteConfig;
   final FirebaseStorage storage;
 
   FirebaseConfig copyWith({
     FirebaseAuth? auth,
     FirebaseFirestore? firestore,
-    RemoteConfig? remoteConfig,
+    FirebaseRemoteConfig? remoteConfig,
     FirebaseStorage? storage,
   }) {
     return FirebaseConfig(
