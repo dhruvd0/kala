@@ -29,7 +29,7 @@ class ContentCard extends StatelessWidget {
           Navigator.pushNamed(
             context,
             Routes.content_page,
-            
+            arguments: BlocProvider.of<ContentBloc>(context),
           );
         },
         child: BlocBuilder<ContentBloc, Content>(
@@ -83,7 +83,7 @@ class ContentCard extends StatelessWidget {
                             )
                           else
                             ContentImage(
-                              image: state.imageUrl ?? state.imageFile,
+                              image: state.imageFile ?? state.imageUrl,
                             ),
                           if (state.viewMode == ContentViewMode.grid)
                             const SizedBox()
@@ -125,14 +125,7 @@ class ContentBottomRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
-                width: !SizeUtils.isMobileSize() ? 1.sw / 10 : 1.sw / 2.5,
-                child: AutoSizeText(
-                  '${state.description}\n\n${DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(state.uploadTimestamp!.toDate())}',
-                  minFontSize: 8,
-                  style: TextThemeContext(context).bodyText2,
-                ),
-              ),
+              const ContentDescription(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -150,6 +143,28 @@ class ContentBottomRow extends StatelessWidget {
                 ],
               )
             ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ContentDescription extends StatelessWidget {
+  const ContentDescription({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ContentBloc, Content>(
+      builder: (context, state) {
+        return SizedBox(
+          width: !SizeUtils.isMobileSize() ? 1.sw / 10 : 1.sw / 2.5,
+          child: AutoSizeText(
+            '${state.description}\n\n${DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(state.uploadTimestamp!.toDate())}',
+            minFontSize: 8,
+            style: TextThemeContext(context).bodyText2,
           ),
         );
       },

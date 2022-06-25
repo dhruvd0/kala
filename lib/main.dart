@@ -92,7 +92,7 @@ class KalaApp extends StatelessWidget {
         FigmaConstants.figmaScreenWidth,
         FigmaConstants.figmaScreenHeight,
       ),
-      builder: (_,__) {
+      builder: (_, __) {
         return MultiBlocProvider(
           providers: [
             BlocProvider(

@@ -20,6 +20,7 @@ class GalleryGridView extends StatelessWidget {
         }
 
         const cellCount = 3;
+
         return StaggeredGrid.count(
           crossAxisCount: cellCount,
           crossAxisSpacing: 2,

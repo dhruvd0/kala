@@ -40,11 +40,11 @@ class ContentMock {
     firebaseConfig ??=
         await FirebaseMocks().getMockFirebaseConfig(signedIn: true);
     assert(firebaseConfig != null);
-     final image = await DefaultCacheManager()
+    final image = await DefaultCacheManager()
         .downloadFile(ContentMock.fakeContent(1).imageUrl.toString());
     for (var i = 0; i < length; i++) {
       await Future<void>.delayed(const Duration(milliseconds: 100));
-      await addNewMockContent(image.file,i);
+      await addNewMockContent(image.file, i);
     }
     assert(firebaseConfig != null);
     if (firebaseConfig!.firestore is FakeFirebaseFirestore) {
@@ -52,14 +52,13 @@ class ContentMock {
     }
   }
 
-  Future<void> addNewMockContent(File image,[int? index]) async {
+  Future<void> addNewMockContent(File image, [int? index]) async {
     firebaseConfig ??=
         await FirebaseMocks().getMockFirebaseConfig(signedIn: true);
 
     final addNewContentCubit = AddNewContentCubit.mock();
     assert(firebaseConfig != null);
 
-   
     final fileExists = image.existsSync();
     assert(fileExists);
     await addNewContentCubit.editNewContent(ContentProps.image, image);
