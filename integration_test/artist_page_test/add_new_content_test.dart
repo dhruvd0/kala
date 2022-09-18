@@ -15,7 +15,8 @@ import '../config/widget_tester.dart';
 void testToAddNewContent() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets(
-    'Test to create and add new content and show it in Gallery, Artist Content Grid',
+    'Test to create and add new content and show it in Gallery '
+    ' Artist Content Grid',
     (tester) async {
       final widgetTesterHandler = WidgetTesterHandler(tester);
       await widgetTesterHandler.startAppWithMockFirebase(signedIn: true);

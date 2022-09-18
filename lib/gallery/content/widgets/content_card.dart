@@ -28,7 +28,7 @@ class ContentCard extends StatelessWidget {
         onTap: () {
           Navigator.pushNamed(
             context,
-            Routes.content_page,
+            Routes.contentPage,
             arguments: BlocProvider.of<ContentBloc>(context),
           );
         },
@@ -162,7 +162,9 @@ class ContentDescription extends StatelessWidget {
         return SizedBox(
           width: !SizeUtils.isMobileSize() ? 1.sw / 10 : 1.sw / 2.5,
           child: AutoSizeText(
-            '${state.description}\n\n${DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(state.uploadTimestamp!.toDate())}',
+            '${state.description}\n\n '
+            // ignore: lines_longer_than_80_chars
+            '${DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(state.uploadTimestamp!.toDate())}',
             minFontSize: 8,
             style: TextThemeContext(context).bodyText2,
           ),

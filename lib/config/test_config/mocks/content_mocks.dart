@@ -30,7 +30,7 @@ class ContentMock {
       imgWidth: 100,
       uploadTimestamp: Timestamp.now(),
       description:
-          'Description Description Description Description Description Description Description',
+          'Description Description Description Description Description',
     );
   }
 

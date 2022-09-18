@@ -11,14 +11,14 @@ class NavigationController {
     return MaterialPageRoute<dynamic>(
       builder: (context) {
         final route = settings.name.toString();
-        var bloc = settings.arguments;
+        final bloc = settings.arguments;
 
         return getWidgetFromRoute(route, bloc: bloc);
       },
     );
   }
 
-  static Widget getWidgetFromRoute(String route, {dynamic? bloc}) {
+  static Widget getWidgetFromRoute(String route, {dynamic bloc}) {
     switch (route) {
       case Routes.splash:
         return const Splash();
@@ -26,7 +26,7 @@ class NavigationController {
       //   return const AuthPage();
       case Routes.dashboard:
         return const Dashboard();
-      case Routes.content_page:
+      case Routes.contentPage:
         assert(bloc is ContentBloc);
         return BlocProvider<ContentBloc>.value(
           value: bloc,

@@ -18,8 +18,11 @@ import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 class ArtistPage extends DashBoardPage {
-  const ArtistPage({required PreloadPageController controller, this.userID})
-      : super(controller: controller);
+  const ArtistPage({
+    Key? key,
+    required PreloadPageController controller,
+    this.userID,
+  }) : super(key: key, controller: controller);
 
   final String? userID;
 
@@ -38,8 +41,7 @@ class ArtistPage extends DashBoardPage {
       trailing: InkWell(
         key: const ValueKey(ArtistPageKeys.toggleEditModeBtn),
         onTap: () {
-          BlocProvider.of<KalaUserContentBloc>(context, listen: false)
-              .toggleEditMode();
+          BlocProvider.of<KalaUserContentBloc>(context).toggleEditMode();
         },
         child: BlocBuilder<KalaUserContentBloc, KalaUserContentState>(
           builder: (context, state) {
@@ -56,8 +58,7 @@ class ArtistPage extends DashBoardPage {
       scaffoldKey: const ValueKey(ScaffoldKeys.artistPageKey),
       enablePageNavigationArrows: true,
       controller: controller,
-      centerTitle:
-          BlocProvider.of<KalaUserBloc>(context, listen: false).state.name,
+      centerTitle: BlocProvider.of<KalaUserBloc>(context).state.name,
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -79,7 +79,7 @@ class _AddNewContentSheetState extends State<AddNewContentSheet> {
                   textAlign: TextAlign.center,
                   style: TextThemeContext(context).headline1,
                   onChanged: (str) {
-                    BlocProvider.of<AddNewContentCubit>(context, listen: false)
+                    BlocProvider.of<AddNewContentCubit>(context)
                         .editNewContent(ContentProps.title, str);
                   },
                   decoration: TextInputDecorations.defaultTextInputDecoration(
@@ -101,7 +101,6 @@ class _AddNewContentSheetState extends State<AddNewContentSheet> {
                     onChanged: (str) {
                       BlocProvider.of<AddNewContentCubit>(
                         context,
-                        listen: false,
                       ).editNewContent(ContentProps.price, int.parse(str));
                     },
                     decoration: TextInputDecorations.defaultTextInputDecoration(
@@ -119,7 +118,7 @@ class _AddNewContentSheetState extends State<AddNewContentSheet> {
                   maxLines: 5,
                   textAlign: TextAlign.center,
                   onChanged: (str) {
-                    BlocProvider.of<AddNewContentCubit>(context, listen: false)
+                    BlocProvider.of<AddNewContentCubit>(context)
                         .editNewContent(ContentProps.description, str);
                   },
                   decoration: TextInputDecorations.defaultTextInputDecoration(
@@ -145,12 +144,10 @@ class _AddNewContentSheetState extends State<AddNewContentSheet> {
                         });
                         BlocProvider.of<AddNewContentCubit>(
                           context,
-                          listen: false,
                         ).addNewContent().then((value) async {
                           unawaited(
                             BlocProvider.of<GalleryBloc>(
                               context,
-                              listen: false,
                             ).getContentList(
                               100,
                               collectionSegment: CollectionSegment.previous,
@@ -158,7 +155,6 @@ class _AddNewContentSheetState extends State<AddNewContentSheet> {
                           );
                           await BlocProvider.of<KalaUserContentBloc>(
                             context,
-                            listen: false,
                           ).getUserContent(
                             100,
                             collectionSegment: CollectionSegment.previous,
@@ -166,7 +162,6 @@ class _AddNewContentSheetState extends State<AddNewContentSheet> {
                           if (mounted) {
                             BlocProvider.of<KalaUserContentBloc>(
                               context,
-                              listen: false,
                             ).toggleEditMode(forceToggle: false);
                           }
 

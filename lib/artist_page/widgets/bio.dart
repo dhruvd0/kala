@@ -65,7 +65,6 @@ class _BioWidgetState extends State<BioWidget> {
                       onChanged: (str) {
                         BlocProvider.of<KalaUserContentBloc>(
                           context,
-                          listen: false,
                         ).changeBio(str);
                       },
                     ),

@@ -28,10 +28,6 @@ class FirestorePageResponse {
   @override
   int get hashCode => currentJsonList.hashCode ^ lastDocSnap.hashCode;
 
-  @override
-  String toString() =>
-      'FirestorePageResponse(currentJsonList: $currentJsonList, lastDocSnap: $lastDocSnap, firstDocSnap: $firstDocSnap)';
-
   FirestorePageResponse copyWith({
     List<Json>? currentJsonList,
     DocumentSnapshot? lastDocSnap,

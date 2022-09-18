@@ -71,7 +71,8 @@ Future<void> setupCrashlytics() async {
   }
   if (kDebugMode) {
     // Force disable Crashlytics collection while doing every day development.
-    // Temporarily toggle this to true if you want to test crash reporting in your app.
+    // Temporarily toggle this to true if you want to test crash reporting in
+    // your app.
     try {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
     } on FirebaseException catch (e) {

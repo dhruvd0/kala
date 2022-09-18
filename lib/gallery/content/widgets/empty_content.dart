@@ -32,7 +32,6 @@ class EmptyContentCard extends StatelessWidget {
             onTap: () {
               final bloc = BlocProvider.of<AddNewContentCubit>(
                 context,
-                listen: false,
               );
               scanImage(context).then(
                 (file) {
@@ -50,7 +49,6 @@ class EmptyContentCard extends StatelessWidget {
                             final isInEditMode =
                                 !BlocProvider.of<KalaUserContentBloc>(
                               context,
-                              listen: false,
                             ).state.isEditMode;
                             if (!isInEditMode) {
                               Navigator.pushReplacementNamed(

@@ -153,7 +153,7 @@ class KalaUserContentBloc extends HasPaginationCubit<KalaUserContentState> {
           kalaUserBloc.state.uid,
     );
     if (firebaseFirestore != null) {
-      paginationCubit.firestore = firebaseFirestore;
+      paginationCubit.firebaseFirestore = firebaseFirestore;
     }
   }
 

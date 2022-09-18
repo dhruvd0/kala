@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_asserts_with_message
+
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -80,11 +82,6 @@ class Content extends Equatable {
       uploadTimestamp,
       viewMode,
     ];
-  }
-
-  @override
-  String toString() {
-    return 'Content(artistID: $artistID, artistName: $artistName, description: $description, docID: $docID, fileSize: $fileSize, imageFile: $imageFile, imageUrl: $imageUrl, imgHeight: $imgHeight, imgWidth: $imgWidth, price: $price, title: $title, uploadTimestamp: $uploadTimestamp, viewMode: $viewMode)';
   }
 
   Content copyWith({

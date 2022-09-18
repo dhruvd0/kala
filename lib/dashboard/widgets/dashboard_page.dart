@@ -79,12 +79,10 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> authenticatePageRoutine() async {
-    final galleryBloc = BlocProvider.of<GalleryBloc>(context, listen: false);
+    final galleryBloc = BlocProvider.of<GalleryBloc>(context);
     await Future.doWhile(() {
       final isDataLoaded = galleryBloc.state.contentSlideList.isNotEmpty &&
-          BlocProvider.of<KalaUserContentBloc>(context, listen: false)
-                  .state
-                  .userContent !=
+          BlocProvider.of<KalaUserContentBloc>(context).state.userContent !=
               null;
       return isDataLoaded;
     });

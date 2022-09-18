@@ -88,11 +88,6 @@ class KalaUser extends Equatable {
     ];
   }
 
-  @override
-  String toString() {
-    return 'KalaUser(authType: $authType, contactURL: $contactURL, kalaUserState: $kalaUserState, lastSignIn: $lastSignIn, name: $name, photoURL: $photoURL, uid: $uid)';
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'authType': authType,

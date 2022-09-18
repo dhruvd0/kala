@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_single_cascade_in_expression_statements, prefer_final_locals, cascade_invocations
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
@@ -131,13 +129,13 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
   ) {
     if (newDataList.isNotEmpty) {
       // ignore: omit_local_variable_types
-      var currentDataList = state.data.toList();
+      final currentDataList = state.data.toList();
       if (segment == CollectionSegment.previous) {
-        for (var e in newDataList.reversed) {
+        for (final e in newDataList.reversed) {
           currentDataList.insert(0, e);
         }
       } else {
-        for (var e in newDataList) {
+        for (final e in newDataList) {
           currentDataList.add(e);
         }
       }
@@ -157,9 +155,6 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
   void assertionsForNewDataList(List<dynamic> newDataList) {
     assert(state.data.last != newDataList.first);
   }
-
-  set firestore(FirebaseFirestore? firebaseFirestore) =>
-      firebaseFirestore = firebaseFirestore;
 }
 
 abstract class HasPaginationCubit<T> extends Cubit<T> {

@@ -13,9 +13,10 @@ import 'package:kala/gallery/content/models/content.dart';
 // ignore: must_be_immutable
 class ContentImage extends StatefulWidget {
   const ContentImage({
+    Key? key,
     required this.image,
     this.overrideFit,
-  });
+  }) : super(key: key);
   final BoxFit? overrideFit;
   final dynamic image;
   @override
@@ -72,9 +73,7 @@ class _ContentImageState extends State<ContentImage> {
 
   double imageElevation(BuildContext context) {
     try {
-      return BlocProvider.of<ContentBloc>(context, listen: false)
-                  .state
-                  .viewMode ==
+      return BlocProvider.of<ContentBloc>(context).state.viewMode ==
               ContentViewMode.grid
           ? 0
           : 10;

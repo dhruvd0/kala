@@ -18,6 +18,7 @@ class FirestoreQueries {
     PaginationRequestState request, {
     CollectionSegment? collectionSegment,
   }) async {
+    // ignore: lines_longer_than_80_chars
     try {
       QuerySnapshot? querySnapshot;
       final collection = firestore?.collection(request.collection);
@@ -56,7 +57,9 @@ class FirestoreQueries {
       }
 
       final jsonListFromDocSnaps2 = jsonListFromDocSnaps(querySnapshot);
-      //log("Count: ${jsonListFromDocSnaps2.length} , First:${querySnapshot.docs.first.id}, Last:${querySnapshot.docs.last.id}  ");
+      //log("Count: ${jsonListFromDocSnaps2.length} ,
+      // First:${querySnapshot.docs.first.id},
+      // Last:${querySnapshot.docs.last.id}  ");
       return FirestorePageResponse(
         currentJsonList: jsonListFromDocSnaps2,
         lastDocSnap: querySnapshot.docs.last,

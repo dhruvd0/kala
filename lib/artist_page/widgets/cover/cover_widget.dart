@@ -51,7 +51,6 @@ class AddCoverContent extends StatelessWidget {
           onTap: () {
             final bloc = BlocProvider.of<KalaUserContentBloc>(
               context,
-              listen: false,
             );
             scanImage(context).then((value) {
               if (value is File) {

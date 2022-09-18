@@ -12,8 +12,8 @@ import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 class AuthPage extends DashBoardPage {
-  const AuthPage({required PreloadPageController pageController})
-      : super(controller: pageController);
+  const AuthPage({Key? key, required PreloadPageController pageController})
+      : super(key: key, controller: pageController);
 
   @override
   Widget build(BuildContext context) {
