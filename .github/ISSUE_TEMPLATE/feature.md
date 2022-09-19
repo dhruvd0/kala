@@ -13,8 +13,7 @@ assignees: ''
 ## Figma UI 
 **Insert any UI images with Figma links to the correct frames**
 
-## RTM Link
-**Insert a notion.so link to this feature in RTM**
+
 
 ## Tests
 
