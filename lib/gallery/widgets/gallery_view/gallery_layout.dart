@@ -3,8 +3,8 @@ import 'package:kala/artist_page/widgets/keys/artist_page/gallery_grid.dart';
 import 'package:kala/config/size/size.dart';
 import 'package:kala/gallery/widgets/gallery_view/gallery_scroll.dart';
 
-class GalleryContainer extends StatelessWidget {
-  const GalleryContainer({Key? key}) : super(key: key);
+class GalleryLayout extends StatelessWidget {
+  const GalleryLayout({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -28,7 +28,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -67,7 +67,7 @@ android {
             minifyEnabled true // added previously
             shrinkResources true // add this
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro' // added previously
-            
+
         }
     }
 }
@@ -89,7 +89,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
-    
+
 
 // Add the dependencies for any other desired Firebase products
 // https://firebase.google.com/docs/android/setup#available-libraries

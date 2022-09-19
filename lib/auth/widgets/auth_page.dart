@@ -6,14 +6,16 @@ import 'package:kala/auth/models/kala_user.dart';
 
 import 'package:kala/auth/social_integration/auth_types.dart';
 import 'package:kala/auth/widgets/auth_btn.dart';
+import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
-import 'package:kala/dashboard/widgets/dashboard_child_page.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
-import 'package:preload_page_view/preload_page_view.dart';
 
-class AuthPage extends DashBoardPage {
-  const AuthPage({Key? key, required PreloadPageController pageController})
-      : super(key: key, controller: pageController);
+class AuthPage extends StatelessWidget {
+  const AuthPage({
+    Key? key,
+  }) : super(
+          key: key,
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +23,9 @@ class AuthPage extends DashBoardPage {
       scaffoldKey: const ValueKey(ScaffoldKeys.authPageKey),
       body: BlocListener<KalaUserBloc, KalaUser>(
         listener: (_, state) {
-          // if (state.kalaUserState == KalaUserState.authenticated) {
-          //   controller.nextPage(
-          //     duration: Duration(seconds: 200),
-          //     curve: Curves.easeIn,
-          //   );
-          // }
+          if (state.kalaUserState == KalaUserState.authenticated) {
+            Navigator.pushReplacementNamed(context, Routes.dashboard);
+          }
         },
         child: SizedBox(
           width: 1.sw,

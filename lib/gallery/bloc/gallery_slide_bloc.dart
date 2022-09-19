@@ -1,13 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:kala/auth/bloc/kala_user_bloc.dart';
 
@@ -67,31 +61,6 @@ class GalleryBloc extends HasPaginationCubit<GalleryState> {
           lastFetchedTimestamp: Timestamp.now(),
         ),
       );
-    }
-  }
-
-  Future<void> cacheContentImages(BuildContext context) async {
-    for (final content in state.contentSlideList) {
-      if (content.isValid()) {
-        await precacheImage(
-          CachedNetworkImageProvider(
-            content.imageUrl.toString(),
-            cacheKey: content.imageUrl.toString(),
-            cacheManager: DefaultCacheManager(),
-            errorListener: () {
-              //
-            },
-          ),
-          context,
-          size: Size(1.sw - 10, 200),
-          onError: (e, stack) {
-            log(e.toString());
-            if (kDebugMode && (e is Exception)) {
-              throw e;
-            }
-          },
-        );
-      }
     }
   }
 }

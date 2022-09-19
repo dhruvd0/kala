@@ -67,16 +67,6 @@ class KalaUserContentBloc extends HasPaginationCubit<KalaUserContentState> {
     super.onChange(change);
   }
 
-  Future<void> loadCoverImageFromCache() async {
-    if (state.isContentImageUrlValid()) {
-      final fileInfo = await DefaultCacheManager()
-          .getFileFromCache(state.coverContent.toString());
-
-      if (fileInfo?.file != null) {
-        emit(state.copyWith(coverContent: fileInfo?.file));
-      }
-    }
-  }
 
   static Content initialNewContent() => Content.fromMap(
         <String, dynamic>{
@@ -177,7 +167,7 @@ class KalaUserContentBloc extends HasPaginationCubit<KalaUserContentState> {
 
       emit(kalaUserContentState);
       setupUserContentPaginationCubit();
-      loadCoverImageFromCache();
+      
       if (userContent?.isEmpty ?? false) {
         getUserContent(
           2,

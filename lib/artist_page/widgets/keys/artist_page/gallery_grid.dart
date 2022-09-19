@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/artist_page/bloc/kala_user_content_state.dart';
-import 'package:kala/gallery/widgets/gallery_view/gallery_scroll.dart';
+import 'package:kala/gallery/content/widgets/content_card.dart';
 
 class GalleryGridView extends StatelessWidget {
   const GalleryGridView({Key? key}) : super(key: key);
@@ -29,7 +29,7 @@ class GalleryGridView extends StatelessWidget {
               .map(
                 (e) => StaggeredGridTile.fit(
                   crossAxisCellCount: 1,
-                  child: ContentBlocProvider(
+                  child: ContentCard(
                     content: e,
                   ),
                 ),

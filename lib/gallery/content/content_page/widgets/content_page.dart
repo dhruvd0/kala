@@ -33,7 +33,7 @@ class ContentPage extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.only(left: 10),
-                child: const ContentDescription(),
+                child:  ContentDescription(content: content,),
               ),
             ],
           ),

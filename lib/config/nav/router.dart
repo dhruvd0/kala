@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kala/auth/widgets/auth_page.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/dashboard/widgets/dashboard_page.dart';
 import 'package:kala/gallery/content/bloc/content_bloc.dart';
@@ -22,8 +23,8 @@ class NavigationController {
     switch (route) {
       case Routes.splash:
         return const Splash();
-      // case Routes.auth:
-      //   return const AuthPage();
+      case Routes.auth:
+        return const AuthPage();
       case Routes.dashboard:
         return const Dashboard();
       case Routes.contentPage:

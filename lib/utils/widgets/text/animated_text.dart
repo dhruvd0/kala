@@ -22,7 +22,7 @@ class _RotatingTextState extends State<RotatingText> {
     final style = widget.style ?? BodyTextStyle.bodyText1;
     return SizedBox(
       height: style.fontSize,
-      key: UniqueKey(),
+     
       child: DefaultTextStyle(
         style: style,
         child: AnimatedTextKit(

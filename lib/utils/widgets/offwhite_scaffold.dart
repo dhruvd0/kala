@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/config/colors/basic_colors.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/config/widget_keys/nav_keys.dart';
-import 'package:preload_page_view/preload_page_view.dart';
+import 'package:kala/dashboard/bloc/dashboard_page_bloc.dart';
 
 class OffWhiteScaffold extends StatelessWidget {
   OffWhiteScaffold({
@@ -17,7 +18,6 @@ class OffWhiteScaffold extends StatelessWidget {
     this.trailing,
     this.onTapTitle,
     this.leading,
-    this.controller,
   }) : super(key: scaffoldKey) {
     if (enableBackArrow ?? false) {
       assert(onBack != null);
@@ -25,9 +25,7 @@ class OffWhiteScaffold extends StatelessWidget {
     if (onBack != null) {
       assert(enableBackArrow ?? false);
     }
-    if (enablePageNavigationArrows ?? false) {
-      assert(controller != null);
-    }
+
     assert(leading == null || enableBackArrow == null);
   }
 
@@ -40,81 +38,83 @@ class OffWhiteScaffold extends StatelessWidget {
   final Widget? trailing;
   final bool? hideAppBar;
   final Function? onTapTitle;
-  final PreloadPageController? controller;
+
   final Widget? leading;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: BasicColors.backgroundOffWhite,
-      body: SizedBox(height: 1.sh, child: body),
-      key: scaffoldKey,
-      appBar: hideAppBar ?? false
-          ? null
-          : PreferredSize(
-              preferredSize: Size.fromHeight(80.h),
-              child: Container(
-                margin: EdgeInsets.only(top: 20.h, bottom: 20.h),
-                child: AppBar(
-                  elevation: 0,
-                  backgroundColor: BasicColors.backgroundOffWhite,
-                  actions: trailing == null
-                      ? null
-                      : [
-                          trailing!,
-                          SizedBox(
-                            width: 10.w,
-                          )
-                        ],
-                  leading: leading ??
-                      (enableBackArrow == null
-                          ? null
-                          : enableBackArrow ?? false
-                              ? GestureDetector(
-                                  onTap: onBack,
-                                  child: Icon(
-                                    Icons.arrow_back_ios_new,
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: BasicColors.backgroundOffWhite,
+        body: SizedBox(height: 1.sh, child: body),
+        appBar: hideAppBar ?? false
+            ? null
+            : PreferredSize(
+                preferredSize: Size.fromHeight(80.h),
+                child: Container(
+                  margin: EdgeInsets.only(top: 20.h, bottom: 20.h),
+                  child: AppBar(
+                    elevation: 0,
+                    backgroundColor: BasicColors.backgroundOffWhite,
+                    actions: trailing == null
+                        ? null
+                        : [
+                            trailing!,
+                            SizedBox(
+                              width: 10.w,
+                            )
+                          ],
+                    leading: leading ??
+                        (enableBackArrow == null
+                            ? null
+                            : enableBackArrow ?? false
+                                ? GestureDetector(
+                                    onTap: onBack,
+                                    child: Icon(
+                                      Icons.arrow_back_ios_new,
+                                      size: 14,
+                                      color: Theme.of(context).iconTheme.color,
+                                    ),
+                                  )
+                                : null),
+                    centerTitle: true,
+                    title: centerTitle == null
+                        ? null
+                        : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (enablePageNavigationArrows ?? false)
+                                _PageNavArrow(
+                                  navArrowType: NavArrowType.left,
+                                  pageKey: scaffoldKey,
                                 )
-                              : null),
-                  centerTitle: true,
-                  title: centerTitle == null
-                      ? null
-                      : Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (enablePageNavigationArrows ?? false)
-                              _PageNavArrow(
-                                navArrowType: NavArrowType.left,
-                                pageKey: scaffoldKey,
-                                controller: controller!,
-                              )
-                            else
-                              Container(),
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 15.w),
-                              child: Title(
-                                color: Colors.black,
-                                child: Text(
-                                  centerTitle.toString(),
-                                  style: TextThemeContext(context).headline1,
+                              else
+                                Container(),
+                              Container(
+                                margin: EdgeInsets.symmetric(horizontal: 15.w),
+                                child: Title(
+                                  color: Colors.black,
+                                  child: Text(
+                                    centerTitle.toString(),
+                                    style: TextThemeContext(context).headline1,
+                                  ),
                                 ),
                               ),
-                            ),
-                            if (enablePageNavigationArrows ?? false)
-                              _PageNavArrow(
-                                navArrowType: NavArrowType.right,
-                                pageKey: scaffoldKey,
-                                controller: controller!,
-                              )
-                            else
-                              Container(),
-                          ],
-                        ),
+                              if (enablePageNavigationArrows ?? false)
+                                Flexible(
+                                  child: _PageNavArrow(
+                                    navArrowType: NavArrowType.right,
+                                    pageKey: scaffoldKey,
+                                  ),
+                                )
+                              else
+                                Container(),
+                            ],
+                          ),
+                  ),
                 ),
               ),
-            ),
+      ),
     );
   }
 }
@@ -125,18 +125,11 @@ class _PageNavArrow extends StatelessWidget {
   const _PageNavArrow({
     required this.navArrowType,
     required this.pageKey,
-    required this.controller,
     Key? key,
   }) : super(key: key);
 
   final NavArrowType navArrowType;
   final ValueKey pageKey;
-  final PreloadPageController controller;
-
-  // bool isPageEndOfPages() {
-  //   return state.pageIndex == 0 && navArrowType == NavArrowType.left ||
-  //       state.pageIndex == 3 - 1 && navArrowType == NavArrowType.right;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -144,23 +137,17 @@ class _PageNavArrow extends StatelessWidget {
       builder: (context) {
         void Function() onTap;
         IconData icon;
-
+        final dashboardBloc = context.read<DashboardPageBloc>();
         switch (navArrowType) {
           case NavArrowType.left:
             onTap = () {
-              controller.previousPage(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.ease,
-              );
+              dashboardBloc.add(PreviousPage());
             };
             icon = Icons.arrow_back_ios_new;
             break;
           case NavArrowType.right:
             onTap = () {
-              controller.nextPage(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.ease,
-              );
+              dashboardBloc.add(NextPage());
             };
             icon = Icons.arrow_forward_ios;
             break;
