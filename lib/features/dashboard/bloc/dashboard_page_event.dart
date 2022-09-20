@@ -10,5 +10,5 @@ class NextPage extends DashboardPageEvent{
 
 }
 class PreviousPage extends DashboardPageEvent{
-  
+
 }

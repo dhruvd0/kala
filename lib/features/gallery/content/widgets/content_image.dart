@@ -1,13 +1,12 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/config/colors/basic_colors.dart';
 import 'package:kala/gallery/content/bloc/content_bloc.dart';
 import 'package:kala/gallery/content/models/content.dart';
+import 'package:optimized_cached_image/optimized_cached_image.dart';
 
 // ignore: must_be_immutable
 class ContentImage extends StatelessWidget {
@@ -39,20 +38,21 @@ class ContentImage extends StatelessWidget {
         minHeight: 100.h,
         maxHeight: (1.sh - 100) / 2,
       ),
-      child: Material(
-        color: BasicColors.backgroundOffWhite,
-        elevation: imageElevation(context),
-        child: Image(
-          image: image is String
-              ? CachedNetworkImageProvider(
-                  image,
-                  cacheKey: image.toString(),
-                )
-              : FileImage(image as File) as ImageProvider,
-          fit: overrideFit ?? BoxFit.fill,
-          
-        ),
-      ),
+      child: image == null
+          ? const SizedBox()
+          : Material(
+              color: BasicColors.backgroundOffWhite,
+              elevation: imageElevation(context),
+              child: Image(
+                image: image is String
+                    ? OptimizedCacheImageProvider(
+                        image,
+                        cacheKey: image.toString(),
+                      )
+                    : FileImage(image as File) as ImageProvider,
+                fit: overrideFit ?? BoxFit.fill,
+              ),
+            ),
     );
   }
 }

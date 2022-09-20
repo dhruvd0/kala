@@ -76,30 +76,29 @@ class FirestoreQueries {
     Query? baseQuery,
     PaginationRequestState request,
   ) async {
-    QuerySnapshot? querySnapshot;
     switch (collectionSegment) {
       case null:
-        querySnapshot = await baseQuery?.limit(10).get();
-        break;
+        return await baseQuery?.limit(10).get();
+
       case CollectionSegment.initial:
-        querySnapshot = await baseQuery?.limit(10).get();
-        break;
+        return await baseQuery?.limit(10).get();
+
       case CollectionSegment.previous:
-        assert(request.firstDocument != null);
-        querySnapshot = await baseQuery
+        if (request.firstDocument == null) {
+          return await baseQuery?.limit(10).get();
+        }
+        return await baseQuery
             ?.endBeforeDocument(request.firstDocument!)
             .limit(10)
             .get();
-        break;
+
       case CollectionSegment.next:
         assert(request.lastDocument != null);
-        querySnapshot = await baseQuery
+        return await baseQuery
             ?.startAfterDocument(request.lastDocument!)
             .limit(10)
             .get();
-        break;
     }
-    return querySnapshot;
   }
 
   List<Json> jsonListFromDocSnaps(QuerySnapshot querySnapshot) {

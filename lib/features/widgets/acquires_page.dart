@@ -4,7 +4,7 @@ import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 class AcquiresPage extends StatelessWidget {
-  const AcquiresPage();
+  const AcquiresPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

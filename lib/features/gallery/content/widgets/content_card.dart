@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,11 +26,13 @@ class ContentCard extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            Routes.contentPage,
-            arguments: ContentBloc(content),
-          );
+          if (content.isValid()) {
+            Navigator.pushNamed(
+              context,
+              Routes.contentPage,
+              arguments: ContentBloc(content),
+            );
+          }
         },
         child: Container(
           constraints: !SizeUtils.isMobileSize()
@@ -151,7 +154,7 @@ class ContentDescription extends StatelessWidget {
       child: AutoSizeText(
         '${content.description}\n\n '
         // ignore: lines_longer_than_80_chars
-        '${DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(content.uploadTimestamp!.toDate())}',
+        '${DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format((content.uploadTimestamp ?? Timestamp.now()).toDate())}',
         minFontSize: 8,
         style: TextThemeContext(context).bodyText2,
       ),
