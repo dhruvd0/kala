@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/config/nav/route_names.dart';
+import 'package:kala/config/register_singletons.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
-import 'package:kala/main.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 /// The first widget to display for Kala App
@@ -31,7 +31,7 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     streamSubscription =
-        firebaseConfig?.auth.userChanges().listen(handleUseAuthState);
+        firebaseConfig.auth.userChanges().listen(handleUseAuthState);
     super.initState();
   }
 

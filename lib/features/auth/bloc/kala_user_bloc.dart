@@ -8,11 +8,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
+import 'package:kala/config/register_singletons.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/features/auth/models/kala_user.dart';
 import 'package:kala/features/auth/social_integration/auth_types.dart';
 import 'package:kala/features/auth/social_integration/google.dart';
-import 'package:kala/main.dart';
 
 class KalaUserBloc extends Cubit<KalaUser> {
   KalaUserBloc([KalaUser? customKalaUser])
@@ -39,7 +39,7 @@ class KalaUserBloc extends Cubit<KalaUser> {
   }
 
   void registerAuthListener() {
-    authStream = firebaseConfig?.auth.authStateChanges().listen((user) {
+    authStream = firebaseConfig.auth.authStateChanges().listen((user) {
       if (user != null && user.uid.isNotEmpty) {
         emit(
           KalaUser.fromSocialAuthUser(
@@ -65,23 +65,23 @@ class KalaUserBloc extends Cubit<KalaUser> {
   }
 
   Future<void> updateLastSignedInTimeStamp() async {
-    final uid = firebaseConfig?.auth.currentUser?.uid;
+    final uid = firebaseConfig.auth.currentUser?.uid;
 
-    await firebaseConfig?.firestore
+    await firebaseConfig.firestore
         .collection(FirestorePaths.userCollection)
         .doc(uid)
         .update({'lastSignIn': Timestamp.now()});
   }
 
   Future<void> updateKalaUserToFirestore() async {
-    final uid = firebaseConfig?.auth.currentUser?.uid;
+    final uid = firebaseConfig.auth.currentUser?.uid;
 
-    if (firebaseConfig?.auth.currentUser == null) {
+    if (firebaseConfig.auth.currentUser == null) {
       await Fluttertoast.showToast(msg: 'Log in First');
     }
 
     try {
-      await firebaseConfig?.firestore
+      await firebaseConfig.firestore
           .collection(FirestorePaths.userCollection)
           .doc(uid)
           .update(state.toMap());
@@ -91,22 +91,22 @@ class KalaUserBloc extends Cubit<KalaUser> {
   }
 
   Future<void> addKalaUserToFirestore() async {
-    final uid = firebaseConfig?.auth.currentUser?.uid;
+    final uid = firebaseConfig.auth.currentUser?.uid;
 
-    if (firebaseConfig?.auth.currentUser == null) {
+    if (firebaseConfig.auth.currentUser == null) {
       await Fluttertoast.showToast(msg: 'Log in First');
     }
     assert(state.validateUser());
-    await firebaseConfig?.firestore
+    await firebaseConfig.firestore
         .collection(FirestorePaths.userCollection)
         .doc(uid)
         .set(state.toMap());
   }
 
   Future<void> startUserSnapshotFetcher() async {
-    final uid = firebaseConfig?.auth.currentUser?.uid;
+    final uid = firebaseConfig.auth.currentUser?.uid;
     if (uid?.isNotEmpty ?? false) {
-      firebaseConfig?.firestore
+      firebaseConfig.firestore
           .collection(FirestorePaths.userCollection)
           .doc(uid)
           .snapshots()
@@ -117,7 +117,7 @@ class KalaUserBloc extends Cubit<KalaUser> {
 
           return;
         }
-        data['uid'] = firebaseConfig?.auth.currentUser?.uid;
+        data['uid'] = firebaseConfig.auth.currentUser?.uid;
         var userFromSnapshot = KalaUser.fromMap(
           data,
         );
@@ -147,13 +147,13 @@ class KalaUserBloc extends Cubit<KalaUser> {
 
   Future<void> mockAuthentication(String authType) async {
     KalaUser kalaUser;
-    assert(firebaseConfig?.auth is MockFirebaseAuth);
-    await firebaseConfig?.auth.signInAnonymously();
-    assert(firebaseConfig?.auth.currentUser != null);
-    if (firebaseConfig?.auth.currentUser != null) {
+    assert(firebaseConfig.auth is MockFirebaseAuth);
+    await firebaseConfig.auth.signInAnonymously();
+    assert(firebaseConfig.auth.currentUser != null);
+    if (firebaseConfig.auth.currentUser != null) {
       kalaUser = KalaUser.fromSocialAuthUser(
         // ignore: cast_nullable_to_non_nullable
-        firebaseConfig?.auth.currentUser as User,
+        firebaseConfig.auth.currentUser as User,
         authType: 'mock-$authType',
       )..validateUser();
 

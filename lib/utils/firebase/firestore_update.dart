@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:kala/main.dart';
+import 'package:kala/config/register_singletons.dart';
 
 class FirestoreUpdateRequest {
   FirestoreUpdateRequest({this.firestore}) {
-    firestore = firestore ?? firebaseConfig!.firestore;
+    firestore = firestore ?? firebaseConfig.firestore;
     assert(firestore != null);
   }
 

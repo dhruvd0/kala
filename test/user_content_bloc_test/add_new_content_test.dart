@@ -1,15 +1,19 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kala/config/register_singletons.dart';
 import 'package:kala/config/test_config/mocks/content_mocks.dart';
+import 'package:kala/config/test_config/mocks/mock_dependencies.dart';
 import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
-import 'package:kala/main.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 void main() {
-  tearDown(() {
-    firebaseConfig = null;
+  setUp(() async {
+    await mockDependencies();
+  });
+  tearDown(() async {
+    await getIt.reset();
   });
   test(
     'Test to add new content to Kala gallery as the first content',
@@ -30,14 +34,9 @@ void main() {
       expect(kalaUserContentCubit.state.userContent!.first.isValid(), true);
     },
   );
-  testAddNewContent();
-}
-
-void testAddNewContent() {
   test(
     'Test to add new content to Kala gallery',
     () async {
-      assert(firebaseConfig == null);
       final kalaUserContentCubit = KalaUserContentBloc.mock()
         ..toggleEditMode(forceToggle: false);
       final galleryBloc = GalleryBloc(

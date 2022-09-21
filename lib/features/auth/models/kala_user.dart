@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:kala/config/register_singletons.dart';
 import 'package:kala/config/typedefs.dart';
-import 'package:kala/main.dart';
 
 enum KalaUserState {
   unauthenticated,
@@ -32,7 +31,7 @@ class KalaUser extends Equatable {
     return KalaUser(
       authType: map['authType'] ?? '',
       contactURL: map['contactURL'] ?? '',
-      kalaUserState: firebaseConfig?.auth.currentUser == null
+      kalaUserState: firebaseConfig.auth.currentUser == null
           ? KalaUserState.unauthenticated
           : KalaUserState.authenticated,
       lastSignIn: map['lastSignIn'],

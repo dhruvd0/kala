@@ -2,22 +2,19 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
+import 'package:kala/config/register_singletons.dart';
 import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/features/gallery/content/models/content.dart';
-import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/firebase_storage.dart';
 import 'package:kala/utils/firebase/firestore_update.dart';
 
 class AddNewContentCubit extends Cubit<Content> {
   AddNewContentCubit({
     required this.kalaUserContent,
-    this.customStorage,
-    this.firebaseFirestore,
   }) : super(Content.fromMap(const {})) {
     kalaUserContent.stream.asBroadcastStream().listen((event) {
       if (isClosed) {
@@ -30,19 +27,15 @@ class AddNewContentCubit extends Cubit<Content> {
   factory AddNewContentCubit.mock() {
     return AddNewContentCubit(
       kalaUserContent: KalaUserContentBloc.mock(),
-      firebaseFirestore: firebaseConfig?.firestore,
-      customStorage: firebaseConfig?.storage,
     );
   }
 
-  FirebaseStorage? customStorage;
-  FirebaseFirestore? firebaseFirestore;
   final KalaUserContentBloc kalaUserContent;
 
   Future<String> uploadImageAndGetUrl(
     String contentStoragePath,
   ) async {
-    return FirebaseStorageRequest(customStorage).uploadFile(
+    return FirebaseStorageRequest(firebaseConfig.storage).uploadFile(
       '$contentStoragePath/$correctFilePath',
       state.imageFile!,
     );
@@ -51,7 +44,7 @@ class AddNewContentCubit extends Cubit<Content> {
   String? get correctFilePath => state.imageFile?.path.split('/').last;
 
   Future<String> setInitialContentData() {
-    return FirestoreUpdateRequest(firestore: firebaseFirestore).set(
+    return FirestoreUpdateRequest(firestore: firebaseConfig.firestore).set(
       FirestorePaths.contentCollection,
       state.toMap(),
     );
@@ -111,7 +104,7 @@ class AddNewContentCubit extends Cubit<Content> {
     String uploadedContentDocID,
     String imageUrl,
   ) async {
-    await FirestoreUpdateRequest(firestore: firebaseFirestore).update(
+    await FirestoreUpdateRequest(firestore: firebaseConfig.firestore).update(
       FirestorePaths.contentCollection,
       uploadedContentDocID,
       <String, String>{'imageUrl': imageUrl, 'docID': uploadedContentDocID},

@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:kala/config/register_singletons.dart';
 import 'package:kala/config/typedefs.dart';
-import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/crashlytics.dart';
 import 'package:kala/utils/firebase/page_data.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class FirestoreQueries {
   FirestoreQueries({this.firestore}) {
-    firestore = firestore ?? firebaseConfig!.firestore;
+    firestore = firestore ?? firebaseConfig.firestore;
   }
 
   FirebaseFirestore? firestore;

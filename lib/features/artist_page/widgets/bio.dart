@@ -2,12 +2,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kala/config/register_singletons.dart';
 import 'package:kala/config/remote_config_data.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/features/artist_page/bloc/kala_user_content_state.dart';
 import 'package:kala/features/artist_page/widgets/keys/artist_page/artist_page_keys.dart';
-import 'package:kala/main.dart';
 
 class BioWidget extends StatefulWidget {
   const BioWidget({Key? key}) : super(key: key);
@@ -52,7 +52,7 @@ class _BioWidgetState extends State<BioWidget> {
                       textAlign: TextAlign.center,
                       maxLines: 5,
                       decoration: InputDecoration(
-                        hintText: firebaseConfig?.remoteConfig
+                        hintText: firebaseConfig.remoteConfig
                             .getString(RemoteConfigKeys.addBioPlaceholder),
                         hintStyle:
                             TextThemeContext(context).bodyText1!.copyWith(

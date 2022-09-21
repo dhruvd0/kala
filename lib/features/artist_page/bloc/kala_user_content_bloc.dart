@@ -8,12 +8,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
+import 'package:kala/config/register_singletons.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
 import 'package:kala/features/artist_page/bloc/kala_user_content_state.dart';
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/features/auth/models/kala_user.dart';
 import 'package:kala/features/gallery/content/models/content.dart';
-import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/firebase_storage.dart';
 import 'package:kala/utils/firebase/firestore_update.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
@@ -41,8 +41,8 @@ class KalaUserContentBloc extends HasPaginationCubit<KalaUserContentState> {
   factory KalaUserContentBloc.mock() {
     return KalaUserContentBloc(
       kalaUserBloc: KalaUserBloc.mock(),
-      firebaseFirestore: firebaseConfig?.firestore,
-      customStorage: firebaseConfig?.storage,
+      firebaseFirestore: firebaseConfig.firestore,
+      customStorage: firebaseConfig.storage,
     )..setupUserContentPaginationCubit(FirebaseMocks().firebaseMockUser.uid);
   }
 
@@ -68,7 +68,7 @@ class KalaUserContentBloc extends HasPaginationCubit<KalaUserContentState> {
 
   static Content initialNewContent() => Content.fromMap(
         <String, dynamic>{
-          'artistID': firebaseConfig?.auth.currentUser?.uid,
+          'artistID': firebaseConfig.auth.currentUser?.uid,
         },
       );
 
@@ -135,7 +135,7 @@ class KalaUserContentBloc extends HasPaginationCubit<KalaUserContentState> {
   void setupUserContentPaginationCubit([String? customUid]) {
     paginationCubit = PaginationCubit.userContentPagination(
       customUid ??
-          firebaseConfig?.auth.currentUser?.uid ??
+          firebaseConfig.auth.currentUser?.uid ??
           kalaUserBloc.state.uid,
     );
     if (firebaseFirestore != null) {
