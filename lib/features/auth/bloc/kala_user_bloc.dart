@@ -7,12 +7,11 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-
-import 'package:kala/auth/models/kala_user.dart';
-import 'package:kala/auth/social_integration/auth_types.dart';
-import 'package:kala/auth/social_integration/google.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
+import 'package:kala/features/auth/models/kala_user.dart';
+import 'package:kala/features/auth/social_integration/auth_types.dart';
+import 'package:kala/features/auth/social_integration/google.dart';
 import 'package:kala/main.dart';
 
 class KalaUserBloc extends Cubit<KalaUser> {
@@ -138,11 +137,6 @@ class KalaUserBloc extends Cubit<KalaUser> {
   }
 
   Future<void> authenticateWithSocialAuth(String authType) async {
-    if (isTestMode) {
-      await mockAuthentication(authType);
-      return;
-    }
-
     switch (authType) {
       case AuthTypes.google:
         await signInWithGoogle();

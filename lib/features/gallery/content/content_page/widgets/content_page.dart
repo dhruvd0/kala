@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kala/gallery/content/bloc/content_bloc.dart';
-import 'package:kala/gallery/content/models/content.dart';
-import 'package:kala/gallery/content/widgets/content_card.dart';
-import 'package:kala/gallery/content/widgets/content_image.dart';
+import 'package:kala/features/gallery/content/bloc/content_bloc.dart';
+import 'package:kala/features/gallery/content/models/content.dart';
+import 'package:kala/features/gallery/content/widgets/content_card.dart';
+import 'package:kala/features/gallery/content/widgets/content_image.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 class ContentPage extends StatelessWidget {
@@ -33,7 +33,9 @@ class ContentPage extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.only(left: 10),
-                child:  ContentDescription(content: content,),
+                child: ContentDescription(
+                  content: content,
+                ),
               ),
             ],
           ),

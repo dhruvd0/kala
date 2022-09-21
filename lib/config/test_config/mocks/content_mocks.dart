@@ -6,9 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart'
     show FakeFirebaseFirestore;
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:kala/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
-import 'package:kala/gallery/content/models/content.dart';
+import 'package:kala/features/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
+import 'package:kala/features/gallery/content/models/content.dart';
 import 'package:kala/main.dart';
 
 class ContentMock {

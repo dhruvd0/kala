@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/utils/widgets/buttons/curved_mono_button.dart';
 
 class SocialAuthButton extends StatelessWidget {

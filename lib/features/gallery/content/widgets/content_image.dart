@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/config/colors/basic_colors.dart';
-import 'package:kala/gallery/content/bloc/content_bloc.dart';
-import 'package:kala/gallery/content/models/content.dart';
+import 'package:kala/features/gallery/content/bloc/content_bloc.dart';
+import 'package:kala/features/gallery/content/models/content.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 
 // ignore: must_be_immutable

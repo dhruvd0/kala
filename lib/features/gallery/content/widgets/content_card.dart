@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:kala/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
-import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/size/size.dart';
 import 'package:kala/config/theme/theme.dart';
-import 'package:kala/gallery/content/bloc/content_bloc.dart';
-import 'package:kala/gallery/content/models/content.dart';
-import 'package:kala/gallery/content/widgets/content_image.dart';
-import 'package:kala/gallery/content/widgets/empty_content.dart';
-import 'package:kala/gallery/content/widgets/keys.dart';
+import 'package:kala/features/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
+import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
+import 'package:kala/features/gallery/content/bloc/content_bloc.dart';
+import 'package:kala/features/gallery/content/models/content.dart';
+import 'package:kala/features/gallery/content/widgets/content_image.dart';
+import 'package:kala/features/gallery/content/widgets/empty_content.dart';
+import 'package:kala/features/gallery/content/widgets/keys.dart';
 
 class ContentCard extends StatelessWidget {
   const ContentCard({Key? key, required this.content}) : super(key: key);

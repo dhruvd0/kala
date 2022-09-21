@@ -3,27 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
-import 'package:kala/artist_page/bloc/kala_user_content_state.dart';
-import 'package:kala/artist_page/widgets/bio.dart';
-import 'package:kala/artist_page/widgets/cover/cover_widget.dart';
-import 'package:kala/artist_page/widgets/keys/artist_page/artist_page_keys.dart';
-import 'package:kala/artist_page/widgets/keys/artist_page/gallery_grid.dart';
-import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
-
+import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
+import 'package:kala/features/artist_page/bloc/kala_user_content_state.dart';
+import 'package:kala/features/artist_page/widgets/bio.dart';
+import 'package:kala/features/artist_page/widgets/cover/cover_widget.dart';
+import 'package:kala/features/artist_page/widgets/keys/artist_page/artist_page_keys.dart';
+import 'package:kala/features/artist_page/widgets/keys/artist_page/gallery_grid.dart';
+import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/main.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 class ArtistPage extends StatelessWidget {
   const ArtistPage({
     Key? key,
-
-
-  }) : super(key: key, );
-
-
+  }) : super(
+          key: key,
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +53,6 @@ class ArtistPage extends StatelessWidget {
       ),
       scaffoldKey: const ValueKey(ScaffoldKeys.artistPageKey),
       enablePageNavigationArrows: true,
-      
       centerTitle: BlocProvider.of<KalaUserBloc>(context).state.name,
       body: SingleChildScrollView(
         child: Column(

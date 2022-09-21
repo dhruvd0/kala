@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kala/acquires_page/widgets/acquires_page.dart';
-import 'package:kala/artist_page/widgets/artist_page.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
-import 'package:kala/dashboard/bloc/dashboard_page_bloc.dart';
-
-import 'package:kala/gallery/widgets/page/gallery_page.dart';
+import 'package:kala/features/acquires_page/acquires_page.dart';
+import 'package:kala/features/artist_page/widgets/artist_page.dart';
+import 'package:kala/features/dashboard/bloc/dashboard_page_bloc.dart';
+import 'package:kala/features/gallery/widgets/page/gallery_page.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);

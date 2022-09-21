@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/config/colors/basic_colors.dart';
 import 'package:kala/config/theme/theme.dart';
 import 'package:kala/config/widget_keys/nav_keys.dart';
-import 'package:kala/dashboard/bloc/dashboard_page_bloc.dart';
+import 'package:kala/features/dashboard/bloc/dashboard_page_bloc.dart';
 
 class OffWhiteScaffold extends StatelessWidget {
   OffWhiteScaffold({

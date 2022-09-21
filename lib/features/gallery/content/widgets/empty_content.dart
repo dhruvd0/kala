@@ -2,12 +2,12 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
-import 'package:kala/artist_page/add_new_content/widgets/add_new_content_sheet.dart';
-import 'package:kala/artist_page/add_new_content/widgets/keys/add_new_content_widget_keys.dart';
-import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/config/nav/route_names.dart';
-import 'package:kala/gallery/content/models/content.dart';
+import 'package:kala/features/artist_page/add_new_content/bloc/add_new_content_bloc.dart';
+import 'package:kala/features/artist_page/add_new_content/widgets/add_new_content_sheet.dart';
+import 'package:kala/features/artist_page/add_new_content/widgets/keys/add_new_content_widget_keys.dart';
+import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
+import 'package:kala/features/gallery/content/models/content.dart';
 import 'package:kala/utils/io/scan_image.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 

@@ -7,13 +7,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:kala/artist_page/bloc/kala_user_content_state.dart';
-import 'package:kala/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/auth/models/kala_user.dart';
-
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
-import 'package:kala/gallery/content/models/content.dart';
+import 'package:kala/features/artist_page/bloc/kala_user_content_state.dart';
+import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/auth/models/kala_user.dart';
+import 'package:kala/features/gallery/content/models/content.dart';
 import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/firebase_storage.dart';
 import 'package:kala/utils/firebase/firestore_update.dart';
@@ -67,12 +66,9 @@ class KalaUserContentBloc extends HasPaginationCubit<KalaUserContentState> {
     super.onChange(change);
   }
 
-
   static Content initialNewContent() => Content.fromMap(
         <String, dynamic>{
-          'artistID': isTestMode
-              ? FirebaseMocks().firebaseMockUser.uid
-              : firebaseConfig?.auth.currentUser?.uid,
+          'artistID': firebaseConfig?.auth.currentUser?.uid,
         },
       );
 
@@ -167,7 +163,7 @@ class KalaUserContentBloc extends HasPaginationCubit<KalaUserContentState> {
 
       emit(kalaUserContentState);
       setupUserContentPaginationCubit();
-      
+
       if (userContent?.isEmpty ?? false) {
         getUserContent(
           2,

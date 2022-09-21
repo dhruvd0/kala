@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kala/auth/models/kala_user.dart';
-import 'package:kala/auth/social_integration/auth_types.dart';
+import 'package:kala/features/auth/models/kala_user.dart';
+import 'package:kala/features/auth/social_integration/auth_types.dart';
 
 Future<KalaUser?> signInWithGoogle() async {
   // Trigger the authentication flow

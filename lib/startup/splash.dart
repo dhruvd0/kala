@@ -4,10 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
-import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
+import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
+import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/main.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 

@@ -6,9 +6,7 @@ abstract class DashboardPageEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
-class NextPage extends DashboardPageEvent{
 
-}
-class PreviousPage extends DashboardPageEvent{
+class NextPage extends DashboardPageEvent {}
 
-}
+class PreviousPage extends DashboardPageEvent {}

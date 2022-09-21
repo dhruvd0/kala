@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/auth/models/kala_user.dart';
-
-import 'package:kala/auth/social_integration/auth_types.dart';
-import 'package:kala/auth/widgets/auth_btn.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
+import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/auth/models/kala_user.dart';
+import 'package:kala/features/auth/social_integration/auth_types.dart';
+import 'package:kala/features/auth/widgets/auth_btn.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 class AuthPage extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/config/test_config/mocks/content_mocks.dart';
+import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 int length = 10;

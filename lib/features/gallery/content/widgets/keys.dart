@@ -1,4 +1,4 @@
-import 'package:kala/gallery/content/models/content.dart';
+import 'package:kala/features/gallery/content/models/content.dart';
 
 class ContentCardKey {
   static String key(ContentViewMode mode, String docID) {

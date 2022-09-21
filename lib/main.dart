@@ -11,24 +11,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
-import 'package:kala/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
-
+import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
+import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/firebase_options.dart';
-import 'package:kala/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/startup/splash.dart';
 
 FirebaseConfig? firebaseConfig;
 
-bool isTestMode = true;
 Future<void> main({FirebaseConfig? mockFirebase}) async {
-  if (kReleaseMode) {
-    isTestMode = false;
-  }
   await runZonedGuarded<Future<void>>(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +32,7 @@ Future<void> main({FirebaseConfig? mockFirebase}) async {
 
       runApp(const KalaApp());
     },
-    (error, stack) => isTestMode || kIsWeb
+    (error, stack) => kDebugMode || kIsWeb
         ? log(error.toString(), stackTrace: stack)
         : FirebaseCrashlytics.instance.recordError(error, stack),
   );
@@ -45,7 +40,6 @@ Future<void> main({FirebaseConfig? mockFirebase}) async {
 
 Future<void> setupFirebase(FirebaseConfig? mockFirebase) async {
   if (mockFirebase == null) {
-    isTestMode = false;
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -58,7 +52,6 @@ Future<void> setupFirebase(FirebaseConfig? mockFirebase) async {
     await firebaseConfig?.remoteConfig.fetchAndActivate();
   } else {
     firebaseConfig = mockFirebase;
-    isTestMode = true;
   }
 }
 
@@ -66,9 +59,7 @@ Future<void> setupCrashlytics() async {
   if (kIsWeb) {
     return;
   }
-  if (isTestMode) {
-    return;
-  }
+
   if (kDebugMode) {
     // Force disable Crashlytics collection while doing every day development.
     // Temporarily toggle this to true if you want to test crash reporting in

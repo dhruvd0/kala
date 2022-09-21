@@ -6,10 +6,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart';
-import 'package:kala/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
-import 'package:kala/config/test_config/mocks/firebase_mocks.dart';
-import 'package:kala/gallery/content/models/content.dart';
+import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
+import 'package:kala/features/gallery/content/models/content.dart';
 import 'package:kala/main.dart';
 import 'package:kala/utils/firebase/firebase_storage.dart';
 import 'package:kala/utils/firebase/firestore_update.dart';
@@ -63,9 +62,7 @@ class AddNewContentCubit extends Cubit<Content> {
     if (state.artistName.isEmpty) {
       emit(
         state.copyWith(
-          artistName: isTestMode
-              ? FirebaseMocks().firebaseMockUser.displayName
-              : kalaUserContent.kalaUserBloc.state.name,
+          artistName: kalaUserContent.kalaUserBloc.state.name,
         ),
       );
     }

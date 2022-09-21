@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:kala/gallery/content/models/content.dart';
+import 'package:kala/features/gallery/content/models/content.dart';
 
 @immutable
 class KalaUserContentState extends Equatable {
