@@ -156,7 +156,7 @@ class _AddNewContentSheetState extends State&lt;AddNewContentSheet&gt; {
                               collectionSegment: CollectionSegment.previous,
                             ),
                           );
-                          await BlocProvider.of&lt;KalaUserContentBloc&gt;(
+                          await BlocProvider.of&lt;KalaUserBloc&gt;(
                             context,
                             listen: false,
                           ).getUserContent(
@@ -164,7 +164,7 @@ class _AddNewContentSheetState extends State&lt;AddNewContentSheet&gt; {
                             collectionSegment: CollectionSegment.previous,
                           );
                           if (mounted) {
-                            BlocProvider.of&lt;KalaUserContentBloc&gt;(
+                            BlocProvider.of&lt;KalaUserBloc&gt;(
                               context,
                               listen: false,
                             ).toggleEditMode(forceToggle: false);

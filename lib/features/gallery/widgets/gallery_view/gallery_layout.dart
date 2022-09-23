@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kala/config/size/size.dart';
-import 'package:kala/features/artist_page/widgets/keys/artist_page/gallery_grid.dart';
+import 'package:kala/features/gallery/widgets/gallery_view/gallery_grid.dart';
 import 'package:kala/features/gallery/widgets/gallery_view/gallery_scroll.dart';
 
 class GalleryLayout extends StatelessWidget {
@@ -11,7 +11,7 @@ class GalleryLayout extends StatelessWidget {
     return Container(
       child: SizeUtils.isMobileSize()
           ? const GalleryScroll()
-          : const Center(
+          :  Center(
               child: GalleryGridView(),
             ),
     );

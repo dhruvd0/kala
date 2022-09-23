@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/utils/widgets/buttons/curved_mono_button.dart';
 
 class SocialAuthButton extends StatelessWidget {
@@ -10,14 +11,14 @@ class SocialAuthButton extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final String authType;
+  final AuthTypes authType;
 
   @override
   Widget build(BuildContext context) {
     return RectMonoButton(
       height: 50.h,
       width: 1.sw / 1.8,
-      text: 'Log In With $authType ',
+      text: 'Log In With ${authType.name} ',
       key: ValueKey('${authType}AuthBtn'),
       margin: EdgeInsets.symmetric(vertical: 20.h),
       onTap: () {

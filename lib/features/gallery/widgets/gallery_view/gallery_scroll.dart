@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_state.dart';
-import 'package:kala/features/gallery/content/widgets/content_card.dart';
+import 'package:kala/features/gallery/art/widgets/art_card.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class GalleryScroll extends StatefulWidget {
@@ -24,7 +24,7 @@ class _GalleryScrollState extends State<GalleryScroll> {
       scrollController.addListener(() {
         if (scrollController.hasClients) {
           if (scrollController.offset / 300 > 5) {
-            context.read<GalleryBloc>().getContentList(
+            context.read<GalleryBloc>().getArtList(
                   scrollController.offset.toInt(),
                   collectionSegment: CollectionSegment.next,
                 );
@@ -38,7 +38,7 @@ class _GalleryScrollState extends State<GalleryScroll> {
   Widget build(BuildContext context) {
     return BlocBuilder<GalleryBloc, GalleryState>(
       builder: (context, state) {
-        if (state.contentSlideList.isEmpty) {
+        if (state.artSlideList.isEmpty) {
           return Container();
         }
 
@@ -47,12 +47,12 @@ class _GalleryScrollState extends State<GalleryScroll> {
           addSemanticIndexes: false,
           semanticChildCount: 0,
           controller: scrollController,
-          itemCount: state.contentSlideList.length,
+          itemCount: state.artSlideList.length,
           physics: const BouncingScrollPhysics(),
           itemBuilder: (_, index) {
-            return ContentCard(
-              key: ValueKey(state.contentSlideList[index].docID),
-              content: state.contentSlideList[index],
+            return ArtCard(
+              key: ValueKey(state.artSlideList[index].docID),
+              art: state.artSlideList[index],
             );
           },
         );

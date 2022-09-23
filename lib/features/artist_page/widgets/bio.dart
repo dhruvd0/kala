@@ -2,12 +2,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/config/register_singletons.dart';
+import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/remote_config_data.dart';
 import 'package:kala/config/theme/theme.dart';
-import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
-import 'package:kala/features/artist_page/bloc/kala_user_content_state.dart';
-import 'package:kala/features/artist_page/widgets/keys/artist_page/artist_page_keys.dart';
+
+import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 
 class BioWidget extends StatefulWidget {
   const BioWidget({Key? key}) : super(key: key);
@@ -21,9 +20,9 @@ class _BioWidgetState extends State<BioWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KalaUserContentBloc, KalaUserContentState>(
+    return BlocBuilder<KalaUserBloc, KalaUserState>(
       builder: (context, userState) {
-        return userState.isEditMode
+        return userState.kalaUser.isEditMode
             ? AnimatedContainer(
                 duration: const Duration(seconds: 10),
                 curve: Curves.ease,
@@ -38,7 +37,6 @@ class _BioWidgetState extends State<BioWidget> {
                   child: Container(
                     padding: activeTextField ? const EdgeInsets.all(5) : null,
                     child: TextField(
-                      key: const ValueKey(ArtistPageKeys.editBioKey),
                       onTap: () {
                         setState(() {
                           activeTextField = true;
@@ -61,7 +59,7 @@ class _BioWidgetState extends State<BioWidget> {
                         border: InputBorder.none,
                       ),
                       onChanged: (str) {
-                        BlocProvider.of<KalaUserContentBloc>(
+                        BlocProvider.of<KalaUserBloc>(
                           context,
                         ).changeBio(str);
                       },
@@ -72,8 +70,7 @@ class _BioWidgetState extends State<BioWidget> {
             : Container(
                 margin: const EdgeInsets.only(left: 22, right: 22),
                 child: AutoSizeText(
-                  userState.bio,
-                  key: const ValueKey(ArtistPageKeys.bioKey),
+                  userState.kalaUser.bio,
                   style: TextThemeContext(context).bodyText1,
                 ),
               );

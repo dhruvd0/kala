@@ -6,5 +6,5 @@ class Routes {
 
   static const String dashboard = '/dashboard';
 
-  static const String contentPage = '/content-page';
+  static const String artPage = '/art-page';
 }

@@ -7,12 +7,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/figma/consts.dart';
-import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/nav/router.dart';
-import 'package:kala/config/register_singletons.dart';
 import 'package:kala/config/theme/theme.dart';
-import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/firebase_options.dart';
@@ -27,8 +25,8 @@ Future<void> main() async {
       );
 
       await setupCrashlytics();
-      await injectDependencies();
-      print(firebaseConfig.toString());
+      await registerDependencies();
+
       runApp(const KalaApp());
     },
     (error, stack) => kDebugMode || kIsWeb
@@ -69,22 +67,8 @@ class KalaApp extends StatelessWidget {
       builder: (_, __) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(
-              lazy: false,
-              create: (context) => KalaUserBloc(),
-            ),
-            BlocProvider(
-              lazy: false,
-              create: (context) => GalleryBloc(
-                kalaUserBloc: context.read<KalaUserBloc>(),
-              ),
-            ),
-            BlocProvider(
-              lazy: false,
-              create: (context) => KalaUserContentBloc(
-                kalaUserBloc: context.read<KalaUserBloc>(),
-              ),
-            ),
+
+          
           ],
           child: MaterialApp(
             title: 'Kala',

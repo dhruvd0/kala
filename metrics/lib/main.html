@@ -107,7 +107,7 @@ class KalaApp extends StatelessWidget {
             ),
             BlocProvider(
               lazy: false,
-              create: (context) =&gt; KalaUserContentBloc(
+              create: (context) =&gt; KalaUserBloc(
                 kalaUserBloc: context.read&lt;KalaUserBloc&gt;(),
               ),
             ),

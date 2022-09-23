@@ -48,7 +48,7 @@ class EmptyContentCard extends StatelessWidget {
                             ),
                           ).then((value) {
                             final isInEditMode =
-                                !BlocProvider.of&lt;KalaUserContentBloc&gt;(
+                                !BlocProvider.of&lt;KalaUserBloc&gt;(
                               context,
                               listen: false,
                             ).state.isEditMode;

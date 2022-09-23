@@ -21,7 +21,7 @@ class ContentCard extends StatelessWidget {
     return BlocProvider(
       lazy: false,
       create: (_) =&gt; AddNewContentCubit(
-        kalaUserContent: context.read&lt;KalaUserContentBloc&gt;(),
+        kalaUserContent: context.read&lt;KalaUserBloc&gt;(),
       ),
       child: BlocBuilder&lt;ContentBloc, Content&gt;(
         key: UniqueKey(),

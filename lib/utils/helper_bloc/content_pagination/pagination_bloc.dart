@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/typedefs.dart';
 
-import 'package:kala/features/gallery/content/models/content.dart';
-import 'package:kala/utils/firebase/crashlytics.dart';
-import 'package:kala/utils/firebase/firestore_get.dart';
-import 'package:kala/utils/firebase/page_data.dart';
+import 'package:kala/features/gallery/art/models/art.dart';
+import 'package:kala/services/firebase/crashlytics.dart';
+import 'package:kala/services/firebase/firestore_get.dart';
+import 'package:kala/services/firebase/page_data.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class PaginationCubit extends Cubit<PaginationRequestState> {
@@ -30,21 +30,21 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
           ),
         );
 
-  factory PaginationCubit.galleryContentPagination() {
+  factory PaginationCubit.galleryArtPagination() {
     return PaginationCubit(
-      collection: FirestorePaths.contentCollection,
+      collection: firestorePaths.art,
       orderIsDescending: true,
-      dataFromMap: Content.fromMap,
+      dataFromMap: Art.fromMap,
       orderByField: 'uploadTimestamp',
     );
   }
 
-  factory PaginationCubit.userContentPagination(String uid) {
+  factory PaginationCubit.userArtPagination(String uid) {
     return PaginationCubit(
-      collection: FirestorePaths.contentCollection,
+      collection: firestorePaths.user,
       orderIsDescending: true,
       orderByField: 'uploadTimestamp',
-      dataFromMap: Content.fromMap,
+      dataFromMap: Art.fromMap,
       whereQueryEquals: {'artistID': uid},
     );
   }
@@ -62,8 +62,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       return <dynamic>[];
     }
     emit(state.copyWith(scrollPosition: scrollPosition));
-    final response = await FirestoreQueries(firestore: firebaseFirestore)
-        .paginateCollectionDocuments(
+    final response = await FirestoreQueries().paginateCollectionDocuments(
       firestorePageRequest,
       collectionSegment: segment,
     );
@@ -98,12 +97,12 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
   }
 
   List<dynamic> parseTListFromFirestoreResponse(List<dynamic> args) {
-    final newContentList = <dynamic>[];
+    final newArtList = <dynamic>[];
     final response = args.first as FirestorePageResponse;
     for (final jsonElement in response.currentJsonList) {
       try {
         assert(jsonElement.containsKey('docID'));
-        newContentList.add(dataFromMap(jsonElement));
+        newArtList.add(dataFromMap(jsonElement));
         // ignore: avoid_catching_errors
       } on AssertionError {
         setCrashlyticsCustomKey('doc', jsonElement)
@@ -111,15 +110,15 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       }
     }
     final currentList = args.last as List<dynamic>;
-    if (newContentList.isNotEmpty && currentList.isNotEmpty) {
-      newContentList.removeWhere(
+    if (newArtList.isNotEmpty && currentList.isNotEmpty) {
+      newArtList.removeWhere(
         (dynamic newE) => currentList.any(
           (dynamic element) => newE == element,
         ),
       );
     }
 
-    return newContentList;
+    return newArtList;
   }
 
   List<dynamic> validateAndEmitData(

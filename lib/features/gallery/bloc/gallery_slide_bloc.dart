@@ -3,40 +3,29 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
-
-import 'package:kala/features/auth/models/kala_user.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_state.dart';
-import 'package:kala/features/gallery/content/models/content.dart';
+import 'package:kala/features/gallery/art/models/art.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
+
 class GalleryBloc extends HasPaginationCubit<GalleryState> {
-  GalleryBloc({
-    required KalaUserBloc kalaUserBloc,
-  }) : super(
+  GalleryBloc()
+      : super(
           const GalleryState(
-            contentSlideList: [],
+            artSlideList: [],
           ),
-          paginationCubit: PaginationCubit.galleryContentPagination(),
+          paginationCubit: PaginationCubit.galleryArtPagination(),
         ) {
-    kalaUserStateStream =
-        kalaUserBloc.stream.asBroadcastStream().listen((state) {
-      if (state.kalaUserState == KalaUserState.authenticated) {
-        getContentList(
-          0,
-          collectionSegment: CollectionSegment.initial,
-        );
-      }
-    });
-  }
-
-  StreamSubscription<KalaUser>? kalaUserStateStream;
-
-  @override
-  Future<void> close() async {
-    await kalaUserStateStream?.cancel();
-    return super.close();
+    // kalaUserStateStream =
+    //     kalaUserBloc.stream.asBroadcastStream().listen((state) {
+    //   if (state.kalaUserState == UserAuthState.authenticated) {
+    //     getArtList(
+    //       0,
+    //       collectionSegment: CollectionSegment.initial,
+    //     );
+    //   }
+    // });
   }
 
   @override
@@ -44,20 +33,19 @@ class GalleryBloc extends HasPaginationCubit<GalleryState> {
     super.onChange(change);
   }
 
-  Future<void> getContentList(
+  Future<void> getArtList(
     int scrollPosition, {
     required CollectionSegment collectionSegment,
   }) async {
-    final newGalleryContent = await paginationCubit.getTList(
+    final newGalleryArt = await paginationCubit.getTList(
       scrollPosition,
       segment: collectionSegment,
     );
 
-    if (newGalleryContent.isNotEmpty) {
+    if (newGalleryArt.isNotEmpty) {
       emit(
         state.copyWith(
-          contentSlideList:
-              newGalleryContent.map((dynamic e) => e as Content).toList(),
+          artSlideList: newGalleryArt.map((dynamic e) => e as Art).toList(),
           lastFetchedTimestamp: Timestamp.now(),
         ),
       );

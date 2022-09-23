@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:kala/features/gallery/content/models/content.dart';
+import 'package:kala/features/gallery/art/models/art.dart';
 
 @immutable
 class GalleryState {
   const GalleryState({
-    required this.contentSlideList,
+    required this.artSlideList,
   });
 
-  final List<Content> contentSlideList;
+  final List<Art> artSlideList;
 
   @override
   bool operator ==(Object other) {
@@ -18,21 +18,21 @@ class GalleryState {
     }
 
     return other is GalleryState &&
-        listEquals(other.contentSlideList, contentSlideList);
+        listEquals(other.artSlideList, artSlideList);
   }
 
   @override
   int get hashCode {
-    return contentSlideList.hashCode;
+    return artSlideList.hashCode;
   }
 
   GalleryState copyWith({
-    List<Content>? contentSlideList,
+    List<Art>? artSlideList,
     DocumentSnapshot? lastDocument,
     Timestamp? lastFetchedTimestamp,
   }) {
     return GalleryState(
-      contentSlideList: contentSlideList ?? this.contentSlideList,
+      artSlideList: artSlideList ?? this.artSlideList,
     );
   }
 }

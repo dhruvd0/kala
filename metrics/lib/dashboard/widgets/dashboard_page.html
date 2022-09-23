@@ -82,7 +82,7 @@ class _DashboardState extends State&lt;Dashboard&gt; {
     final galleryBloc = BlocProvider.of&lt;GalleryBloc&gt;(context, listen: false);
     await Future.doWhile(() {
       final isDataLoaded = galleryBloc.state.contentSlideList.isNotEmpty &amp;&amp;
-          BlocProvider.of&lt;KalaUserContentBloc&gt;(context, listen: false)
+          BlocProvider.of&lt;KalaUserBloc&gt;(context, listen: false)
                   .state
                   .userContent !=
               null;

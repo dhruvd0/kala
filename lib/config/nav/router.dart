@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/features/auth/widgets/auth_page.dart';
 import 'package:kala/features/dashboard/widgets/dashboard_page.dart';
-import 'package:kala/features/gallery/content/bloc/content_bloc.dart';
-import 'package:kala/features/gallery/content/content_page/widgets/content_page.dart';
+import 'package:kala/features/gallery/art/art_page/widgets/content_page.dart';
+import 'package:kala/features/gallery/art/bloc/art_bloc.dart';
 import 'package:kala/startup/splash.dart';
 
 class NavigationController {
@@ -27,11 +27,11 @@ class NavigationController {
         return const AuthPage();
       case Routes.dashboard:
         return const Dashboard();
-      case Routes.contentPage:
-        assert(bloc is ContentBloc);
-        return BlocProvider<ContentBloc>.value(
+      case Routes.artPage:
+        assert(bloc is ArtBloc);
+        return BlocProvider<ArtBloc>.value(
           value: bloc,
-          child: const ContentPage(),
+          child: const ArtPage(),
         );
       default:
         return const Splash();

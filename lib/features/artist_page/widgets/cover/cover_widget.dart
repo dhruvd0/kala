@@ -5,50 +5,51 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/config/register_singletons.dart';
+import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/remote_config_data.dart';
 import 'package:kala/config/theme/theme.dart';
-import 'package:kala/features/artist_page/bloc/kala_user_content_bloc.dart';
-import 'package:kala/features/artist_page/bloc/kala_user_content_state.dart';
-import 'package:kala/features/gallery/content/widgets/content_image.dart';
-import 'package:kala/utils/io/scan_image.dart';
 
-class CoverContent extends StatelessWidget {
-  const CoverContent({Key? key}) : super(key: key);
+import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/gallery/art/widgets/art_image.dart';
+import 'package:kala/services/io/scan_image.dart';
+
+class CoverArt extends StatelessWidget {
+  const CoverArt({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KalaUserContentBloc, KalaUserContentState>(
+    return BlocBuilder<KalaUserBloc, KalaUserState>(
       builder: (context, userState) {
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            border: !userState.isEditMode && (userState.coverContent is File) ||
-                    userState.isContentImageUrlValid()
+            border: !userState.kalaUser.isEditMode &&
+                        (userState.kalaUser.coverArt is File) ||
+                    userState.kalaUser.isArtImageUrlValid()
                 ? null
                 : Border.all(),
             color: Colors.transparent,
           ),
           margin: EdgeInsets.symmetric(horizontal: 40.w),
-          child: userState.isEditMode
-              ? const AddCoverContent()
-              : ContentImage(image: userState.coverContent),
+          child: userState.kalaUser.isEditMode
+              ? const AddCoverArt()
+              : ArtImage(image: userState.kalaUser.coverArt),
         );
       },
     );
   }
 }
 
-class AddCoverContent extends StatelessWidget {
-  const AddCoverContent({Key? key}) : super(key: key);
+class AddCoverArt extends StatelessWidget {
+  const AddCoverArt({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KalaUserContentBloc, KalaUserContentState>(
+    return BlocBuilder<KalaUserBloc, KalaUserState>(
       builder: (context, state) {
         return GestureDetector(
           onTap: () {
-            final bloc = BlocProvider.of<KalaUserContentBloc>(
+            final bloc = BlocProvider.of<KalaUserBloc>(
               context,
             );
             scanImage(context).then((value) {
@@ -71,8 +72,8 @@ class AddCoverContent extends StatelessWidget {
                   padding: EdgeInsets.only(left: 47.w, right: 37.w),
                   child: AutoSizeText(
                     firebaseConfig.remoteConfig.getString(
-                          RemoteConfigKeys.addNewContentPlaceholder,
-                        ) ,
+                      RemoteConfigKeys.addNewArtPlaceholder,
+                    ),
                     style: TextThemeContext(context).bodyText2,
                     textAlign: TextAlign.center,
                   ),

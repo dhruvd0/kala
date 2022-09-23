@@ -9,10 +9,10 @@ class ArtistNameContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KalaUserBloc, KalaUser>(
+    return BlocBuilder<KalaUserBloc, KalaUserState>(
       builder: (context, state) {
         return Text(
-          state.name,
+          state.kalaUser.name,
           style: TextThemeContext(context).headline1,
         );
       },

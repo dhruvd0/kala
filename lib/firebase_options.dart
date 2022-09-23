@@ -72,9 +72,9 @@ class DefaultFirebaseOptions {
     projectId: 'app-kala',
     storageBucket: 'app-kala.appspot.com',
     androidClientId:
-        '709816759828-gv3mu2491jn23dcb22bo8gf5rue6lmbl.apps.googleusercontent.com',
+        '709816759828-gv3mu2491jn23dcb22bo8gf5rue6lmbl.apps.googleuserart.com',
     iosClientId:
-        '709816759828-5im6bfm7ui6s03big28m1oin8k1jgm9u.apps.googleusercontent.com',
+        '709816759828-5im6bfm7ui6s03big28m1oin8k1jgm9u.apps.googleuserart.com',
     iosBundleId: 'kala.app',
   );
 }

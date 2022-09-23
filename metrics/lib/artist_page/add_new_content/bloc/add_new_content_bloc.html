@@ -30,7 +30,7 @@ class AddNewContentCubit extends Cubit&lt;Content&gt; {
 
   factory AddNewContentCubit.mock() {
     return AddNewContentCubit(
-      kalaUserContent: KalaUserContentBloc.mock(),
+      kalaUserContent: KalaUserBloc.mock(),
       firebaseFirestore: firebaseConfig?.firestore,
       customStorage: firebaseConfig?.storage,
     );
@@ -38,7 +38,7 @@ class AddNewContentCubit extends Cubit&lt;Content&gt; {
 
   FirebaseStorage? customStorage;
   FirebaseFirestore? firebaseFirestore;
-  final KalaUserContentBloc kalaUserContent;
+  final KalaUserBloc kalaUserContent;
 
   Future&lt;String&gt; uploadImageAndGetUrl(
     String contentStoragePath,
