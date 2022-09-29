@@ -133,7 +133,6 @@ class _AddNewArtSheetState extends State<AddNewArtSheet> {
                 else
                   RectMonoButton(
                     text: 'LETS GO',
-
                     onTap: () {
                       if (AddNewArtSheet.formKey.currentState?.validate() ??
                           false) {

@@ -4,19 +4,18 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kala/features/auth/models/kala_user.dart';
 
 enum AuthTypes {
   google('Google'),
   instagram('Instagram'),
   facebook('Facebook');
 
-  final String name;
   const AuthTypes(this.name);
+  final String name;
 }
 
 class SocialSignIn {
-  Future<Either<FirebaseAuthException, KalaUser>> signInWithGoogle() async {
+  Future<Either<FirebaseAuthException, User>> signInWithGoogle() async {
     // Trigger the authentication flow
 
     try {
@@ -35,14 +34,11 @@ class SocialSignIn {
       final userCredential = kIsWeb
           ? await getGoogleAuthProviderForWeb()
           : await FirebaseAuth.instance.signInWithCredential(credential);
-      return right(
-        KalaUser.fromSocialAuthUser(
-          userCredential.user!,
-          authType: AuthTypes.google.name,
-        ),
+      return Right(
+        userCredential.user!,
       );
     } on FirebaseAuthException catch (e) {
-      return left(e);
+      return Left(e);
     }
   }
 

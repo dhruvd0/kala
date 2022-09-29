@@ -4,41 +4,29 @@ import 'package:equatable/equatable.dart';
 import 'package:kala/features/auth/models/kala_user.dart';
 
 abstract class KalaUserState extends Equatable {
-  final KalaUser kalaUser;
-  const KalaUserState({
-    required this.kalaUser,
-  });
   @override
-  // TODO: implement props
-  List<Object?> get props => [kalaUser];
+  List<Object?> get props => [];
 }
 
-class InitialKalaUserState extends KalaUserState {
-  const InitialKalaUserState()
-      : super(
-          kalaUser: const KalaUser(
-            name: '',
-            authType: '',
-            photoURL: '',
-            contactURL: '',
-            lastSignIn: null,
-            uid: '',
-            bio: '',
-          ),
-        );
-}
+class InitialKalaUserState extends KalaUserState {}
 
 class AuthenticatedKalaUserState extends KalaUserState {
-  const AuthenticatedKalaUserState({required KalaUser kalaUser})
-      : super(kalaUser: kalaUser);
+  final String uid;
+  AuthenticatedKalaUserState(this.uid);
 }
 
-class KalaUserLoadingState extends KalaUserState {
-  KalaUserLoadingState()
-      : super(kalaUser: const InitialKalaUserState().kalaUser);
+class FetchedKalaUserState extends KalaUserState {
+  final KalaUser kalaUser;
+  FetchedKalaUserState(this.kalaUser);
 }
+
+class KalaUserLoadingState extends KalaUserState {}
+
 class KalaUserErrorState extends KalaUserState {
   final String message;
-  KalaUserErrorState(this.message)
-      : super(kalaUser: const InitialKalaUserState().kalaUser);
+  KalaUserErrorState(this.message);
+}
+
+extension StateTypeCasts on KalaUserState {
+  FetchedKalaUserState get fetchedKalaUser => this as FetchedKalaUserState;
 }

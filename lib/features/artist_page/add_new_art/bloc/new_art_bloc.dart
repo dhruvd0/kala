@@ -35,7 +35,7 @@ class NewArtCubit extends Cubit<Art> {
   Future<void> editNewArt(ArtProps artProp, dynamic data) async {
     assert(data != null);
     if (state.artistName.isEmpty) {
-      ///TODO:Artist name
+      // TODO(dhruv): Artist name
       emit(
         state.copyWith(
           artistName: 'name',
@@ -108,7 +108,7 @@ class NewArtCubit extends Cubit<Art> {
   }
 
   Future<void> addNewArt() async {
-    ///TODO: artist id
+    // TODO(dhruv): artist id
     // if (state.artistID.isEmpty) {
     //   emit(state.copyWith(artistID: kalaUserArt.kalaUserBloc.state.uid));
     // }

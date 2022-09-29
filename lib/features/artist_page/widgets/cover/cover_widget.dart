@@ -23,17 +23,17 @@ class CoverArt extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            border: !userState.kalaUser.isEditMode &&
-                        (userState.kalaUser.coverArt is File) ||
-                    userState.kalaUser.isArtImageUrlValid()
+            border: !userState.fetchedKalaUser.kalaUser.isEditMode &&
+                        (userState.fetchedKalaUser.kalaUser.coverArt is File) ||
+                    userState.fetchedKalaUser.kalaUser.isArtImageUrlValid()
                 ? null
                 : Border.all(),
             color: Colors.transparent,
           ),
           margin: EdgeInsets.symmetric(horizontal: 40.w),
-          child: userState.kalaUser.isEditMode
+          child: userState.fetchedKalaUser.kalaUser.isEditMode
               ? const AddCoverArt()
-              : ArtImage(image: userState.kalaUser.coverArt),
+              : ArtImage(image: userState.fetchedKalaUser.kalaUser.coverArt),
         );
       },
     );

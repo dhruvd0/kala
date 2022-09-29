@@ -22,7 +22,7 @@ class _BioWidgetState extends State<BioWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<KalaUserBloc, KalaUserState>(
       builder: (context, userState) {
-        return userState.kalaUser.isEditMode
+        return userState.fetchedKalaUser.kalaUser.isEditMode
             ? AnimatedContainer(
                 duration: const Duration(seconds: 10),
                 curve: Curves.ease,
@@ -70,7 +70,7 @@ class _BioWidgetState extends State<BioWidget> {
             : Container(
                 margin: const EdgeInsets.only(left: 22, right: 22),
                 child: AutoSizeText(
-                  userState.kalaUser.bio,
+                  userState.fetchedKalaUser.kalaUser.bio,
                   style: TextThemeContext(context).bodyText1,
                 ),
               );

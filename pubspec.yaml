@@ -30,6 +30,7 @@ dependencies:
   animated_text_kit: ^4.2.2
   auto_size_text: ^3.0.0
   bloc: ^8.1.0
+  bloc_test: ^9.1.0
   cloud_firestore: ^3.4.9
   cupertino_icons: ^1.0.5
   dartz: ^0.10.1
@@ -86,6 +87,7 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
+  uuid: ^3.0.6
   very_good_analysis: ^3.0.2
 
 # For information on the generic Dart part of this file, see the

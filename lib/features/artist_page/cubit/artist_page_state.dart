@@ -1,9 +1,8 @@
 part of 'artist_page_cubit.dart';
 
 abstract class ArtistPageState extends Equatable {
-  final List<Art> userArt = [];
-
   ArtistPageState();
+  final List<Art> userArt = [];
 
   @override
   List<Object> get props => [];

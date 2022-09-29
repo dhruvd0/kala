@@ -5,14 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:kala/config/typedefs.dart';
 import 'package:kala/features/gallery/art/models/art.dart';
 
 class KalaUser extends Equatable {
-
-
   const KalaUser({
-
     required this.authType,
     required this.bio,
     required this.contactURL,
@@ -118,7 +114,6 @@ class KalaUser extends Equatable {
     String? uid,
   }) {
     return KalaUser(
-    
       authType: authType ?? this.authType,
       bio: bio ?? this.bio,
       contactURL: contactURL ?? this.contactURL,

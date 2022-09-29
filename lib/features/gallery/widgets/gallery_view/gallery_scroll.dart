@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kala/features/gallery/art/widgets/art_card.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_state.dart';
-import 'package:kala/features/gallery/art/widgets/art_card.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class GalleryScroll extends StatefulWidget {

@@ -7,6 +7,9 @@ part 'artist_page_state.dart';
 
 class ArtistPageCubit extends Cubit<ArtistPageState> {
   ArtistPageCubit() : super(ArtistPageInitial());
-
-  getUserArt(int i, {required CollectionSegment collectionSegment}) {}
+  // TODO(dhruv): implement this
+  Future<void> getUserArt(
+    int i, {
+    required CollectionSegment collectionSegment,
+  }) async {}
 }

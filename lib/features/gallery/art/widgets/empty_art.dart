@@ -28,7 +28,6 @@ class EmptyArtCard extends StatelessWidget {
       ),
       decoration: BoxDecoration(border: Border.all(width: 0.5)),
       child: BlocBuilder<NewArtCubit, Art>(
-
         builder: (context, state) {
           return GestureDetector(
             onTap: () {
@@ -48,9 +47,11 @@ class EmptyArtCard extends StatelessWidget {
                               child: const AddNewArtSheet(),
                             ),
                           ).then((value) {
-                            final isInEditMode = !BlocProvider.of<KalaUserBloc>(
-                              context,
-                            ).state.kalaUser.isEditMode;
+                            final isInEditMode =
+                                (BlocProvider.of<KalaUserBloc>(context).state
+                                        as FetchedKalaUserState)
+                                    .kalaUser
+                                    .isEditMode;
                             if (!isInEditMode) {
                               Navigator.pushReplacementNamed(
                                 context,

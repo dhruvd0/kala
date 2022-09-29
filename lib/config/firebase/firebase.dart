@@ -15,7 +15,6 @@ class FirebaseConfig {
   final FirebaseFirestore firestore;
   final FirebaseRemoteConfig remoteConfig;
   final FirebaseStorage storage;
-  
 
   FirebaseConfig copyWith({
     FirebaseAuth? auth,

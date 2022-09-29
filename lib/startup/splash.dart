@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
-import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
@@ -50,7 +49,8 @@ class _SplashState extends State<Splash> {
     final galleryBloc = BlocProvider.of<GalleryBloc>(context);
     await Future.doWhile(() {
       final isUserArtInitialized = galleryBloc.state.artSlideList.isNotEmpty;
-      /// TODO: load user art
+
+      // TODO(dhruv): load user art
       //  &&
       //     BlocProvider.of<KalaUserBloc>(context).state.userArt != null;
       return isUserArtInitialized;

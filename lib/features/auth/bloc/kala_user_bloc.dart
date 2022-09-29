@@ -8,14 +8,17 @@ import 'package:kala/features/auth/bloc/kala_user_state.dart';
 import 'package:kala/features/auth/models/kala_user.dart';
 import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/features/auth/repositories/user_collection.dart';
+import 'package:kala/services/firebase/firebase_error.dart';
 
 export 'kala_user_state.dart';
+
+KalaUserBloc get kalaUserBloc => getIt.get<KalaUserBloc>();
 
 class KalaUserBloc extends Cubit<KalaUserState> {
   KalaUserBloc({
     required this.socialSignIn,
     required this.userCollectionRepository,
-  }) : super(const InitialKalaUserState());
+  }) : super(InitialKalaUserState());
   final SocialSignIn socialSignIn;
   final UserCollectionRepository userCollectionRepository;
   @override
@@ -23,48 +26,59 @@ class KalaUserBloc extends Cubit<KalaUserState> {
     super.onError(error, stackTrace);
   }
 
-  Future<void> registerKalaUser(KalaUser kalaUser) async {
+  Future<void> registerKalaUser() async {
     (await userCollectionRepository.createKalaUser(
-      firebaseConfig.auth.currentUser!.uid,
-      kalaUser.toMap(),
+      firebaseConfig.auth.currentUser!,
+      AuthTypes.google.name,
     ))
         .fold(
-      (error) => KalaUserErrorState(error.message),
-      (timeCreated) => log(timeCreated.toString()),
+      (error) => emit(KalaUserErrorState(error.message)),
+      (timeCreated) {
+        log(timeCreated.toString());
+        emit(
+          FetchedKalaUserState(
+            KalaUser.fromSocialAuthUser(firebaseConfig.auth.currentUser!),
+          ),
+        );
+      },
     );
   }
 
   Future<void> getKalaUser() async {
-    (await userCollectionRepository
-            .getKalaUser(firebaseConfig.auth.currentUser!.uid))
-        .fold(
+    final either = await userCollectionRepository
+        .getKalaUser(firebaseConfig.auth.currentUser!.uid);
+    await either.fold(
       (error) async {
-        if (error.message == 'not registered') {
-          await registerKalaUser(state.kalaUser);
+        if (error is DocumentNotFound) {
+          await registerKalaUser();
           return;
         }
         emit(KalaUserErrorState(error.message));
       },
-      (kalaUser) => emit(AuthenticatedKalaUserState(kalaUser: kalaUser)),
+      (kalaUser) async {
+        emit(FetchedKalaUserState(kalaUser));
+      },
     );
   }
 
   Future<void> authenticateWithSocialAuth(AuthTypes authType) async {
-    (await socialSignIn.signInWithGoogle()).fold(
-      (l) => KalaUserErrorState(l.message!),
+    emit(KalaUserLoadingState());
+    final either = await socialSignIn.signInWithGoogle();
+
+    await either.fold(
+      (l) async => KalaUserErrorState(l.message!),
       (user) async {
+        emit(AuthenticatedKalaUserState(user.uid));
         await getKalaUser();
       },
     );
   }
 
   void changeBio(String str) {
-    ///TODO: change bio
+    // TODO(dhruv): change bio
   }
-
-
 
   void toggleEditMode({bool forceToggle = false}) {}
 
-  changeCover(File value) {}
+  void changeCover(File value) {}
 }

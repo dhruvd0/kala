@@ -8,9 +8,8 @@ import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/features/artist_page/widgets/bio.dart';
 import 'package:kala/features/artist_page/widgets/cover/cover_widget.dart';
-import 'package:kala/features/gallery/widgets/gallery_view/gallery_grid.dart';
-
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/gallery/widgets/gallery_view/gallery_grid.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 class ArtistPage extends StatelessWidget {
@@ -41,7 +40,7 @@ class ArtistPage extends StatelessWidget {
             return Container(
               margin: EdgeInsets.only(bottom: 5.h),
               child: Icon(
-                state.kalaUser.isEditMode
+                state.fetchedKalaUser.kalaUser.isEditMode
                     ? EvaIcons.eye
                     : FontAwesomeIcons.penToSquare,
                 color: Colors.black,
@@ -52,7 +51,9 @@ class ArtistPage extends StatelessWidget {
       ),
       scaffoldKey: const ValueKey(ScaffoldKeys.artistPageKey),
       enablePageNavigationArrows: true,
-      centerTitle: BlocProvider.of<KalaUserBloc>(context).state.kalaUser.name,
+      centerTitle: kalaUserBloc.state is FetchedKalaUserState
+          ? kalaUserBloc.state.fetchedKalaUser.kalaUser.name
+          : '',
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

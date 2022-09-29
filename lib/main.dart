@@ -11,8 +11,6 @@ import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/figma/consts.dart';
 import 'package:kala/config/nav/router.dart';
 import 'package:kala/config/theme/theme.dart';
-import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/firebase_options.dart';
 import 'package:kala/startup/splash.dart';
 
@@ -66,10 +64,7 @@ class KalaApp extends StatelessWidget {
       ),
       builder: (_, __) {
         return MultiBlocProvider(
-          providers: [
-
-          
-          ],
+          providers: const [],
           child: MaterialApp(
             title: 'Kala',
             theme: lightTheme,
