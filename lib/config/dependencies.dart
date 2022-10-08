@@ -15,8 +15,8 @@ final getIt = GetIt.instance;
 FirebaseConfig get firebaseConfig => getIt.get<FirebaseConfig>();
 Future<void> registerDependencies() async {
   (await _clientsAndServices()).map((e) => getIt.registerSingleton(e));
-  (await _repositories()).map((e) => getIt.registerSingleton(e));
-  (await _blocs()).map((e) => getIt.registerSingleton(e));
+  (_repositories()).map((e) => getIt.registerSingleton(e));
+  (_blocs()).map((e) => getIt.registerSingleton(e));
 }
 
 Future<List<Object>> _clientsAndServices() async {
@@ -28,11 +28,11 @@ Future<List<Object>> _clientsAndServices() async {
   ];
 }
 
-Future<List<Object>> _repositories() async {
+List<Object> _repositories() {
   return [SocialSignIn(), UserCollectionRepository()];
 }
 
-Future<List<Object>> _blocs() async {
+List<Object> _blocs() {
   return [
     KalaUserBloc(
       socialSignIn: getIt.get(),

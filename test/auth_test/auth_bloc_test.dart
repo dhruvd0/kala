@@ -6,9 +6,7 @@ import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/services/firebase/firebase_error.dart';
-import 'package:kala/test/firebase_config_mock.dart';
-import 'package:kala/test/repo_mocks.dart';
-import 'package:kala/test/services_mocks.dart';
+
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
