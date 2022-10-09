@@ -9,7 +9,7 @@ import 'package:kala/services/firebase/firestore_get.dart';
 import 'package:kala/services/firebase/page_data.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
-class PaginationCubit extends Cubit<PaginationRequestState> {
+class PaginationCubit<T> extends Cubit<PaginationRequestState> {
   PaginationCubit({
     required String collection,
     required bool orderIsDescending,
@@ -53,13 +53,13 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
 
   FirebaseFirestore? firebaseFirestore;
 
-  Future<List<dynamic>> getTList(
+  Future<List<Map<String,dynamic>>> getTList(
     int scrollPosition, {
     required CollectionSegment segment,
   }) async {
     final firestorePageRequest = state;
     if (isDataFetchedForScrollPosition(scrollPosition, segment)) {
-      return <dynamic>[];
+      return [];
     }
     emit(state.copyWith(scrollPosition: scrollPosition));
     final response = await FirestoreQueries().paginateCollectionDocuments(
@@ -67,7 +67,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       collectionSegment: segment,
     );
     if (response == null) {
-      return <dynamic>[];
+      return [];
     }
     emit(
       state.copyWith(
@@ -76,15 +76,8 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       ),
     );
 
-    final validatedData = validateAndEmitData(
-      parseTListFromFirestoreResponse(<dynamic>[
-        response,
-        state.data,
-      ]),
-      response,
-      segment,
-    );
-    return validatedData;
+   
+    return response.currentJsonList;
   }
 
   bool isDataFetchedForScrollPosition(
@@ -96,8 +89,8 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
         segment == CollectionSegment.next;
   }
 
-  List<dynamic> parseTListFromFirestoreResponse(List<dynamic> args) {
-    final newArtList = <dynamic>[];
+  List<T> parseTListFromFirestoreResponse(List<dynamic> args) {
+    final newArtList = <T>[];
     final response = args.first as FirestorePageResponse;
     for (final jsonElement in response.currentJsonList) {
       try {
@@ -121,14 +114,14 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
     return newArtList;
   }
 
-  List<dynamic> validateAndEmitData(
-    List<dynamic> newDataList,
+  List<T> validateAndEmitData(
+    List<T> newDataList,
     FirestorePageResponse response,
     CollectionSegment segment,
   ) {
     if (newDataList.isNotEmpty) {
       // ignore: omit_local_variable_types
-      final currentDataList = state.data.toList();
+      final currentDataList = state.data.toList() as List<T>;
       if (segment == CollectionSegment.previous) {
         for (final e in newDataList.reversed) {
           currentDataList.insert(0, e);
@@ -147,7 +140,7 @@ class PaginationCubit extends Cubit<PaginationRequestState> {
       );
       return currentDataList;
     } else {
-      return <dynamic>[];
+      return <T>[];
     }
   }
 

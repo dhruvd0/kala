@@ -9,6 +9,8 @@ import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/features/auth/repositories/user_collection.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
+import 'package:kala/features/gallery/repositories/gallery_repository.dart';
+import 'package:kala/features/gallery/services/gallery_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 final getIt = GetIt.instance;
@@ -25,11 +27,16 @@ Future<List<Object>> _clientsAndServices() async {
     packageInfo,
     await _setupFirebase(),
     FirestoreCollectionPaths(),
+    GalleryService()
   ];
 }
 
 List<Object> _repositories() {
-  return [SocialSignIn(), UserCollectionRepository()];
+  return [
+    SocialSignIn(),
+    UserCollectionRepository(),
+    GalleryRepository(getIt.get())
+  ];
 }
 
 List<Object> _blocs() {
@@ -38,7 +45,7 @@ List<Object> _blocs() {
       socialSignIn: getIt.get(),
       userCollectionRepository: getIt.get(),
     ),
-    GalleryBloc()
+    GalleryBloc(getIt.get())
   ];
 }
 

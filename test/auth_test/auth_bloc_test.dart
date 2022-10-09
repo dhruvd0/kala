@@ -4,12 +4,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/auth/models/kala_user.dart';
 import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/services/firebase/firebase_error.dart';
 
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
+
+import '../firebase_config_mock.dart';
+import '../repo_mocks.dart';
+import '../services_mocks.dart';
 
 void main() {
   final socialSignIn = MockSocialSignIn();
@@ -50,6 +55,39 @@ void main() {
       ).thenAnswer(
         (invocation) async => Right(Timestamp.now()),
       );
+      final kalaUserBloc = KalaUserBloc(
+        socialSignIn: socialSignIn,
+        userCollectionRepository: userCollectionRepo,
+      );
+
+      await kalaUserBloc.authenticateWithSocialAuth(AuthTypes.google);
+
+      expect(kalaUserBloc.state.runtimeType, FetchedKalaUserState);
+      expect(
+        (kalaUserBloc.state as FetchedKalaUserState).kalaUser.uid,
+        uid,
+      );
+    });
+
+    test('Test to authenticate with social with a registered Kala User',
+        () async {
+      when(() => socialSignIn.signInWithGoogle()).thenAnswer(
+        (invocation) async => Right(
+          getIt.get<FirebaseConfig>().auth.currentUser!,
+        ),
+      );
+      when(
+        () => userCollectionRepo.getKalaUser(
+          any(that: const TypeMatcher<String>()),
+        ),
+      ).thenAnswer(
+        (invocation) async => Right(
+          KalaUser.fromSocialAuthUser(
+            getIt.get<FirebaseConfig>().auth.currentUser!,
+          ),
+        ),
+      );
+
       final kalaUserBloc = KalaUserBloc(
         socialSignIn: socialSignIn,
         userCollectionRepository: userCollectionRepo,

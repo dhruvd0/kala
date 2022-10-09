@@ -4,38 +4,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/features/gallery/art/models/art.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_state.dart';
-import 'package:kala/utils/helper_bloc/content_pagination/pagination_bloc.dart';
+import 'package:kala/features/gallery/repositories/gallery_repository.dart';
 import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
-class GalleryBloc extends HasPaginationCubit<GalleryState> {
-  GalleryBloc()
+class GalleryBloc extends Cubit<GalleryState> {
+  GalleryBloc(this.galleryRepository)
       : super(
           const GalleryState(
             artSlideList: [],
           ),
-          paginationCubit: PaginationCubit.galleryArtPagination(),
-        ) {
-    // kalaUserStateStream =
-    //     kalaUserBloc.stream.asBroadcastStream().listen((state) {
-    //   if (state.kalaUserState == UserAuthState.authenticated) {
-    //     getArtList(
-    //       0,
-    //       collectionSegment: CollectionSegment.initial,
-    //     );
-    //   }
-    // });
-  }
+        );
 
-  @override
-  void onChange(Change<GalleryState> change) {
-    super.onChange(change);
-  }
+  final GalleryRepository galleryRepository;
 
   Future<void> getArtList(
     int scrollPosition, {
     required CollectionSegment collectionSegment,
   }) async {
-    final newGalleryArt = await paginationCubit.getTList(
+    final newGalleryArt = await galleryRepository.getGalleryArt(
       scrollPosition,
       segment: collectionSegment,
     );
