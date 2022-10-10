@@ -1,38 +1,35 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:kala/features/gallery/art/models/art.dart';
 
+abstract class GalleryState extends Equatable {}
+
 @immutable
-class GalleryState {
-  const GalleryState({
+class FetchedGalleryState extends GalleryState {
+  FetchedGalleryState({
     required this.artSlideList,
   });
 
   final List<Art> artSlideList;
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-
-    return other is GalleryState &&
-        listEquals(other.artSlideList, artSlideList);
-  }
-
-  @override
-  int get hashCode {
-    return artSlideList.hashCode;
-  }
-
   GalleryState copyWith({
     List<Art>? artSlideList,
-    DocumentSnapshot? lastDocument,
-    Timestamp? lastFetchedTimestamp,
   }) {
-    return GalleryState(
+    return FetchedGalleryState(
       artSlideList: artSlideList ?? this.artSlideList,
     );
   }
+
+  @override
+  List<Object?> get props => [artSlideList];
+}
+
+class InititalGalleryState extends FetchedGalleryState {
+  InititalGalleryState() : super(artSlideList: []);
+}
+
+class LoadingGalleryState extends GalleryState {
+  @override
+  List<Object?> get props => [];
 }

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/features/gallery/art/widgets/art_card.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_state.dart';
-import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class GalleryScroll extends StatefulWidget {
   const GalleryScroll({
@@ -24,10 +23,9 @@ class _GalleryScrollState extends State<GalleryScroll> {
       scrollController.addListener(() {
         if (scrollController.hasClients) {
           if (scrollController.offset / 300 > 5) {
-            context.read<GalleryBloc>().getArtList(
-                  scrollController.offset.toInt(),
-                  collectionSegment: CollectionSegment.next,
-                );
+            context
+                .read<GalleryBloc>()
+                .getArtList(scrollController.offset.toInt());
           }
         }
       });
@@ -38,7 +36,10 @@ class _GalleryScrollState extends State<GalleryScroll> {
   Widget build(BuildContext context) {
     return BlocBuilder<GalleryBloc, GalleryState>(
       builder: (context, state) {
-        if (state.artSlideList.isEmpty) {
+        if (state is LoadingGalleryState) {
+          return Container();
+        }
+        if ((state as FetchedGalleryState).artSlideList.isEmpty) {
           return Container();
         }
 

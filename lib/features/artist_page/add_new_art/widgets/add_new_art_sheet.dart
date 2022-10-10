@@ -145,10 +145,7 @@ class _AddNewArtSheetState extends State<AddNewArtSheet> {
                           unawaited(
                             BlocProvider.of<GalleryBloc>(
                               context,
-                            ).getArtList(
-                              100,
-                              collectionSegment: CollectionSegment.previous,
-                            ),
+                            ).getArtList(),
                           );
                           await BlocProvider.of<ArtistPageCubit>(
                             context,

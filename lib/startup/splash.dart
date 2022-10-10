@@ -8,6 +8,7 @@ import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
+import 'package:kala/features/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/utils/widgets/offwhite_scaffold.dart';
 
 /// The first widget to display for Kala App
@@ -48,7 +49,8 @@ class _SplashState extends State<Splash> {
   Future<void> authenticatePageRoutine() async {
     final galleryBloc = BlocProvider.of<GalleryBloc>(context);
     await Future.doWhile(() {
-      final isUserArtInitialized = galleryBloc.state.artSlideList.isNotEmpty;
+      final isUserArtInitialized = galleryBloc.state is! FetchedGalleryState &&
+          (galleryBloc.state as FetchedGalleryState).artSlideList.isNotEmpty;
 
       // TODO(dhruv): load user art
       //  &&
