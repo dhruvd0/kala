@@ -11,7 +11,7 @@ import 'package:kala/config/theme/theme.dart';
 
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/features/gallery/art/widgets/art_image.dart';
-import 'package:kala/services/io/scan_image.dart';
+import 'package:kala/common/services/io/scan_image.dart';
 
 class CoverArt extends StatelessWidget {
   const CoverArt({Key? key}) : super(key: key);

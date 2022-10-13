@@ -10,7 +10,7 @@ import 'package:kala/features/artist_page/widgets/bio.dart';
 import 'package:kala/features/artist_page/widgets/cover/cover_widget.dart';
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/features/gallery/widgets/gallery_view/gallery_grid.dart';
-import 'package:kala/utils/widgets/offwhite_scaffold.dart';
+import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
 
 class ArtistPage extends StatelessWidget {
   const ArtistPage({

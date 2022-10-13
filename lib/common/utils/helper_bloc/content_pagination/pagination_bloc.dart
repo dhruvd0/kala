@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/typedefs.dart';
 
-import 'package:kala/features/gallery/art/models/art.dart';
-import 'package:kala/services/firebase/firestore_get.dart';
-import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
+import 'package:kala/common/models/art.dart';
+import 'package:kala/common/services/firebase/firestore_get.dart';
+import 'package:kala/common/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class PaginationCubit<T> extends Cubit<PaginationRequestState> {
   PaginationCubit({
@@ -39,7 +39,7 @@ class PaginationCubit<T> extends Cubit<PaginationRequestState> {
 
   factory PaginationCubit.userArtPagination(String uid) {
     return PaginationCubit(
-      collection: firestorePaths.user,
+      collection: firestorePaths.art,
       orderIsDescending: true,
       orderByField: 'uploadTimestamp',
       dataFromMap: Art.fromMap,
@@ -49,7 +49,7 @@ class PaginationCubit<T> extends Cubit<PaginationRequestState> {
 
   final dynamic Function(Map<String, dynamic>) dataFromMap;
 
-  FirebaseFirestore? firebaseFirestore;
+ 
 
   Future<List<Map<String, dynamic>>> getJsonList(
     int scrollPosition, {

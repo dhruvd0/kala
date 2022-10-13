@@ -9,8 +9,8 @@ import 'package:kala/features/artist_page/add_new_art/widgets/add_new_art_sheet.
 
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 
-import 'package:kala/features/gallery/art/models/art.dart';
-import 'package:kala/services/io/scan_image.dart';
+import 'package:kala/common/models/art.dart';
+import 'package:kala/common/services/io/scan_image.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class EmptyArtCard extends StatelessWidget {

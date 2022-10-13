@@ -2,19 +2,22 @@ import 'package:kala/common/models/art.dart';
 import 'package:kala/common/utils/helper_bloc/content_pagination/pagination_bloc.dart';
 import 'package:kala/common/utils/helper_bloc/content_pagination/pagination_state.dart';
 
-class GalleryService {
-  final PaginationCubit<Art> paginationCubit =
-      PaginationCubit.galleryArtPagination();
-  Future<List<Map<String, dynamic>>> getGalleryArt(
+class ArtistContentService {
+  ArtistContentService(this.artistID) {
+    paginationCubit = PaginationCubit.userArtPagination(artistID);
+  }
+  final String artistID;
+  late PaginationCubit<Art> paginationCubit;
+  Future<List<Map<String, dynamic>>> getUserArt(
     int scrollPosition,
   ) async {
-    final galleryJson = await paginationCubit.getJsonList(
+    final userArtJson = await paginationCubit.getJsonList(
       scrollPosition,
       segment: scrollPosition == 0
           ? CollectionSegment.initial
           : CollectionSegment.next,
     );
 
-    return galleryJson;
+    return userArtJson;
   }
 }

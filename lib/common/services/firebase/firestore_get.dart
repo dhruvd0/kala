@@ -4,9 +4,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/typedefs.dart';
-import 'package:kala/services/firebase/crashlytics.dart';
-import 'package:kala/services/firebase/page_data.dart';
-import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
+import 'package:kala/common/services/firebase/crashlytics.dart';
+import 'package:kala/common/services/firebase/page_data.dart';
+import 'package:kala/common/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class FirestoreQueries {
   FirestoreQueries();
@@ -55,9 +55,7 @@ class FirestoreQueries {
       }
 
       final jsonListFromDocSnaps2 = jsonListFromDocSnaps(querySnapshot);
-      //log("Count: ${jsonListFromDocSnaps2.length} ,
-      // First:${querySnapshot.docs.first.id},
-      // Last:${querySnapshot.docs.last.id}  ");
+
       return FirestorePageResponse(
         currentJsonList: jsonListFromDocSnaps2,
         lastDocSnap: querySnapshot.docs.last,

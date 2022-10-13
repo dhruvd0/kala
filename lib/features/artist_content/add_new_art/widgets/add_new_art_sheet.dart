@@ -10,13 +10,13 @@ import 'package:kala/features/artist_page/add_new_art/bloc/new_art_bloc.dart';
 import 'package:kala/features/artist_page/add_new_art/widgets/keys/add_new_content_widget_keys.dart';
 import 'package:kala/features/artist_page/cubit/artist_page_cubit.dart';
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/features/gallery/art/models/art.dart';
+import 'package:kala/common/models/art.dart';
 import 'package:kala/features/gallery/art/widgets/art_image.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
-import 'package:kala/utils/helper_bloc/content_pagination/pagination_state.dart';
-import 'package:kala/utils/widgets/buttons/curved_mono_button.dart';
-import 'package:kala/utils/widgets/decors/text_input_decoration.dart';
-import 'package:kala/utils/widgets/offwhite_scaffold.dart';
+import 'package:kala/common/utils/helper_bloc/content_pagination/pagination_state.dart';
+import 'package:kala/common/utils/widgets/buttons/curved_mono_button.dart';
+import 'package:kala/common/utils/widgets/decors/text_input_decoration.dart';
+import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
 
 class AddNewArtSheet extends StatefulWidget {
   const AddNewArtSheet({Key? key}) : super(key: key);
@@ -147,7 +147,7 @@ class _AddNewArtSheetState extends State<AddNewArtSheet> {
                               context,
                             ).getArtList(),
                           );
-                          await BlocProvider.of<ArtistPageCubit>(
+                          await BlocProvider.of<ArtistContentCubit>(
                             context,
                           ).getUserArt(
                             100,

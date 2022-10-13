@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
-import 'package:kala/features/auth/models/kala_user.dart';
+import 'package:kala/common/models/kala_user.dart';
 
 abstract class KalaUserState extends Equatable {
   @override

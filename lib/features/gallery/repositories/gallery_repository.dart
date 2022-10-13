@@ -1,4 +1,4 @@
-import 'package:kala/features/gallery/art/models/art.dart';
+import 'package:kala/common/models/art.dart';
 import 'package:kala/features/gallery/services/gallery_service.dart';
 
 class GalleryRepository {

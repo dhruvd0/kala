@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:kala/features/gallery/art/models/art.dart';
+import 'package:kala/common/models/art.dart';
 
 abstract class GalleryState extends Equatable {}
 

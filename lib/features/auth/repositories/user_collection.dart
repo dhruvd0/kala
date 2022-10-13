@@ -3,9 +3,9 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
-import 'package:kala/features/auth/models/kala_user.dart';
-import 'package:kala/services/firebase/error_handler.dart';
-import 'package:kala/services/firebase/firebase_error.dart';
+import 'package:kala/common/models/kala_user.dart';
+import 'package:kala/common/services/firebase/error_handler.dart';
+import 'package:kala/common/services/firebase/firebase_error.dart';
 
 class UserCollectionRepository {
   Future<Either<FirestoreException, KalaUser>> getKalaUser(String uid) async {

@@ -6,7 +6,7 @@ import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
 import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/features/auth/widgets/auth_btn.dart';
-import 'package:kala/utils/widgets/offwhite_scaffold.dart';
+import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({

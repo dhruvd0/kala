@@ -9,7 +9,7 @@ class GalleryGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ArtistPageCubit, ArtistPageState>(
+    return BlocBuilder<ArtistContentCubit, ArtistContentState>(
       builder: (context, state) {
         if (state.userArt.isEmpty) {
           return Container();

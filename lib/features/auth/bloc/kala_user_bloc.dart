@@ -5,10 +5,10 @@ import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/features/auth/bloc/kala_user_state.dart';
-import 'package:kala/features/auth/models/kala_user.dart';
+import 'package:kala/common/models/kala_user.dart';
 import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/features/auth/repositories/user_collection.dart';
-import 'package:kala/services/firebase/firebase_error.dart';
+import 'package:kala/common/services/firebase/firebase_error.dart';
 
 export 'kala_user_state.dart';
 
@@ -73,12 +73,4 @@ class KalaUserBloc extends Cubit<KalaUserState> {
       },
     );
   }
-
-  void changeBio(String str) {
-    // TODO(dhruv): change bio
-  }
-
-  void toggleEditMode({bool forceToggle = false}) {}
-
-  void changeCover(File value) {}
 }

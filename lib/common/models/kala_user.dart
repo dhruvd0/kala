@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:kala/features/gallery/art/models/art.dart';
+import 'package:kala/common/models/art.dart';
 
 class KalaUser extends Equatable {
   const KalaUser({

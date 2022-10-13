@@ -10,7 +10,7 @@ import 'package:kala/config/theme/theme.dart';
 import 'package:kala/features/artist_page/add_new_art/bloc/new_art_bloc.dart';
 
 import 'package:kala/features/gallery/art/bloc/art_bloc.dart';
-import 'package:kala/features/gallery/art/models/art.dart';
+import 'package:kala/common/models/art.dart';
 import 'package:kala/features/gallery/art/widgets/art_image.dart';
 import 'package:kala/features/gallery/art/widgets/empty_art.dart';
 import 'package:kala/features/gallery/art/widgets/keys.dart';

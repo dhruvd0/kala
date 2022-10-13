@@ -1,4 +1,4 @@
-import 'package:kala/utils/widgets/offwhite_scaffold.dart';
+import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
 
 class NavWidgetKeys {
   static String pageNavArrowKey(

@@ -4,9 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
-import 'package:kala/features/auth/models/kala_user.dart';
+import 'package:kala/common/models/kala_user.dart';
 import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
-import 'package:kala/services/firebase/firebase_error.dart';
+import 'package:kala/common/services/firebase/firebase_error.dart';
 
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';

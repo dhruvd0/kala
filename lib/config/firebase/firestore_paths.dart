@@ -9,10 +9,7 @@ FirestoreCollectionPaths get firestorePaths =>
 class FirestoreCollectionPaths {
   FirestoreCollectionPaths();
 
-  final String _art = _artCollection;
-  final String _user = _userCollection;
+  String get art => _artCollection + Env.getEnvironmentTag();
 
-  String get art => _art + Env.getEnvironmentTag();
-
-  String get user => _user + Env.getEnvironmentTag();
+  String get user => _userCollection + Env.getEnvironmentTag();
 }

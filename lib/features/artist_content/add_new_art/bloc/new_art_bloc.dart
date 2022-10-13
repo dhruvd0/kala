@@ -7,9 +7,9 @@ import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
-import 'package:kala/features/gallery/art/models/art.dart';
-import 'package:kala/services/firebase/firebase_storage.dart';
-import 'package:kala/services/firebase/firestore_update.dart';
+import 'package:kala/common/models/art.dart';
+import 'package:kala/common/services/firebase/firebase_storage.dart';
+import 'package:kala/common/services/firebase/firestore_update.dart';
 
 class NewArtCubit extends Cubit<Art> {
   NewArtCubit() : super(Art.fromMap(const {}));

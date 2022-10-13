@@ -9,7 +9,7 @@ import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_state.dart';
-import 'package:kala/utils/widgets/offwhite_scaffold.dart';
+import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
 
 /// The first widget to display for Kala App
 class Splash extends StatefulWidget {

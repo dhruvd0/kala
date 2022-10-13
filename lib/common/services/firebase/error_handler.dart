@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:kala/services/firebase/firebase_error.dart';
+import 'package:kala/common/services/firebase/firebase_error.dart';
 
 FirestoreException handleFirestoreError(dynamic e) {
   if (e is SocketException) {
