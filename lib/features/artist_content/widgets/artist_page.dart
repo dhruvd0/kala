@@ -33,9 +33,9 @@ class ArtistPage extends StatelessWidget {
       ),
       trailing: InkWell(
         onTap: () {
-          BlocProvider.of<KalaUserBloc>(context).toggleEditMode();
+          BlocProvider.of<ProfileBloc>(context).toggleEditMode();
         },
-        child: BlocBuilder<KalaUserBloc, KalaUserState>(
+        child: BlocBuilder<ProfileBloc, KalaUserState>(
           builder: (context, state) {
             return Container(
               margin: EdgeInsets.only(bottom: 5.h),

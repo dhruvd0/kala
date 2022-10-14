@@ -18,7 +18,7 @@ class CoverArt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KalaUserBloc, KalaUserState>(
+    return BlocBuilder<ProfileBloc, KalaUserState>(
       builder: (context, userState) {
         return Container(
           decoration: BoxDecoration(
@@ -45,11 +45,11 @@ class AddCoverArt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KalaUserBloc, KalaUserState>(
+    return BlocBuilder<ProfileBloc, KalaUserState>(
       builder: (context, state) {
         return GestureDetector(
           onTap: () {
-            final bloc = BlocProvider.of<KalaUserBloc>(
+            final bloc = BlocProvider.of<ProfileBloc>(
               context,
             );
             scanImage(context).then((value) {

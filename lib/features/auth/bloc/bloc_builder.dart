@@ -16,7 +16,7 @@ class KalaUserBlocBuilder extends StatelessWidget {
   final Widget Function(KalaUserErrorState) error;
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KalaUserBloc, KalaUserState>(
+    return BlocBuilder<ProfileBloc, KalaUserState>(
       builder: (context, state) {
         switch (state.runtimeType) {
           case KalaUserLoadingState:

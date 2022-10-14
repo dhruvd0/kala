@@ -26,7 +26,9 @@ class KalaUserErrorState extends KalaUserState {
   final String message;
   KalaUserErrorState(this.message);
 }
-
+class UserNotFoundState extends KalaUserState{
+  
+}
 extension StateTypeCasts on KalaUserState {
   FetchedKalaUserState get fetchedKalaUser => this as FetchedKalaUserState;
 }

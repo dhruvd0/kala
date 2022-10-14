@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kala/common/models/art.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/features/artist_content/cubit/artist_content_cubit.dart';
+import 'package:kala/features/artist_content/repositories/artist_content_repo.dart';
+import 'package:kala/features/artist_content/services/artist_content_service.dart';
 import 'package:uuid/uuid.dart';
 
 import '../firestore_mock_service.dart';
@@ -10,10 +12,7 @@ import '../model_mocks.dart';
 import '../services_mocks.dart';
 
 void main() {
- 
- final uid = const Uuid().v4();
-
-
+  final uid = const Uuid().v4();
 
   setUp(() async {
     setupBasicMockServices();
@@ -25,14 +24,17 @@ void main() {
     getIt.reset();
   });
   group('Artist Content: ', () {
-
     blocTest<ArtistContentCubit, ArtistContentState>(
       'Test to fetch initial art of an artist',
-      build: () => ArtistContentCubit(uid),
-      act: (bloc) async => bloc.getArtistArt(),
+      build: () {
+        return ArtistContentCubit(
+          ArtistContentRepository(ArtistContentService(uid)),
+        );
+      },
+      act: (bloc) async => bloc.getArtistArt(uid),
       wait: const Duration(milliseconds: 100),
       expect: () => [
-        ArtistContentLoadingState(uid),
+        const ArtistContentLoadingState(),
         const TypeMatcher<ArtistContentLoadedState>()
       ],
       verify: (bloc) {
@@ -44,13 +46,15 @@ void main() {
     );
     blocTest<ArtistContentCubit, ArtistContentState>(
       'Test to paginate  art of an artist',
-      build: () => ArtistContentCubit(uid),
+      build: () => ArtistContentCubit(
+        ArtistContentRepository(ArtistContentService(uid)),
+      ),
       act: (bloc) async {
-        await bloc.getArtistArt();
-        await bloc.getArtistArt(1);
+        await bloc.getArtistArt(uid);
+        await bloc.getArtistArt(uid, 1);
       },
       expect: () => [
-        ArtistContentLoadingState(uid),
+        const ArtistContentLoadingState(),
         const TypeMatcher<ArtistContentLoadedState>(),
         const TypeMatcher<ArtistContentLoadedState>()
       ],
@@ -65,18 +69,21 @@ void main() {
       },
     );
 
-    final list = List.generate(20, (index) => fakeArt(index, uid));
+    final list = List.generate(20, (index) => fakeArtJson(index, uid))
+        .map((e) => Art.fromMap(e))
+        .toList();
     blocTest<ArtistContentCubit, ArtistContentState>(
       'Test to fetch new  art after pagination of an artist',
-      build: () => ArtistContentCubit(uid),
+      build: () => ArtistContentCubit(
+        ArtistContentRepository(ArtistContentService(uid)),
+      ),
       act: (bloc) async {
-        await bloc.getArtistArt();
+        await bloc.getArtistArt(uid);
       },
       seed: () {
         return ArtistContentLoadedState(
           userArt: list,
           acquiredArt: const [],
-          artistID: uid,
         );
       },
       expect: () => [
@@ -93,6 +100,11 @@ void main() {
         );
       },
     );
+
+
+
+
+  
   });
 }
 

@@ -1,32 +1,55 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kala/common/models/kala_user.dart';
+import 'package:kala/common/services/firebase/firebase_error.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/features/auth/bloc/kala_user_state.dart';
-import 'package:kala/common/models/kala_user.dart';
 import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/features/auth/repositories/user_collection.dart';
-import 'package:kala/common/services/firebase/firebase_error.dart';
 
 export 'kala_user_state.dart';
 
-KalaUserBloc get kalaUserBloc => getIt.get<KalaUserBloc>();
+ProfileBloc get kalaUserBloc => getIt.get<ProfileBloc>();
 
-class KalaUserBloc extends Cubit<KalaUserState> {
-  KalaUserBloc({
-    required this.socialSignIn,
-    required this.userCollectionRepository,
-  }) : super(InitialKalaUserState());
-  final SocialSignIn socialSignIn;
-  final UserCollectionRepository userCollectionRepository;
-  @override
-  void onError(Object error, StackTrace stackTrace) {
-    super.onError(error, stackTrace);
+class ProfileBloc extends Cubit<KalaUserState> {
+  ProfileBloc(this.userCollectionRepository)
+      : super(
+          InitialKalaUserState(),
+        );
+  final UserProfileRepository userCollectionRepository;
+
+  Future<void> getKalaUser(User user) async {
+    emit(KalaUserLoadingState());
+    final either = await userCollectionRepository.getKalaUser(user.uid);
+    await either.fold(
+      (error) async {
+        if (error is DocumentNotFound) {
+          emit(UserNotFoundState());
+          return;
+        }
+        emit(KalaUserErrorState(error.message));
+      },
+      (kalaUser) async {
+        emit(FetchedKalaUserState(kalaUser));
+      },
+    );
+  }
+}
+
+class AuthenticatedProfileBloc extends ProfileBloc {
+  AuthenticatedProfileBloc(super.userCollectionRepository);
+  Future<void> syncUserProfile() async {
+    await getKalaUser(firebaseConfig.auth.currentUser!);
+    if (state is UserNotFoundState) {
+      await _registerKalaUser(firebaseConfig.auth.currentUser!);
+    }
   }
 
-  Future<void> registerKalaUser() async {
+  Future<void> _registerKalaUser(User user) async {
+    emit(KalaUserLoadingState());
     (await userCollectionRepository.createKalaUser(
       firebaseConfig.auth.currentUser!,
       AuthTypes.google.name,
@@ -40,36 +63,6 @@ class KalaUserBloc extends Cubit<KalaUserState> {
             KalaUser.fromSocialAuthUser(firebaseConfig.auth.currentUser!),
           ),
         );
-      },
-    );
-  }
-
-  Future<void> getKalaUser() async {
-    final either = await userCollectionRepository
-        .getKalaUser(firebaseConfig.auth.currentUser!.uid);
-    await either.fold(
-      (error) async {
-        if (error is DocumentNotFound) {
-          await registerKalaUser();
-          return;
-        }
-        emit(KalaUserErrorState(error.message));
-      },
-      (kalaUser) async {
-        emit(FetchedKalaUserState(kalaUser));
-      },
-    );
-  }
-
-  Future<void> authenticateWithSocialAuth(AuthTypes authType) async {
-    emit(KalaUserLoadingState());
-    final either = await socialSignIn.signInWithGoogle();
-
-    await either.fold(
-      (l) async => KalaUserErrorState(l.message!),
-      (user) async {
-        emit(AuthenticatedKalaUserState(user.uid));
-        await getKalaUser();
       },
     );
   }

@@ -1,22 +1,18 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:kala/config/dependencies.dart';
-import 'package:kala/features/artist_content/repositories/artist_content_repo.dart';
 import 'package:kala/common/models/art.dart';
-import 'package:kala/features/artist_content/services/artist_content_service.dart';
+import 'package:kala/features/artist_content/repositories/artist_content_repo.dart';
 
 part 'artist_content_state.dart';
 
 class ArtistContentCubit extends Cubit<ArtistContentState> {
-  ArtistContentCubit(String artistID) : super(ArtistContentInitial(artistID)) {
-    artistContentRepository =
-        ArtistContentRepository(ArtistContentService(artistID));
-  }
+  ArtistContentCubit(this.artistContentRepository)
+      : super(const ArtistContentInitial());
 
-  late ArtistContentRepository artistContentRepository;
-  Future<void> getArtistArt([int scrollPosition = 0]) async {
+  final ArtistContentRepository artistContentRepository;
+  Future<void> getArtistArt(String artistID, [int scrollPosition = 0]) async {
     if (state is ArtistContentInitial) {
-      emit(ArtistContentLoadingState(state.artistID));
+      emit(const ArtistContentLoadingState());
     }
 
     final newGalleryArt =
@@ -38,7 +34,6 @@ class ArtistContentCubit extends Cubit<ArtistContentState> {
     } else {
       emit(
         ArtistContentLoadedState(
-          artistID: state.artistID,
           userArt: newGalleryArt,
           acquiredArt: const [],
         ),
@@ -48,7 +43,3 @@ class ArtistContentCubit extends Cubit<ArtistContentState> {
 }
 
 /// Content cubit for the logged in artist
-class AuthenticatedArtistContentCubit extends ArtistContentCubit {
-  AuthenticatedArtistContentCubit()
-      : super(firebaseConfig.auth.currentUser!.uid);
-}

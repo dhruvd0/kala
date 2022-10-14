@@ -10,38 +10,32 @@ import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/common/models/art.dart';
 import 'package:kala/common/services/firebase/firebase_storage.dart';
 import 'package:kala/common/services/firebase/firestore_update.dart';
+import 'package:kala/features/artist_content/upload_art/bloc/upload_art_state.dart';
 
-class NewArtCubit extends Cubit<Art> {
-  NewArtCubit() : super(Art.fromMap(const {}));
-
+class UploadArtBloc extends Cubit<UploadArtState> {
+  UploadArtBloc() : super(UploadArtInitial(Art.fromMap(const {})));
+  EditArtState get editArtState => state as EditArtState;
   Future<String> uploadImageAndGetUrl(
     String artStoragePath,
   ) async {
     return FirebaseStorageRequest(firebaseConfig.storage).uploadFile(
       '$artStoragePath/$correctFilePath',
-      state.imageFile!,
+      editArtState.art.imageFile!,
     );
   }
 
-  String? get correctFilePath => state.imageFile?.path.split('/').last;
+  String? get correctFilePath => editArtState.art.imageFile?.path.split('/').last;
 
   Future<String> setInitialArtData() {
     return FirestoreUpdateRequest(firestore: firebaseConfig.firestore).set(
       firestorePaths.art,
-      state.toMap(),
+      editArtState.art.toMap(),
     );
   }
 
   Future<void> editNewArt(ArtProps artProp, dynamic data) async {
     assert(data != null);
-    if (state.artistName.isEmpty) {
-      // TODO(dhruv): Artist name
-      emit(
-        state.copyWith(
-          artistName: 'name',
-        ),
-      );
-    }
+  
 
     switch (artProp) {
       case ArtProps.title:

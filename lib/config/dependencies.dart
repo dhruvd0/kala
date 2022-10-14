@@ -34,19 +34,13 @@ Future<List<Object>> _clientsAndServices() async {
 List<Object> _repositories() {
   return [
     SocialSignIn(),
-    UserCollectionRepository(),
+    UserProfileRepository(),
     GalleryRepository(getIt.get())
   ];
 }
 
 List<Object> _blocs() {
-  return [
-    KalaUserBloc(
-      socialSignIn: getIt.get(),
-      userCollectionRepository: getIt.get(),
-    ),
-    GalleryBloc(getIt.get())
-  ];
+  return [ProfileBloc(getIt.get()), GalleryBloc(getIt.get())];
 }
 
 Future<FirebaseConfig> _setupFirebase() async {

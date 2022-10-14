@@ -22,7 +22,7 @@ class SocialAuthButton extends StatelessWidget {
       key: ValueKey('${authType}AuthBtn'),
       margin: EdgeInsets.symmetric(vertical: 20.h),
       onTap: () {
-        BlocProvider.of<KalaUserBloc>(context)
+        BlocProvider.of<ProfileBloc>(context)
             .authenticateWithSocialAuth(authType);
       },
     );

@@ -1,26 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:kala/config/dependencies.dart';
-import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/common/models/kala_user.dart';
 import 'package:kala/common/services/firebase/error_handler.dart';
 import 'package:kala/common/services/firebase/firebase_error.dart';
+import 'package:kala/config/dependencies.dart';
+import 'package:kala/config/firebase/firestore_paths.dart';
+import 'package:kala/features/auth/services/user_profile_service.dart';
 
-class UserCollectionRepository {
+class UserProfileRepository {
+  UserProfileRepository(this.userProfileService);
+
+  final UserProfileService userProfileService;
   Future<Either<FirestoreException, KalaUser>> getKalaUser(String uid) async {
-    try {
-      final doc = await firebaseConfig.firestore
-          .collection(firestorePaths.user)
-          .doc(uid)
-          .get();
-      if (doc.data() == null) {
-        throw DocumentNotFound();
-      }
-      return Right(KalaUser.fromMap(doc.data()!));
-    } on Exception catch (e) {
-      return Left(handleFirestoreError(e));
-    }
+    final result = await userProfileService.getKalaUser(uid);
+
+    return result.fold(
+      (l) {
+        return Left(l);
+      },
+      (json) => Right(KalaUser.fromMap(json)),
+    );
   }
 
   Future<Either<FirestoreException, Timestamp>> createKalaUser(

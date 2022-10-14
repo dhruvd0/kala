@@ -48,7 +48,7 @@ class EmptyArtCard extends StatelessWidget {
                             ),
                           ).then((value) {
                             final isInEditMode =
-                                (BlocProvider.of<KalaUserBloc>(context).state
+                                (BlocProvider.of<ProfileBloc>(context).state
                                         as FetchedKalaUserState)
                                     .kalaUser
                                     .isEditMode;

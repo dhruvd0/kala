@@ -72,13 +72,13 @@ class KalaUser extends Equatable {
   List<dynamic> get props {
     return [
       authType,
+      bio,
       contactURL,
+      isEditMode,
       lastSignIn,
       name,
       photoURL,
       uid,
-      isEditMode,
-      bio,
     ];
   }
 

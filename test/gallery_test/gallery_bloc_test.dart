@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kala/common/models/art.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_state.dart';
@@ -52,7 +53,9 @@ void main() {
       },
     );
 
-    final list = List.generate(20, (index) => fakeArt(index));
+     final list = List.generate(20, (index) => fakeArtJson(index))
+        .map((e) => Art.fromMap(e))
+        .toList();
     blocTest<GalleryBloc, GalleryState>(
       'Test to fetch new gallery art after pagination',
       build: () => GalleryBloc(GalleryRepository(GalleryService())),

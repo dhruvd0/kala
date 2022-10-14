@@ -2,20 +2,18 @@
 part of 'artist_content_cubit.dart';
 
 abstract class ArtistContentState extends Equatable {
-  const ArtistContentState(this.artistID);
-
-  final String artistID;
+  const ArtistContentState();
 }
 
 class ArtistContentInitial extends ArtistContentState {
-  const ArtistContentInitial(super.artistID);
+  const ArtistContentInitial();
 
   @override
   List<Object> get props => [];
 }
 
 class ArtistContentLoadingState extends ArtistContentState {
-  const ArtistContentLoadingState(super.artistID);
+  const ArtistContentLoadingState();
 
   @override
   List<Object> get props => [];
@@ -27,19 +25,17 @@ class ArtistContentLoadedState extends ArtistContentState {
   const ArtistContentLoadedState({
     required this.userArt,
     required this.acquiredArt,
-    required String artistID,
-  }) : super(artistID);
+  });
   @override
   List<Object> get props => [userArt, acquiredArt];
 
   ArtistContentLoadedState copyWith({
     List<Art>? userArt,
     List<Art>? acquiredArt,
-    String? artistID,
   }) {
     return ArtistContentLoadedState(
-        userArt: userArt ?? this.userArt,
-        acquiredArt: acquiredArt ?? this.acquiredArt,
-        artistID: artistID ?? this.artistID,);
+      userArt: userArt ?? this.userArt,
+      acquiredArt: acquiredArt ?? this.acquiredArt,
+    );
   }
 }

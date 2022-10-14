@@ -20,7 +20,7 @@ class _BioWidgetState extends State<BioWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KalaUserBloc, KalaUserState>(
+    return BlocBuilder<ProfileBloc, KalaUserState>(
       builder: (context, userState) {
         return userState.fetchedKalaUser.kalaUser.isEditMode
             ? AnimatedContainer(
@@ -59,7 +59,7 @@ class _BioWidgetState extends State<BioWidget> {
                         border: InputBorder.none,
                       ),
                       onChanged: (str) {
-                        BlocProvider.of<KalaUserBloc>(
+                        BlocProvider.of<ProfileBloc>(
                           context,
                         ).changeBio(str);
                       },

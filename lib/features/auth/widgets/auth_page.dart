@@ -19,7 +19,7 @@ class AuthPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
       scaffoldKey: const ValueKey(ScaffoldKeys.authPageKey),
-      body: BlocListener<KalaUserBloc, KalaUserState>(
+      body: BlocListener<ProfileBloc, KalaUserState>(
         listener: (_, state) {
           if (state is AuthenticatedKalaUserState) {
             Navigator.pushReplacementNamed(context, Routes.dashboard);
