@@ -1,15 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:kala/config/dependencies.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/typedefs.dart';
 import 'package:kala/common/services/firebase/crashlytics.dart';
-import 'package:kala/common/services/firebase/page_data.dart';
+import 'package:kala/common/models/page_data.dart';
 import 'package:kala/common/utils/helper_bloc/content_pagination/pagination_state.dart';
 
-class FirestoreQueries {
-  FirestoreQueries();
+class FirestoreAPI {
+  FirestoreAPI();
+
   FirebaseFirestore firestore = getIt.get<FirebaseConfig>().firestore;
 
   Future<FirestorePageResponse?> paginateCollectionDocuments(
@@ -111,4 +115,38 @@ class FirestoreQueries {
     }
     return jsonList;
   }
+
+  Future<String> update(
+    String collection,
+    String? docID,
+    Map<String, dynamic> data,
+  ) async {
+    try {
+      final doc = firestore.collection(collection).doc(docID);
+      await doc.update(data);
+      return doc.id;
+    } on Exception catch (e) {
+      await Fluttertoast.showToast(msg: e.toString());
+      return '';
+    }
+  }
+
+  Future<String> set(
+    String collection,
+    Map<String, dynamic> data, {
+    String? docID,
+  }) async {
+    try {
+      final doc = firestore.collection(collection).doc(docID);
+      await doc?.set(data);
+      return doc!.id;
+    } on Exception catch (e) {
+      await Fluttertoast.showToast(msg: e.toString());
+      return '';
+    }
+  }
+}
+
+mixin FirestoreMixin on FirestoreAPI{
+  
 }

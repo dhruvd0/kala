@@ -6,9 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kala/common/models/kala_user.dart';
 import 'package:kala/common/services/firebase/firebase_error.dart';
 import 'package:kala/config/dependencies.dart';
-import 'package:kala/features/auth/bloc/kala_user_state.dart';
+import 'package:kala/features/artist_profile/cubit/artist_profile/kala_user_state.dart';
 import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
-import 'package:kala/features/auth/repositories/user_collection.dart';
+import 'package:kala/features/artist_profile/repositories/user_profile_repository.dart';
 
 export 'kala_user_state.dart';
 
@@ -49,7 +49,7 @@ class AuthenticatedProfileBloc extends ProfileBloc {
   }
 
   Future<void> _registerKalaUser(User user) async {
-    emit(KalaUserLoadingState());
+    emit(RegisteringState());
     (await userCollectionRepository.createKalaUser(
       firebaseConfig.auth.currentUser!,
       AuthTypes.google.name,

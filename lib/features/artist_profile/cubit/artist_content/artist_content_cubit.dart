@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:kala/common/models/art.dart';
-import 'package:kala/features/artist_content/repositories/artist_content_repo.dart';
+import 'package:kala/features/artist_profile/repositories/artist_content_repo.dart';
 
 part 'artist_content_state.dart';
 
@@ -10,6 +10,7 @@ class ArtistContentCubit extends Cubit<ArtistContentState> {
       : super(const ArtistContentInitial());
 
   final ArtistContentRepository artistContentRepository;
+
   Future<void> getArtistArt(String artistID, [int scrollPosition = 0]) async {
     if (state is ArtistContentInitial) {
       emit(const ArtistContentLoadingState());

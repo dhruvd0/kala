@@ -2,9 +2,10 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kala/common/models/art.dart';
 import 'package:kala/config/dependencies.dart';
-import 'package:kala/features/artist_content/cubit/artist_content_cubit.dart';
-import 'package:kala/features/artist_content/repositories/artist_content_repo.dart';
-import 'package:kala/features/artist_content/services/artist_content_service.dart';
+import 'package:kala/features/artist_profile/cubit/artist_content/artist_content_cubit.dart';
+import 'package:kala/features/artist_profile/repositories/artist_content_repo.dart';
+import 'package:kala/features/artist_profile/services/artist_content_service.dart';
+
 import 'package:uuid/uuid.dart';
 
 import '../firestore_mock_service.dart';
@@ -100,11 +101,6 @@ void main() {
         );
       },
     );
-
-
-
-
-  
   });
 }
 

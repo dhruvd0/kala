@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/artist_profile/cubit/artist_profile/kala_user_bloc.dart';
 
-export 'kala_user_state.dart';
-
-class KalaUserBlocBuilder extends StatelessWidget {
-  const KalaUserBlocBuilder({
+class ProfileBlocBuilder extends StatelessWidget {
+  const ProfileBlocBuilder({
     Key? key,
     required this.loading,
     required this.fetched,

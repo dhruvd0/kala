@@ -6,9 +6,9 @@ import 'package:kala/common/models/art.dart';
 abstract class UploadArtState {}
 
 class UploadArtInitial extends UploadArtState {
-  UploadArtInitial(this.art);
+  UploadArtInitial();
 
-  final Art art;
+ 
 }
 
 class EditArtState extends UploadArtState {
@@ -23,4 +23,11 @@ class EditArtState extends UploadArtState {
       art ?? this.art,
     );
   }
+}
+
+class UploadArtSuccess extends UploadArtState{
+
+}
+class UploadArtFailure extends UploadArtState{
+  
 }

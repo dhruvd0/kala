@@ -1,21 +1,22 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:kala/common/services/firebase/firebase_error.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/firebase/firebase.dart';
-import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/artist_profile/cubit/artist_profile/kala_user_bloc.dart';
+import 'package:kala/features/artist_profile/repositories/user_profile_repository.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
 
 import '../firebase_config_mock.dart';
-import '../repo_mocks.dart';
+import '../model_mocks.dart';
+import '../services_mocks.dart';
 
 void main() {
-  final userCollectionRepo = MockUserCollectionRepository();
+  final mockService = MockUserProfileService();
+
   final uid = const Uuid().v4();
   setUp(() async {
     getIt.registerSingleton<FirebaseConfig>(
@@ -33,27 +34,27 @@ void main() {
       'Test to register kala user.',
       build: () {
         when(
-          () => userCollectionRepo.getKalaUser(
+          () => mockService.getKalaUser(
             any(that: const TypeMatcher<String>()),
           ),
         ).thenAnswer(
           (invocation) async => Left(DocumentNotFound()),
         );
         when(
-          () => userCollectionRepo.createKalaUser(
+          () => mockService.createKalaUser(
             any(that: const TypeMatcher<User>()),
             any(that: const TypeMatcher<String>()),
           ),
         ).thenAnswer(
-          (invocation) async => Right(Timestamp.now()),
+          (invocation) async => const Right(true),
         );
-        return AuthenticatedProfileBloc(userCollectionRepo);
+        return AuthenticatedProfileBloc(UserProfileRepository(mockService));
       },
       act: (bloc) async => bloc.syncUserProfile(),
       expect: () => [
         KalaUserLoadingState(),
         UserNotFoundState(),
-        KalaUserLoadingState(),
+        RegisteringState(),
         const TypeMatcher<FetchedKalaUserState>()
       ],
     );
@@ -62,31 +63,18 @@ void main() {
       'Test to fetch a user profile.',
       build: () {
         when(
-          () => userCollectionRepo.getKalaUser(
+          () => mockService.getKalaUser(
             any(that: const TypeMatcher<String>()),
           ),
         ).thenAnswer(
-          (invocation) async => Left(DocumentNotFound()),
+          (invocation) async => Right(fakeArtistJson(uid)),
         );
-        when(
-          () => userCollectionRepo.createKalaUser(
-            any(that: const TypeMatcher<User>()),
-            any(that: const TypeMatcher<String>()),
-          ),
-        ).thenAnswer(
-          (invocation) async => Right(Timestamp.now()),
-        );
-        return AuthenticatedProfileBloc(userCollectionRepo);
+
+        return AuthenticatedProfileBloc(UserProfileRepository(mockService));
       },
       act: (bloc) async => bloc.syncUserProfile(),
-      expect: () => [
-        KalaUserLoadingState(),
-        UserNotFoundState(),
-        KalaUserLoadingState(),
-        const TypeMatcher<FetchedKalaUserState>()
-      ],
+      expect: () =>
+          [KalaUserLoadingState(), const TypeMatcher<FetchedKalaUserState>()],
     );
-
-   
   });
 }

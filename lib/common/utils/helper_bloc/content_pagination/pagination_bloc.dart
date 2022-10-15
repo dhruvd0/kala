@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kala/common/models/art.dart';
+import 'package:kala/common/services/firebase/firestore_api.dart';
+import 'package:kala/common/utils/helper_bloc/content_pagination/pagination_state.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
 import 'package:kala/config/typedefs.dart';
-
-import 'package:kala/common/models/art.dart';
-import 'package:kala/common/services/firebase/firestore_get.dart';
-import 'package:kala/common/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class PaginationCubit<T> extends Cubit<PaginationRequestState> {
   PaginationCubit({
@@ -48,8 +47,7 @@ class PaginationCubit<T> extends Cubit<PaginationRequestState> {
   }
 
   final dynamic Function(Map<String, dynamic>) dataFromMap;
-
- 
+  final FirestoreAPI firestoreAPI = FirestoreAPI();
 
   Future<List<Map<String, dynamic>>> getJsonList(
     int scrollPosition, {
@@ -60,7 +58,7 @@ class PaginationCubit<T> extends Cubit<PaginationRequestState> {
       return [];
     }
     emit(state.copyWith(scrollPosition: scrollPosition));
-    final response = await FirestoreQueries().paginateCollectionDocuments(
+    final response = await firestoreAPI.paginateCollectionDocuments(
       firestorePageRequest,
       collectionSegment: segment,
     );

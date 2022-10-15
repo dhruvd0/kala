@@ -26,6 +26,9 @@ class KalaUserErrorState extends KalaUserState {
   final String message;
   KalaUserErrorState(this.message);
 }
+class RegisteringState extends KalaUserLoadingState{
+  
+}
 class UserNotFoundState extends KalaUserState{
   
 }
