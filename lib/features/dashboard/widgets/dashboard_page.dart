@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
 import 'package:kala/features/acquires_page/acquires_page.dart';
-import 'package:kala/features/artist_page/widgets/artist_page.dart';
+import 'package:kala/features/artist_profile/widgets/artist_page.dart';
 import 'package:kala/features/dashboard/bloc/dashboard_page_bloc.dart';
 import 'package:kala/features/gallery/widgets/page/gallery_page.dart';
 
@@ -45,7 +46,13 @@ class _DashboardState extends State<Dashboard> {
           key: const ValueKey(ScaffoldKeys.dashboard),
           physics: const BouncingScrollPhysics(),
           controller: pageController,
-          children: const [GalleryPage(), ArtistPage(), AcquiresPage()],
+          children: [
+            const GalleryPage(),
+            ArtistPage(
+              artistID: firebaseConfig.auth.currentUser!.uid,
+            ),
+            const AcquiresPage()
+          ],
         ),
       ),
     );

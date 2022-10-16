@@ -1,71 +1,29 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/config/dependencies.dart';
-import 'package:kala/config/nav/route_names.dart';
-import 'package:kala/config/widget_keys/scaffold_keys.dart';
-import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
-import 'package:kala/features/gallery/bloc/gallery_slide_state.dart';
 import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
+import 'package:kala/common/utils/widgets/routines.dart';
+import 'package:kala/config/widget_keys/scaffold_keys.dart';
+import 'package:kala/features/auth/bloc/auth_bloc.dart';
+
+import 'package:kala/features/auth/bloc/auth_state.dart';
 
 /// The first widget to display for Kala App
-class Splash extends StatefulWidget {
-  const Splash({Key? key}) : super(key: key);
-
-  @override
-  State<Splash> createState() => _SplashState();
-}
-
-class _SplashState extends State<Splash> {
-  StreamSubscription? streamSubscription;
-
-  @override
-  void dispose() {
-    streamSubscription?.cancel();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    streamSubscription =
-        firebaseConfig.auth.userChanges().listen(handleUseAuthState);
-    super.initState();
-  }
-
-  Future<void> handleUseAuthState(
-    User? user,
-  ) async {
-    if (user == null) {
-      await Navigator.pushReplacementNamed(context, Routes.auth);
-    } else {
-      await authenticatePageRoutine();
-    }
-    await streamSubscription?.cancel();
-  }
-
-  Future<void> authenticatePageRoutine() async {
-    final galleryBloc = BlocProvider.of<GalleryBloc>(context);
-    await Future.doWhile(() {
-      final isUserArtInitialized = galleryBloc.state is! FetchedGalleryState &&
-          (galleryBloc.state as FetchedGalleryState).artSlideList.isNotEmpty;
-
-      // TODO(dhruv): load user art
-      //  &&
-      //     BlocProvider.of<KalaUserBloc>(context).state.userArt != null;
-      return isUserArtInitialized;
-    });
-    if (mounted) {
-      // ignore: use_build_context_synchronously
-      await Navigator.pushReplacementNamed(context, Routes.dashboard);
-    }
-  }
+class Splash extends RoutinesWidget {
+  const Splash({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const LogoSplash();
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthenticatedState) {
+          postAuthenticationRoutine(context);
+        } else {
+          startupRoutine(context);
+        }
+      },
+      child: const LogoSplash(),
+    );
   }
 }
 

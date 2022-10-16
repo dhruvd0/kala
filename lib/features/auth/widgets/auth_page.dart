@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/config/nav/route_names.dart';
+import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
+import 'package:kala/common/utils/widgets/routines.dart';
 import 'package:kala/config/widget_keys/scaffold_keys.dart';
-import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/auth/bloc/auth_bloc.dart';
+import 'package:kala/features/auth/bloc/auth_state.dart';
 import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/features/auth/widgets/auth_btn.dart';
-import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
 
-class AuthPage extends StatelessWidget {
+class AuthPage extends RoutinesWidget {
   const AuthPage({
     Key? key,
   }) : super(
@@ -19,10 +20,10 @@ class AuthPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return OffWhiteScaffold(
       scaffoldKey: const ValueKey(ScaffoldKeys.authPageKey),
-      body: BlocListener<ProfileBloc, KalaUserState>(
+      body: BlocListener<AuthBloc, AuthState>(
         listener: (_, state) {
-          if (state is AuthenticatedKalaUserState) {
-            Navigator.pushReplacementNamed(context, Routes.dashboard);
+          if (state is AuthenticatedState) {
+            postAuthenticationRoutine(context);
           }
         },
         child: SizedBox(

@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:kala/common/models/art.dart';
+import 'package:kala/config/dependencies.dart';
 import 'package:kala/features/artist_profile/repositories/artist_content_repo.dart';
+import 'package:kala/features/artist_profile/services/artist_content_service.dart';
 
 part 'artist_content_state.dart';
 
@@ -11,7 +13,7 @@ class ArtistContentCubit extends Cubit<ArtistContentState> {
 
   final ArtistContentRepository artistContentRepository;
 
-  Future<void> getArtistArt(String artistID, [int scrollPosition = 0]) async {
+  Future<void> getArtistArt([int scrollPosition = 0]) async {
     if (state is ArtistContentInitial) {
       emit(const ArtistContentLoadingState());
     }
@@ -44,3 +46,13 @@ class ArtistContentCubit extends Cubit<ArtistContentState> {
 }
 
 /// Content cubit for the logged in artist
+///
+///
+class AuthenticatedArtistContentCubit extends ArtistContentCubit {
+  AuthenticatedArtistContentCubit()
+      : super(
+          ArtistContentRepository(
+            ArtistContentService(firebaseConfig.auth.currentUser!.uid),
+          ),
+        );
+}

@@ -31,7 +31,7 @@ Future<File?> compressFile(File file) async {
     file.absolute.path,
     '${split.first}_c.jpg',
     quality: 50,
-    minWidth: (1.sw - 36.sw).toInt(),
+    minWidth: (1.sw - 36.w).toInt(),
     minHeight: 182.h.toInt(),
   );
 

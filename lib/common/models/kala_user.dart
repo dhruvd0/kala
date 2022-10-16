@@ -32,7 +32,7 @@ class KalaUser extends Equatable {
       name: map['name'] as String,
       photoURL: map['photoURL'] != null ? map['photoURL'] as String : null,
       uid: map['uid'] as String,
-      isEditMode: map['isEditMode']??false,
+      isEditMode: map['isEditMode'] ?? false,
       bio: map['bio'] as String,
     );
   }

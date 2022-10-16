@@ -5,9 +5,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/firebase/firestore_paths.dart';
-import 'package:kala/features/artist_profile/cubit/artist_profile/kala_user_bloc.dart';
-import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/features/artist_profile/repositories/user_profile_repository.dart';
+import 'package:kala/features/artist_profile/services/user_profile_service.dart';
+import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 import 'package:kala/features/gallery/repositories/gallery_repository.dart';
 import 'package:kala/features/gallery/services/gallery_service.dart';
@@ -27,12 +27,17 @@ Future<List<Object>> _clientsAndServices() async {
     packageInfo,
     await _setupFirebase(),
     FirestoreCollectionPaths(),
-    GalleryService()
+    GalleryService(),
+    UserProfileService()
   ];
 }
 
 List<Object> _repositories() {
-  return [SocialSignIn(), GalleryRepository(getIt.get())];
+  return [
+    SocialSignIn(),
+    GalleryRepository(getIt.get()),
+    UserProfileRepository(getIt.get())
+  ];
 }
 
 List<Object> _blocs() {

@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kala/common/models/art.dart';
-import 'package:kala/common/utils/helper_bloc/content_pagination/pagination_state.dart';
 import 'package:kala/common/utils/widgets/buttons/curved_mono_button.dart';
 import 'package:kala/common/utils/widgets/decors/text_input_decoration.dart';
 import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/remote_config_data.dart';
 import 'package:kala/config/theme/theme.dart';
-import 'package:kala/features/artist_page/add_new_art/bloc/new_art_bloc.dart';
-import 'package:kala/features/artist_page/add_new_art/widgets/keys/add_new_content_widget_keys.dart';
-import 'package:kala/features/artist_page/cubit/artist_page_cubit.dart';
-import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/artist_profile/cubit/artist_content/artist_content_cubit.dart';
+import 'package:kala/features/artist_profile/cubit/artist_profile/kala_user_bloc.dart';
+import 'package:kala/features/artist_profile/upload_art/bloc/upload_art_bloc.dart';
+import 'package:kala/features/artist_profile/upload_art/bloc/upload_art_state.dart';
+
 import 'package:kala/features/gallery/art/widgets/art_image.dart';
 import 'package:kala/features/gallery/bloc/gallery_slide_bloc.dart';
 
@@ -32,19 +32,17 @@ class _AddNewArtSheetState extends State<AddNewArtSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NewArtCubit, Art>(
+    return BlocBuilder<UploadArtBloc, UploadArtState>(
       builder: (context, state) {
         return OffWhiteScaffold(
           hideAppBar: true,
-          scaffoldKey: const ValueKey(AddNewArtWidgetKeys.scaffoldKey),
+          scaffoldKey: const ValueKey('upload art'),
           body: Form(
             key: AddNewArtSheet.formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
-                  height: 20.h,
-                ),
+                SizedBox(height: 20.h),
                 Text(
                   firebaseConfig.remoteConfig.getString(
                     RemoteConfigKeys.clickPhotoToChangeArt,
@@ -58,7 +56,7 @@ class _AddNewArtSheetState extends State<AddNewArtSheet> {
                     margin:
                         EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
                     child: ArtImage(
-                      image: state.imageFile,
+                      image: state is EditArtState ? state.art.imageFile : null,
                       overrideFit: BoxFit.cover,
                     ),
                   ),
@@ -79,7 +77,7 @@ class _AddNewArtSheetState extends State<AddNewArtSheet> {
                   textAlign: TextAlign.center,
                   style: TextThemeContext(context).headline1,
                   onChanged: (str) {
-                    BlocProvider.of<NewArtCubit>(context)
+                    BlocProvider.of<UploadArtBloc>(context)
                         .editNewArt(ArtProps.title, str);
                   },
                   decoration: TextInputDecorations.defaultTextInputDecoration(
@@ -99,7 +97,7 @@ class _AddNewArtSheetState extends State<AddNewArtSheet> {
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     onChanged: (str) {
-                      BlocProvider.of<NewArtCubit>(
+                      BlocProvider.of<UploadArtBloc>(
                         context,
                       ).editNewArt(ArtProps.price, int.parse(str));
                     },
@@ -118,7 +116,7 @@ class _AddNewArtSheetState extends State<AddNewArtSheet> {
                   maxLines: 5,
                   textAlign: TextAlign.center,
                   onChanged: (str) {
-                    BlocProvider.of<NewArtCubit>(context)
+                    BlocProvider.of<UploadArtBloc>(context)
                         .editNewArt(ArtProps.description, str);
                   },
                   decoration: TextInputDecorations.defaultTextInputDecoration(
@@ -139,7 +137,7 @@ class _AddNewArtSheetState extends State<AddNewArtSheet> {
                         setState(() {
                           uploadingArt = true;
                         });
-                        BlocProvider.of<NewArtCubit>(
+                        BlocProvider.of<UploadArtBloc>(
                           context,
                         ).addNewArt().then((value) async {
                           unawaited(
@@ -147,14 +145,12 @@ class _AddNewArtSheetState extends State<AddNewArtSheet> {
                               context,
                             ).getArtList(),
                           );
-                          await BlocProvider.of<ArtistContentCubit>(
+                          await BlocProvider.of<
+                              AuthenticatedArtistContentCubit>(
                             context,
-                          ).getUserArt(
-                            100,
-                            collectionSegment: CollectionSegment.previous,
-                          );
+                          ).getArtistArt();
                           if (mounted) {
-                            BlocProvider.of<ProfileBloc>(
+                            BlocProvider.of<AuthenticatedProfileBloc>(
                               context,
                             ).toggleEditMode();
                           }

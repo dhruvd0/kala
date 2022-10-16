@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:kala/features/artist_page/cubit/artist_page_cubit.dart';
+import 'package:kala/config/dependencies.dart';
+import 'package:kala/features/artist_profile/cubit/artist_content/artist_content_cubit.dart';
 import 'package:kala/features/gallery/art/widgets/art_card.dart';
 
 class GalleryGridView extends StatelessWidget {
@@ -10,8 +11,16 @@ class GalleryGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ArtistContentCubit, ArtistContentState>(
+      bloc: getIt.get(),
       builder: (context, state) {
-        if (state.userArt.isEmpty) {
+        if (state is ArtistContentLoadingState) {
+          return const CircularProgressIndicator();
+        }
+        if (state is ArtistContentInitial) {
+          return Container();
+        }
+        final userArt = (state as ArtistContentLoadedState).userArt;
+        if (userArt.isEmpty) {
           return Container();
         }
 
@@ -21,7 +30,7 @@ class GalleryGridView extends StatelessWidget {
           crossAxisCount: cellCount,
           crossAxisSpacing: 2,
           mainAxisSpacing: 2,
-          children: state.userArt
+          children: userArt
               .map(
                 (e) => StaggeredGridTile.fit(
                   crossAxisCellCount: 1,

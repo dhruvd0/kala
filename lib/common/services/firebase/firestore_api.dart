@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:kala/config/dependencies.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:kala/common/models/page_data.dart';
+import 'package:kala/common/services/firebase/crashlytics.dart';
+import 'package:kala/common/utils/helper_bloc/content_pagination/pagination_state.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/firebase/firebase.dart';
 import 'package:kala/config/typedefs.dart';
-import 'package:kala/common/services/firebase/crashlytics.dart';
-import 'package:kala/common/models/page_data.dart';
-import 'package:kala/common/utils/helper_bloc/content_pagination/pagination_state.dart';
 
 class FirestoreAPI {
   FirestoreAPI();
@@ -138,8 +135,8 @@ class FirestoreAPI {
   }) async {
     try {
       final doc = firestore.collection(collection).doc(docID);
-      await doc?.set(data);
-      return doc!.id;
+      await doc.set(data);
+      return doc.id;
     } on Exception catch (e) {
       await Fluttertoast.showToast(msg: e.toString());
       return '';
@@ -147,6 +144,4 @@ class FirestoreAPI {
   }
 }
 
-mixin FirestoreMixin on FirestoreAPI{
-  
-}
+mixin FirestoreMixin on FirestoreAPI {}

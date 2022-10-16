@@ -53,7 +53,7 @@ void main() {
       },
     );
 
-     final list = List.generate(20, (index) => fakeArtJson(index))
+    final list = List.generate(20, (index) => fakeArtJson(index))
         .map((e) => Art.fromMap(e))
         .toList();
     blocTest<GalleryBloc, GalleryState>(

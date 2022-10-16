@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kala/features/gallery/art/bloc/art_bloc.dart';
 import 'package:kala/common/models/art.dart';
+import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
+import 'package:kala/features/gallery/art/bloc/art_bloc.dart';
 import 'package:kala/features/gallery/art/widgets/art_card.dart';
 import 'package:kala/features/gallery/art/widgets/art_image.dart';
-import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
 
 class ArtPage extends StatelessWidget {
   const ArtPage({Key? key}) : super(key: key);

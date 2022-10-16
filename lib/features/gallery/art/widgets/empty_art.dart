@@ -2,15 +2,13 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kala/config/nav/route_names.dart';
-
-import 'package:kala/features/artist_page/add_new_art/bloc/new_art_bloc.dart';
-import 'package:kala/features/artist_page/add_new_art/widgets/add_new_art_sheet.dart';
-
-import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
-
 import 'package:kala/common/models/art.dart';
 import 'package:kala/common/services/io/scan_image.dart';
+import 'package:kala/config/nav/route_names.dart';
+import 'package:kala/features/artist_profile/cubit/artist_profile/kala_user_bloc.dart';
+import 'package:kala/features/artist_profile/upload_art/bloc/upload_art_bloc.dart';
+import 'package:kala/features/artist_profile/upload_art/bloc/upload_art_state.dart';
+import 'package:kala/features/artist_profile/upload_art/widgets/add_new_art_sheet.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class EmptyArtCard extends StatelessWidget {
@@ -27,11 +25,11 @@ class EmptyArtCard extends StatelessWidget {
         maxHeight: gridElementSize(),
       ),
       decoration: BoxDecoration(border: Border.all(width: 0.5)),
-      child: BlocBuilder<NewArtCubit, Art>(
+      child: BlocBuilder<UploadArtBloc, UploadArtState>(
         builder: (context, state) {
           return GestureDetector(
             onTap: () {
-              final bloc = BlocProvider.of<NewArtCubit>(
+              final bloc = BlocProvider.of<UploadArtBloc>(
                 context,
               );
               scanImage(context).then(
@@ -48,8 +46,9 @@ class EmptyArtCard extends StatelessWidget {
                             ),
                           ).then((value) {
                             final isInEditMode =
-                                (BlocProvider.of<ProfileBloc>(context).state
-                                        as FetchedKalaUserState)
+                                (BlocProvider.of<AuthenticatedProfileBloc>(
+                              context,
+                            ).state as FetchedKalaUserState)
                                     .kalaUser
                                     .isEditMode;
                             if (!isInEditMode) {

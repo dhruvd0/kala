@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,8 +8,8 @@ import 'package:kala/common/models/kala_user.dart';
 import 'package:kala/common/services/firebase/firebase_error.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/features/artist_profile/cubit/artist_profile/kala_user_state.dart';
-import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 import 'package:kala/features/artist_profile/repositories/user_profile_repository.dart';
+import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 
 export 'kala_user_state.dart';
 
@@ -37,6 +38,12 @@ class ProfileBloc extends Cubit<KalaUserState> {
       },
     );
   }
+
+  void toggleEditMode() {}
+
+  void changeCover(File value) {}
+
+  void changeBio(String str) {}
 }
 
 class AuthenticatedProfileBloc extends ProfileBloc {

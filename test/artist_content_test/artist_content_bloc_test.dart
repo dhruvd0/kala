@@ -32,7 +32,7 @@ void main() {
           ArtistContentRepository(ArtistContentService(uid)),
         );
       },
-      act: (bloc) async => bloc.getArtistArt(uid),
+      act: (bloc) async => bloc.getArtistArt(),
       wait: const Duration(milliseconds: 100),
       expect: () => [
         const ArtistContentLoadingState(),
@@ -51,8 +51,8 @@ void main() {
         ArtistContentRepository(ArtistContentService(uid)),
       ),
       act: (bloc) async {
-        await bloc.getArtistArt(uid);
-        await bloc.getArtistArt(uid, 1);
+        await bloc.getArtistArt();
+        await bloc.getArtistArt(1);
       },
       expect: () => [
         const ArtistContentLoadingState(),
@@ -79,7 +79,7 @@ void main() {
         ArtistContentRepository(ArtistContentService(uid)),
       ),
       act: (bloc) async {
-        await bloc.getArtistArt(uid);
+        await bloc.getArtistArt();
       },
       seed: () {
         return ArtistContentLoadedState(

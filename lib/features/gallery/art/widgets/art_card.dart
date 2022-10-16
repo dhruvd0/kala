@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:kala/common/models/art.dart';
+import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/nav/route_names.dart';
 import 'package:kala/config/size/size.dart';
 import 'package:kala/config/theme/theme.dart';
-import 'package:kala/features/artist_page/add_new_art/bloc/new_art_bloc.dart';
-
+import 'package:kala/features/artist_profile/services/artist_content_service.dart';
+import 'package:kala/features/artist_profile/upload_art/bloc/upload_art_bloc.dart';
 import 'package:kala/features/gallery/art/bloc/art_bloc.dart';
-import 'package:kala/common/models/art.dart';
 import 'package:kala/features/gallery/art/widgets/art_image.dart';
 import 'package:kala/features/gallery/art/widgets/empty_art.dart';
 import 'package:kala/features/gallery/art/widgets/keys.dart';
@@ -21,7 +22,9 @@ class ArtCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => NewArtCubit(),
+      create: (_) => UploadArtBloc(
+        ArtistContentService(firebaseConfig.auth.currentUser!.uid),
+      ),
       child: GestureDetector(
         onTap: () {
           if (art.isValid()) {

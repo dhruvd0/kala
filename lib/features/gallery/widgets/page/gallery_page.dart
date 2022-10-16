@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kala/config/widget_keys/scaffold_keys.dart';
-
-import 'package:kala/features/gallery/widgets/gallery_view/gallery_layout.dart';
-
 import 'package:kala/common/utils/widgets/offwhite_scaffold.dart';
+import 'package:kala/config/widget_keys/scaffold_keys.dart';
+import 'package:kala/features/gallery/widgets/gallery_view/gallery_layout.dart';
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({Key? key}) : super(key: key);

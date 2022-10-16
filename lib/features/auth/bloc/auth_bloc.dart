@@ -1,9 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kala/config/dependencies.dart';
 import 'package:kala/features/auth/bloc/auth_state.dart';
 import 'package:kala/features/auth/repositories/social_integration/social_integration.dart';
 
-class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(this._socialSignIn) : super(AuthInitial());
+class AuthBloc extends Cubit<AuthState> {
+  AuthBloc(this._socialSignIn) : super(AuthInitial()) {
+    firebaseConfig.auth.authStateChanges().listen((event) {
+      if (event != null) {
+        emit(AuthenticatedState(event));
+      } else {
+        emit(AuthInitial());
+      }
+    });
+  }
 
   final SocialSignIn _socialSignIn;
 

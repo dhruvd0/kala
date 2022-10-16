@@ -9,6 +9,6 @@ FirestoreException handleFirestoreError(dynamic e) {
   if (e is DocumentNotFound || e is FirestoreException) {
     return e;
   }
-  
+
   return FirestoreException(message: e.toString());
 }

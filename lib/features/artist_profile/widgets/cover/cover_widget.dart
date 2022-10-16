@@ -5,13 +5,12 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kala/common/services/io/scan_image.dart';
 import 'package:kala/config/dependencies.dart';
 import 'package:kala/config/remote_config_data.dart';
 import 'package:kala/config/theme/theme.dart';
-
-import 'package:kala/features/auth/bloc/kala_user_bloc.dart';
+import 'package:kala/features/artist_profile/cubit/artist_profile/kala_user_bloc.dart';
 import 'package:kala/features/gallery/art/widgets/art_image.dart';
-import 'package:kala/common/services/io/scan_image.dart';
 
 class CoverArt extends StatelessWidget {
   const CoverArt({Key? key}) : super(key: key);
